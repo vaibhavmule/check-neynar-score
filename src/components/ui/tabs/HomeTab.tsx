@@ -2,6 +2,7 @@
 
 import { ScoreCard } from "../ScoreCard";
 import { Button } from "../Button";
+import { ShareButton } from "../Share";
 
 /**
  * HomeTab component displays the main landing content for the mini app.
@@ -58,9 +59,21 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
           <ScoreCard fid={fid} score={score ?? undefined} username={username} pfpUrl={pfpUrl} loading={loading} />
         )}
         
-        {/* Show refresh button if score exists */}
-        {hasScore && score !== null && score !== undefined && !loading && (
-          <div className="mt-4">
+        {/* Show action buttons if score exists */}
+        {hasScore && score !== null && score !== undefined && !loading && fid && (
+          <div className="mt-4 space-y-2">
+            <ShareButton
+              buttonText="Share Score"
+              cast={{
+                text: `🎯 My Neynar Score is ${Math.round((score ?? 0) * 100)}%!\n\nCheck your score:`,
+                embeds: [
+                  {
+                    path: `/share/${fid}`,
+                  },
+                ],
+              }}
+              className="w-full"
+            />
             <Button
               onClick={fetchScore}
               variant="outline"

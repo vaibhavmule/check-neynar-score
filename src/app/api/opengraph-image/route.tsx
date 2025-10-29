@@ -1,30 +1,66 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
-import { getNeynarUser } from "~/lib/neynar";
+import { NeynarAPIClient, Configuration } from '@neynar/nodejs-sdk';
 
 export const dynamic = 'force-dynamic';
+
+async function getUserWithScore(fid: number) {
+  const apiKey = process.env.NEYNAR_API_KEY;
+  if (!apiKey) return null;
+
+  try {
+    const config = new Configuration({ apiKey });
+    const neynar = new NeynarAPIClient(config);
+    
+    const usersResponse = await neynar.fetchBulkUsers({ fids: [fid] });
+    const users = usersResponse.users || [];
+    const user = users[0];
+    
+    if (!user) return null;
+
+    // Extract score from user object
+    let score = user.score ?? null;
+    if (score === null && user.experimental?.neynar_user_score !== undefined) {
+      score = user.experimental.neynar_user_score;
+    }
+
+    return { ...user, score };
+  } catch (error) {
+    console.error('Failed to fetch user with score:', error);
+    return null;
+  }
+}
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const fid = searchParams.get('fid');
 
-  const user = fid ? await getNeynarUser(Number(fid)) : null;
+  const user = fid ? await getUserWithScore(Number(fid)) : null;
+  const scorePercent = user?.score ? Math.round(user.score * 100) : null;
+  const displayName = user?.display_name || user?.username || 'User';
 
   return new ImageResponse(
     (
-      <div tw="flex h-full w-full flex-col justify-center items-center relative bg-primary">
+      <div tw="flex h-full w-full flex-col justify-center items-center relative" style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)' }}>
         {user?.pfp_url && (
-          <div tw="flex w-96 h-96 rounded-full overflow-hidden mb-8 border-8 border-white">
+          <div tw="flex w-64 h-64 rounded-full overflow-hidden mb-8 border-8 border-white shadow-2xl">
             <img src={user.pfp_url} alt="Profile" tw="w-full h-full object-cover" />
           </div>
         )}
-        <h1 tw="text-8xl text-white">{user?.display_name ? `Hello from ${user.display_name ?? user.username}!` : 'Hello!'}</h1>
-        <p tw="text-5xl mt-4 text-white opacity-80">Powered by Neynar 🪐</p>
+        <h1 tw="text-6xl font-bold text-white mb-4">{displayName}'s Neynar Score</h1>
+        {scorePercent !== null ? (
+          <div tw="flex items-center justify-center">
+            <div tw="text-9xl font-bold text-white">{scorePercent}%</div>
+          </div>
+        ) : (
+          <p tw="text-5xl text-white opacity-80">Score not available</p>
+        )}
+        <p tw="text-4xl mt-6 text-white opacity-90">Check your score at check-neynar-score.vercel.app</p>
       </div>
     ),
     {
       width: 1200,
-      height: 800,
+      height: 630,
     }
   );
 }

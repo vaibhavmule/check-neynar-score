@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
             <img src={user.pfp_url} alt="Profile" tw="w-full h-full object-cover" />
           </div>
         )}
-        <h1 tw="text-6xl font-bold text-white mb-4">{displayName}'s Neynar Score</h1>
+        <h1 tw="text-6xl font-bold text-white mb-4">{displayName}&apos;s Neynar Score</h1>
         {scorePercent !== null ? (
           <div tw="flex items-center justify-center">
             <div tw="text-9xl font-bold text-white">{scorePercent}%</div>

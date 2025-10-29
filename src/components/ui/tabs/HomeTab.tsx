@@ -42,7 +42,7 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
         <div className="absolute bottom-0 right-0 h-44 w-44 rounded-full bg-primary-600/20 blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
       </div>
       <div className="w-full max-w-md mx-auto space-y-6">
-        <div className="text-center space-y-1.5">
+        <div className="text-center space-y-1.5 -mt-4">
           <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-700">Check your Neynar score</h2>
           <p className="text-sm text-gray-500 dark:text-gray-400">Only visible inside Farcaster</p>
         </div>
@@ -92,7 +92,7 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
         
         {/* Show action buttons if score exists */}
         {hasScore && score !== null && score !== undefined && !loading && fid && (
-          <div className="space-y-3 pt-1">
+          <div className="pt-1">
             <ShareButton
               buttonText="Share Score"
               cast={{
@@ -105,14 +105,6 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
               }}
               className="w-full"
             />
-            <Button
-              onClick={fetchScore}
-              variant="outline"
-              size="md"
-              className="w-full"
-            >
-              Refresh Score
-            </Button>
           </div>
         )}
       </div>

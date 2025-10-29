@@ -140,14 +140,10 @@ export function ScoreCard({ fid, score, username, pfpUrl, loading, timeAgo, erro
                         @{username}
                       </span>
                     )}
-                    {loading ? (
+                    {loading && (
                       <span className="ml-auto inline-flex items-center rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300">
                         <span className="spinner h-3 w-3 mr-2" aria-hidden="true" />
                         Loading...
-                      </span>
-                    ) : typeof numericScore === "number" && (
-                      <span className="ml-auto inline-flex items-center rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300">
-                        {timeAgo || "Last updated just now"}
                       </span>
                     )}
                   </>

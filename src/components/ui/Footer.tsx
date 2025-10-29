@@ -31,25 +31,14 @@ export const Footer: React.FC<FooterProps> = ({ activeTab, setActiveTab, showWal
         </button>
         <button
           type="button"
-          onClick={() => setActiveTab(Tab.Actions)}
+          onClick={() => setActiveTab(Tab.WhatIsNeynarScore)}
           role="tab"
-          aria-selected={activeTab === Tab.Actions}
-          aria-label="Actions tab"
-          className={tabButtonClass(activeTab === Tab.Actions)}
+          aria-selected={activeTab === Tab.WhatIsNeynarScore}
+          aria-label="What is Neynar Score tab"
+          className={tabButtonClass(activeTab === Tab.WhatIsNeynarScore)}
         >
-          <span className="text-xl mb-0.5" aria-hidden="true">⚡</span>
-          <span className="text-xs font-medium">Actions</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab(Tab.Context)}
-          role="tab"
-          aria-selected={activeTab === Tab.Context}
-          aria-label="Context tab"
-          className={tabButtonClass(activeTab === Tab.Context)}
-        >
-          <span className="text-xl mb-0.5" aria-hidden="true">📋</span>
-          <span className="text-xs font-medium">Context</span>
+          <span className="text-xl mb-0.5" aria-hidden="true">ℹ️</span>
+          <span className="text-xs font-medium">What is Score?</span>
         </button>
         {showWallet && (
           <button

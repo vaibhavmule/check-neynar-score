@@ -5,15 +5,14 @@ import { useMiniApp } from "@neynar/react";
 import { sdk } from "@farcaster/miniapp-sdk";
 import { Header } from "~/components/ui/Header";
 import { Footer } from "~/components/ui/Footer";
-import { HomeTab, ActionsTab, ContextTab, WalletTab } from "~/components/ui/tabs";
+import { HomeTab, WhatIsNeynarScoreTab, WalletTab } from "~/components/ui/tabs";
 import { USE_WALLET } from "~/lib/constants";
 import { useNeynarUser } from "../hooks/useNeynarUser";
 
 // --- Types ---
 export enum Tab {
   Home = "home",
-  Actions = "actions",
-  Context = "context",
+  WhatIsNeynarScore = "what-is-neynar-score",
   Wallet = "wallet",
 }
 
@@ -131,8 +130,7 @@ export default function App(
             checkFollowStatus={checkFollowStatus}
           />
         )}
-        {currentTab === Tab.Actions && <ActionsTab />}
-        {currentTab === Tab.Context && <ContextTab />}
+        {currentTab === Tab.WhatIsNeynarScore && <WhatIsNeynarScoreTab />}
         {currentTab === Tab.Wallet && <WalletTab />}
 
         {/* Footer with navigation */}

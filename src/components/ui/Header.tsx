@@ -8,7 +8,7 @@ import { useMiniApp } from "@neynar/react";
 type HeaderProps = {
   neynarUser?: {
     fid: number;
-    score: number;
+    score: number | null;
   } | null;
 };
 
@@ -64,7 +64,7 @@ export function Header({ neynarUser }: HeaderProps) {
                   {neynarUser && (
                     <>
                       <p className="text-xs text-gray-500 dark:text-gray-500">
-                        Neynar Score: {neynarUser.score}
+                        Neynar Score: {neynarUser.score ?? 'N/A'}
                       </p>
                     </>
                   )}

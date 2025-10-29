@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 export interface NeynarUser {
   fid: number;
-  score: number;
+  score: number | null;
 }
 
 export function useNeynarUser(context?: { user?: { fid?: number } }) {

@@ -24,11 +24,50 @@ export async function GET(request: Request) {
     const neynar = new NeynarAPIClient({ apiKey });
     const fidsArray = fids.split(',').map(fid => parseInt(fid.trim()));
     
-    const { users } = await neynar.fetchBulkUsers({
-      fids: fidsArray,
-    });
+    // Fetch users and scores in parallel
+    const [usersResponse, scores] = await Promise.all([
+      neynar.fetchBulkUsers({ fids: fidsArray }),
+      Promise.all(
+        fidsArray.map(async (fid) => {
+          try {
+            const response = await fetch(
+              `https://api.neynar.com/v2/farcaster/user/quality_score?fid=${fid}`,
+              {
+                headers: {
+                  'x-api-key': apiKey,
+                },
+              }
+            );
+            if (response.ok) {
+              const data = await response.json();
+              // Handle different possible response structures
+              const score = data.score ?? data.result?.score ?? data.result ?? null;
+              return { fid, score };
+            } else {
+              const errorText = await response.text();
+              console.error(`Quality score API error for fid ${fid}:`, response.status, errorText);
+              return { fid, score: null };
+            }
+          } catch (err) {
+            console.error(`Failed to fetch score for fid ${fid}:`, err);
+            return { fid, score: null };
+          }
+        })
+      ),
+    ]);
 
-    return NextResponse.json({ users });
+    const { users } = usersResponse;
+
+    // Create a map of fid -> score for quick lookup
+    const scoreMap = new Map(scores.map((s) => [s.fid, s.score]));
+
+    // Combine user data with scores
+    const usersWithScores = users.map((user) => ({
+      ...user,
+      score: scoreMap.get(user.fid) ?? null,
+    }));
+
+    return NextResponse.json({ users: usersWithScores });
   } catch (error) {
     console.error('Failed to fetch users:', error);
     return NextResponse.json(

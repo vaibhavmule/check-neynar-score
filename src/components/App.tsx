@@ -109,7 +109,15 @@ export default function App(
         <h1 className="text-2xl font-bold text-center mb-4">{title}</h1>
 
         {/* Tab content rendering */}
-        {currentTab === Tab.Home && <HomeTab />}
+        {currentTab === Tab.Home && (
+          <HomeTab
+            fid={context?.user?.fid}
+            username={context?.user?.username}
+            pfpUrl={context?.user?.pfpUrl}
+            score={neynarUser?.score}
+            loading={!neynarUser && !!context?.user?.fid}
+          />
+        )}
         {currentTab === Tab.Actions && <ActionsTab />}
         {currentTab === Tab.Context && <ContextTab />}
         {currentTab === Tab.Wallet && <WalletTab />}

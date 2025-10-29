@@ -1,5 +1,7 @@
 "use client";
 
+import { ScoreCard } from "../ScoreCard";
+
 /**
  * HomeTab component displays the main landing content for the mini app.
  * 
@@ -12,13 +14,30 @@
  * <HomeTab />
  * ```
  */
-export function HomeTab() {
+type HomeTabProps = {
+  fid?: number;
+  score?: number;
+  username?: string;
+  pfpUrl?: string;
+  loading?: boolean;
+};
+
+export function HomeTab({ fid, score, username, pfpUrl, loading }: HomeTabProps) {
   return (
-    <div className="flex items-center justify-center h-[calc(100vh-200px)] px-6">
-      <div className="text-center w-full max-w-md mx-auto">
-        <p className="text-lg mb-2">Put your content here!</p>
-        <p className="text-sm text-gray-500 dark:text-gray-400">Powered by Neynar 🪐</p>
+    <div className="relative flex items-center justify-center h-[calc(100vh-200px)] px-6">
+      {/* ambient background blobs */}
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute -top-10 -left-10 h-40 w-40 rounded-full bg-primary/20 blur-3xl" />
+        <div className="absolute bottom-0 right-0 h-44 w-44 rounded-full bg-primary-dark/20 blur-3xl" />
+      </div>
+      <div className="w-full max-w-md mx-auto">
+        <div className="mb-4 text-center">
+          <h2 className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-dark">Check your Neynar score</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Only visible inside Farcaster</p>
+        </div>
+        {/* @ts-expect-error: typed locally within UI component folder */}
+        <ScoreCard fid={fid} score={score} username={username} pfpUrl={pfpUrl} loading={loading} />
       </div>
     </div>
   );
-} 
+}

@@ -96,7 +96,7 @@ export function SharePageClient({ fid }: { fid: number }) {
                   <div className="spinner-primary h-12 w-12" />
                 </div>
               ) : (
-                <p className="text-xl text-white/80">Score not available</p>
+                <p className="text-xl text-white/80">Open the app to check your score</p>
               )}
             </div>
           </div>

@@ -3,6 +3,7 @@ import { NextRequest } from "next/server";
 import { NeynarAPIClient, Configuration } from '@neynar/nodejs-sdk';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 async function getUserWithScore(fid: number) {
   const apiKey = process.env.NEYNAR_API_KEY;
@@ -58,6 +59,11 @@ export async function GET(request: NextRequest) {
       {
         width: 1200,
         height: 630,
+        headers: {
+          'Cache-Control': 'no-store, max-age=0, must-revalidate',
+          'CDN-Cache-Control': 'no-store',
+          'Vercel-CDN-Cache-Control': 'no-store',
+        },
       }
     );
   }
@@ -84,6 +90,11 @@ export async function GET(request: NextRequest) {
     {
       width: 1200,
       height: 630,
+      headers: {
+        'Cache-Control': 'no-store, max-age=0, must-revalidate',
+        'CDN-Cache-Control': 'no-store',
+        'Vercel-CDN-Cache-Control': 'no-store',
+      },
     }
   );
 }

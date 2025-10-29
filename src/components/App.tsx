@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useMiniApp } from "@neynar/react";
+import { sdk } from "@farcaster/miniapp-sdk";
 import { Header } from "~/components/ui/Header";
 import { Footer } from "~/components/ui/Footer";
 import { HomeTab, ActionsTab, ContextTab, WalletTab } from "~/components/ui/tabs";
@@ -66,15 +67,17 @@ export default function App(
 
   // --- Effects ---
   /**
-   * Sets the initial tab to "home" when the SDK is loaded.
+   * Sets the initial tab to "home" and signals readiness when the SDK is loaded.
    * 
    * This effect ensures that users start on the home tab when they first
-   * load the mini app. It only runs when the SDK is fully loaded to
-   * prevent errors during initialization.
+   * load the mini app. It also calls sdk.actions.ready() to signal that
+   * the app is ready to be displayed, which dismisses the splash screen.
    */
   useEffect(() => {
     if (isSDKLoaded) {
       setInitialTab(Tab.Home);
+      // Signal that the app is ready to be displayed
+      sdk.actions.ready();
     }
   }, [isSDKLoaded, setInitialTab]);
 

@@ -3,6 +3,7 @@
 import { ScoreCard } from "../ScoreCard";
 import { Button } from "../Button";
 import { ShareButton } from "../Share";
+import { DEVELOPER_FID } from "~/lib/constants";
 
 /**
  * HomeTab component displays the main landing content for the mini app.
@@ -30,6 +31,9 @@ type HomeTabProps = {
 };
 
 export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, hasScore, isFollowing, isCheckingFollow, checkFollowStatus }: HomeTabProps) {
+  // Skip follow gate entirely if viewer is the developer
+  const isDeveloper = fid === DEVELOPER_FID;
+  
   return (
     <div className="relative flex items-center justify-center min-h-[calc(100vh-200px)] px-4 py-6">
       {/* ambient background blobs */}
@@ -43,8 +47,8 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Only visible inside Farcaster</p>
         </div>
         
-        {/* Follow gate: show prompt if follow status known and false */}
-        {fid && isFollowing === false && !isCheckingFollow && (
+        {/* Follow gate: show prompt if follow status known and false (but not for developer) */}
+        {fid && !isDeveloper && isFollowing === false && !isCheckingFollow && (
           <div className="space-y-3">
             <div className="card p-4">
               <p className="text-sm text-gray-700 dark:text-gray-200">Follow the developer to check your score.</p>
@@ -69,8 +73,8 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
           </div>
         )}
 
-        {/* Show button if no score or allow refresh (only if following or not checked yet) */}
-        {fid && (isFollowing === null || isFollowing === true) && (!hasScore || score === null || score === undefined) && !loading && (
+        {/* Show button if no score or allow refresh (only if following, not checked yet, or is developer) */}
+        {fid && (isDeveloper || isFollowing === null || isFollowing === true) && (!hasScore || score === null || score === undefined) && !loading && (
           <Button
             onClick={fetchScore}
             variant="primary"

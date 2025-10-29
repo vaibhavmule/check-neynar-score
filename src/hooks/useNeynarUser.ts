@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { DEVELOPER_FID } from "~/lib/constants";
 
 export interface NeynarUser {
   fid: number;
@@ -17,6 +18,12 @@ export function useNeynarUser(context?: { user?: { fid?: number } }) {
     if (!viewerFid) {
       setIsFollowing(null);
       return false;
+    }
+    
+    // Skip follow check if viewer is the developer
+    if (viewerFid === DEVELOPER_FID) {
+      setIsFollowing(true);
+      return true;
     }
     try {
       setIsCheckingFollow(true);
@@ -43,14 +50,19 @@ export function useNeynarUser(context?: { user?: { fid?: number } }) {
       setError(null);
       return;
     }
-    // Ensure we have follow status first, only once per session
-    if (isFollowing === null) {
-      const followed = await checkFollowStatus();
-      if (!followed) {
+    
+    // Skip follow check entirely if viewer is the developer
+    const viewerFid = context.user.fid;
+    if (viewerFid !== DEVELOPER_FID) {
+      // Ensure we have follow status first, only once per session (for non-developers)
+      if (isFollowing === null) {
+        const followed = await checkFollowStatus();
+        if (!followed) {
+          return;
+        }
+      } else if (isFollowing === false) {
         return;
       }
-    } else if (isFollowing === false) {
-      return;
     }
 
     setLoading(true);

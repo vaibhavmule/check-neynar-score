@@ -36,7 +36,8 @@ export async function GET(request: NextRequest) {
   const fid = searchParams.get('fid');
 
   const user = fid ? await getUserWithScore(Number(fid)) : null;
-  const scorePercent = user?.score ? Math.round(user.score * 100) : null;
+  const score = user?.score ?? null;
+  const scoreDisplay = score !== null ? score.toFixed(2) : null;
   const displayName = user?.display_name || user?.username || 'User';
 
   return new ImageResponse(
@@ -48,9 +49,9 @@ export async function GET(request: NextRequest) {
           </div>
         )}
         <h1 tw="text-6xl font-bold text-white mb-4">{displayName}&apos;s Neynar Score</h1>
-        {scorePercent !== null ? (
+        {scoreDisplay !== null ? (
           <div tw="flex items-center justify-center">
-            <div tw="text-9xl font-bold text-white">{scorePercent}%</div>
+            <div tw="text-9xl font-bold text-white">{scoreDisplay}</div>
           </div>
         ) : (
           <p tw="text-5xl text-white opacity-80">Score not available</p>

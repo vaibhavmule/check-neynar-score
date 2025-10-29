@@ -104,34 +104,58 @@ async function startDev() {
     // Start localtunnel and get URL
     tunnel = await localtunnel({ port: port });
     let ip;
-    try {
-      ip = await fetch('https://ipv4.icanhazip.com').then(res => res.text()).then(ip => ip.trim());
-    } catch (error) {
-      console.error('Error getting IP address:', error);
+    
+    // Try multiple IP detection services for better accuracy
+    const ipServices = [
+      'https://api.ipify.org',
+      'https://ipv4.icanhazip.com',
+      'https://checkip.amazonaws.com',
+      'https://api.ip.sb/ip'
+    ];
+    
+    for (const service of ipServices) {
+      try {
+        const response = await fetch(service);
+        ip = (await response.text()).trim();
+        if (ip && /^\d+\.\d+\.\d+\.\d+$/.test(ip)) {
+          break; // Valid IP found
+        }
+      } catch (error) {
+        // Try next service
+        continue;
+      }
     }
 
     miniAppUrl = tunnel.url;
     console.log(`
 🌐 Local tunnel URL: ${tunnel.url}
 
+📋 Detected IP address: ${ip || 'Could not detect - check manually'}
+
 💻 To test on desktop:
    1. Open the localtunnel URL in your browser: ${tunnel.url}
-   2. Enter your IP address in the password field${ip ? `: ${ip}` : ''} (note that this IP may be incorrect if you are using a VPN)
-   3. Click "Click to Submit" -- your mini app should now load in the browser
+   2. If prompted for tunnel password, try:
+      - Auto-detected IP: ${ip || 'N/A'}
+      - Alternative: Check your actual public IP at https://whatismyipaddress.com
+      ${ip ? `\n      ⚠️  If "${ip}" doesn't work, you may be behind a VPN/proxy.` : ''}
+   3. Enter the correct IP and click "Click to Submit"
    4. Navigate to the Warpcast Mini App Developer Tools: https://warpcast.com/~/developers
    5. Enter your mini app URL: ${tunnel.url}
    6. Click "Preview" to launch your mini app within Warpcast (note that it may take ~10 seconds to load)
 
+${!ip ? '\n❗️  Could not auto-detect IP. Please find your public IP manually:\n' +
+       '    Visit: https://whatismyipaddress.com or https://api.ipify.org\n' : ''}
 
-❗️ You will not be able to load your mini app in Warpcast until    ❗️
-❗️ you submit your IP address in the localtunnel password field ❗️
-
+❗️  If IP still doesn't work:
+   - Disable VPN if active
+   - Try the IP from your router/network admin
+   - Or test locally without tunnel: set USE_TUNNEL=false in .env.local
 
 📱 To test in Warpcast mobile app:
    1. Open Warpcast on your phone
    2. Go to Settings > Developer > Mini Apps
-   4. Enter this URL: ${tunnel.url}
-   5. Click "Preview" (note that it may take ~10 seconds to load)
+   3. Enter this URL: ${tunnel.url}
+   4. Click "Preview" (note that it may take ~10 seconds to load)
 `);
   } else {
     miniAppUrl = `http://localhost:${port}`;

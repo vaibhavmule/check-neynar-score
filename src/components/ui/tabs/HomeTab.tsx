@@ -35,7 +35,6 @@ export function HomeTab({ fid, score, username, pfpUrl, loading }: HomeTabProps)
           <h2 className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-dark">Check your Neynar score</h2>
           <p className="text-sm text-gray-500 dark:text-gray-400">Only visible inside Farcaster</p>
         </div>
-        {/* @ts-expect-error: typed locally within UI component folder */}
         <ScoreCard fid={fid} score={score} username={username} pfpUrl={pfpUrl} loading={loading} />
       </div>
     </div>

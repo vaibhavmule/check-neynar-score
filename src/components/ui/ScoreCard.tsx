@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-
 type ScoreCardProps = {
   fid?: number;
   score?: number;

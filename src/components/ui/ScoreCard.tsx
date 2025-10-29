@@ -91,7 +91,7 @@ export function ScoreCard({ fid, score, username, pfpUrl, loading, timeAgo, erro
 
                   <div className="flex-1 min-w-0">
                     <p className="text-white text-sm tracking-wide font-semibold mb-1">Neynar Score</p>
-                    <p className="text-white/85 text-xs">Your reputation snapshot</p>
+                    <p className="text-white/85 text-xs">Your quality score snapshot</p>
                   </div>
                 </div>
 

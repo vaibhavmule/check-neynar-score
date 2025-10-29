@@ -3,8 +3,8 @@
 /**
  * WhatIsNeynarScoreTab component displays information about Neynar Score.
  * 
- * This component provides users with context about what the Neynar Score is,
- * how it works, and why it matters for their Farcaster reputation.
+ * This component provides users with context about what the Neynar User Quality Score is,
+ * how it works, and how to improve it based on official Neynar documentation.
  * 
  * @example
  * ```tsx
@@ -23,46 +23,50 @@ export function WhatIsNeynarScoreTab() {
       <div className="card p-6 space-y-4">
         <div className="space-y-3">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            Your Reputation on Farcaster
+            What is Neynar User Score?
           </h3>
           <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-            Neynar Score is a quality metric that measures your reputation and engagement 
-            within the Farcaster ecosystem. It reflects how authentic and valuable your 
-            presence is in the network.
+            The Neynar User Score is a metric that evaluates the quality of user activity 
+            on the platform. It reflects the confidence in a user being high-quality, based 
+            on their interactions and contributions to the network.
           </p>
         </div>
 
         <div className="space-y-3 pt-4 border-t border-gray-200 dark:border-gray-700">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            How It Works
+            Key Points
           </h3>
           <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
             <li className="flex items-start gap-2">
               <span className="text-primary-600 dark:text-primary-400 mt-0.5">•</span>
-              <span>Based on your activity and interactions on Farcaster</span>
+              <span>Scores range from 0 to 1 (not 0 to 100)</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-primary-600 dark:text-primary-400 mt-0.5">•</span>
-              <span>Measures authenticity and community engagement</span>
+              <span>Assesses account quality and the value added to the network</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-primary-600 dark:text-primary-400 mt-0.5">•</span>
-              <span>Updated regularly to reflect your current reputation</span>
+              <span>Differentiates between high and low-quality activities</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-primary-600 dark:text-primary-400 mt-0.5">•</span>
-              <span>Scores range from 0 to 100</span>
+              <span>Not a proof of humanity, but rather an assessment of account quality</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-primary-600 dark:text-primary-400 mt-0.5">•</span>
+              <span>Updates weekly</span>
             </li>
           </ul>
         </div>
 
         <div className="space-y-3 pt-4 border-t border-gray-200 dark:border-gray-700">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            Why It Matters
+            How to Improve Your Score
           </h3>
           <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-            A higher Neynar Score indicates a stronger reputation in the Farcaster community. 
-            This can help others understand your standing and build trust in your interactions.
+            Focus on engaging in high-quality interactions with other users. The score updates 
+            weekly, so consistent positive activity can lead to an improved score over time.
           </p>
         </div>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { ScoreCard } from "../ScoreCard";
+import { Button } from "../Button";
 
 /**
  * HomeTab component displays the main landing content for the mini app.
@@ -16,13 +17,15 @@ import { ScoreCard } from "../ScoreCard";
  */
 type HomeTabProps = {
   fid?: number;
-  score?: number;
+  score?: number | null;
   username?: string;
   pfpUrl?: string;
   loading?: boolean;
+  fetchScore: () => Promise<void>;
+  hasScore: boolean;
 };
 
-export function HomeTab({ fid, score, username, pfpUrl, loading }: HomeTabProps) {
+export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, hasScore }: HomeTabProps) {
   return (
     <div className="relative flex items-center justify-center h-[calc(100vh-200px)] px-6">
       {/* ambient background blobs */}
@@ -35,7 +38,39 @@ export function HomeTab({ fid, score, username, pfpUrl, loading }: HomeTabProps)
           <h2 className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-dark">Check your Neynar score</h2>
           <p className="text-sm text-gray-500 dark:text-gray-400">Only visible inside Farcaster</p>
         </div>
-        <ScoreCard fid={fid} score={score} username={username} pfpUrl={pfpUrl} loading={loading} />
+        
+        {/* Show button if no score or allow refresh */}
+        {(!hasScore || score === null || score === undefined) && !loading && (
+          <div className="mb-4">
+            <Button
+              onClick={fetchScore}
+              variant="primary"
+              size="lg"
+              className="w-full"
+            >
+              Check My Score
+            </Button>
+          </div>
+        )}
+        
+        {/* Show score card if we have data or are loading */}
+        {(hasScore || loading) && (
+          <ScoreCard fid={fid} score={score ?? undefined} username={username} pfpUrl={pfpUrl} loading={loading} />
+        )}
+        
+        {/* Show refresh button if score exists */}
+        {hasScore && score !== null && score !== undefined && !loading && (
+          <div className="mt-4">
+            <Button
+              onClick={fetchScore}
+              variant="outline"
+              size="md"
+              className="w-full"
+            >
+              Refresh Score
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

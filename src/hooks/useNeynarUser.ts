@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 export interface NeynarUser {
   fid: number;
@@ -10,29 +10,34 @@ export function useNeynarUser(context?: { user?: { fid?: number } }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const fetchScore = useCallback(async () => {
     if (!context?.user?.fid) {
       setUser(null);
       setError(null);
       return;
     }
+
     setLoading(true);
     setError(null);
-    fetch(`/api/users?fids=${context.user.fid}`)
-      .then((response) => {
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        return response.json();
-      })
-      .then((data) => {
-        if (data.users?.[0]) {
-          setUser(data.users[0]);
-        } else {
-          setUser(null);
-        }
-      })
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
+    
+    try {
+      const response = await fetch(`/api/users?fids=${context.user.fid}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      if (data.users?.[0]) {
+        setUser(data.users[0]);
+      } else {
+        setUser(null);
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch score';
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   }, [context?.user?.fid]);
 
-  return { user, loading, error };
+  return { user, loading, error, fetchScore };
 } 

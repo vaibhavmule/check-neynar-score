@@ -62,7 +62,7 @@ export default function App(
   } = useMiniApp();
 
   // --- Neynar user hook ---
-  const { user: neynarUser } = useNeynarUser(context || undefined);
+  const { user: neynarUser, fetchScore, loading: scoreLoading } = useNeynarUser(context || undefined);
 
   // --- Effects ---
   /**
@@ -115,7 +115,9 @@ export default function App(
             username={context?.user?.username}
             pfpUrl={context?.user?.pfpUrl}
             score={neynarUser?.score}
-            loading={!neynarUser && !!context?.user?.fid}
+            loading={scoreLoading}
+            fetchScore={fetchScore}
+            hasScore={neynarUser !== null}
           />
         )}
         {currentTab === Tab.Actions && <ActionsTab />}

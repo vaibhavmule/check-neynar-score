@@ -48,8 +48,8 @@ export function getMiniAppEmbedMetadata(ogImageUrl?: string) {
  * Validates that a URL is a valid HTTPS URL (not localhost or IP)
  */
 function validateHttpsUrl(url: string | undefined, fieldName: string): string {
-  if (!url) {
-    throw new Error(`${fieldName} is required but was undefined. Please set NEXT_PUBLIC_URL environment variable.`);
+  if (!url || url.trim() === '') {
+    throw new Error(`${fieldName} is required but was empty. Please set NEXT_PUBLIC_URL environment variable in Vercel project settings.`);
   }
 
   try {

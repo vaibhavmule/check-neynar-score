@@ -19,23 +19,35 @@ import { type AccountAssociation } from '@farcaster/miniapp-core/src/manifest';
  * Priority:
  * 1. NEXT_PUBLIC_URL (explicitly set)
  * 2. VERCEL_URL (automatically set by Vercel, prefixed with https://)
- * 3. Throws error if neither is set
+ * 3. VERCEL_BRANCH_URL (preview deployments on Vercel)
+ * 4. Falls back to empty string if running client-side without env vars
  */
 function getAppUrl(): string {
+  // Explicit URL takes priority
   const explicitUrl = process.env.NEXT_PUBLIC_URL;
   if (explicitUrl) {
     return explicitUrl;
   }
 
+  // Vercel production URL
   const vercelUrl = process.env.VERCEL_URL;
   if (vercelUrl) {
     return `https://${vercelUrl}`;
   }
 
-  throw new Error(
-    'APP_URL is not set. Please set NEXT_PUBLIC_URL environment variable ' +
-    'or deploy to Vercel where VERCEL_URL is automatically set.'
-  );
+  // Vercel preview/branch URL
+  const vercelBranchUrl = process.env.VERCEL_BRANCH_URL;
+  if (vercelBranchUrl) {
+    return `https://${vercelBranchUrl}`;
+  }
+
+  // Fallback: try to get from window location if client-side
+  if (typeof window !== 'undefined') {
+    return window.location.origin;
+  }
+
+  // Fallback to empty string during SSR if no env vars (will be handled by validation)
+  return '';
 }
 
 export const APP_URL: string = getAppUrl();

@@ -76,6 +76,11 @@ export const APP_PRIMARY_CATEGORY: string = 'social';
  */
 export const APP_TAGS: string[] = ['neynar', 'farcaster', 'analytics', 'reputation', 'profile', 'score'];
 
+/**
+ * Farcaster FID of the developer that users must follow to use the app.
+ */
+export const DEVELOPER_FID: number = 1356870;
+
 // --- Asset URLs ---
 /**
  * URL for the app's icon image.

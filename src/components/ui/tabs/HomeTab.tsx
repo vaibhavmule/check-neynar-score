@@ -24,9 +24,12 @@ type HomeTabProps = {
   loading?: boolean;
   fetchScore: () => Promise<void>;
   hasScore: boolean;
+  isFollowing?: boolean | null;
+  isCheckingFollow?: boolean;
+  checkFollowStatus?: () => Promise<boolean>;
 };
 
-export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, hasScore }: HomeTabProps) {
+export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, hasScore, isFollowing, isCheckingFollow, checkFollowStatus }: HomeTabProps) {
   return (
     <div className="relative flex items-center justify-center min-h-[calc(100vh-200px)] px-4 py-6">
       {/* ambient background blobs */}
@@ -40,8 +43,34 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Only visible inside Farcaster</p>
         </div>
         
-        {/* Show button if no score or allow refresh */}
-        {(!hasScore || score === null || score === undefined) && !loading && (
+        {/* Follow gate: show prompt if follow status known and false */}
+        {fid && isFollowing === false && !isCheckingFollow && (
+          <div className="space-y-3">
+            <div className="card p-4">
+              <p className="text-sm text-gray-700 dark:text-gray-200">Follow the developer to check your score.</p>
+              <div className="mt-3 grid grid-cols-2 gap-3">
+                <a
+                  href="https://farcaster.xyz/vaibhavmule"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Button variant="secondary" size="lg" className="w-full">Open Profile</Button>
+                </a>
+                <Button
+                  onClick={() => { void checkFollowStatus?.(); }}
+                  variant="primary"
+                  size="lg"
+                  className="w-full"
+                >
+                  Check Again
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Show button if no score or allow refresh (only if following or not checked yet) */}
+        {fid && (isFollowing === null || isFollowing === true) && (!hasScore || score === null || score === undefined) && !loading && (
           <Button
             onClick={fetchScore}
             variant="primary"

@@ -5,7 +5,7 @@ import { useMiniApp } from "@neynar/react";
 import { sdk } from "@farcaster/miniapp-sdk";
 import { Header } from "~/components/ui/Header";
 import { Footer } from "~/components/ui/Footer";
-import { HomeTab, ActionsTab, ContextTab, WalletTab } from "~/components/ui/tabs";
+import { HomeTab, WalletTab } from "~/components/ui/tabs";
 import { USE_WALLET } from "~/lib/constants";
 import { useNeynarUser } from "../hooks/useNeynarUser";
 
@@ -63,7 +63,14 @@ export default function App(
   } = useMiniApp();
 
   // --- Neynar user hook ---
-  const { user: neynarUser, fetchScore, loading: scoreLoading } = useNeynarUser(context || undefined);
+  const {
+    user: neynarUser,
+    fetchScore,
+    loading: scoreLoading,
+    isFollowing,
+    isCheckingFollow,
+    checkFollowStatus,
+  } = useNeynarUser(context || undefined);
 
   // --- Effects ---
   /**
@@ -121,10 +128,11 @@ export default function App(
             loading={scoreLoading}
             fetchScore={fetchScore}
             hasScore={neynarUser !== null}
+            isFollowing={isFollowing}
+            isCheckingFollow={isCheckingFollow}
+            checkFollowStatus={checkFollowStatus}
           />
         )}
-        {currentTab === Tab.Actions && <ActionsTab />}
-        {currentTab === Tab.Context && <ContextTab />}
         {currentTab === Tab.Wallet && <WalletTab />}
 
         {/* Footer with navigation */}

@@ -123,7 +123,7 @@ export function ActionsTab() {
 
   // --- Render ---
   return (
-    <div className="space-y-3 px-6 w-full max-w-md mx-auto">
+    <div className="space-y-4 px-6 w-full max-w-md mx-auto py-4">
       {/* Share functionality */}
       <ShareButton
         buttonText="Share Mini App"
@@ -154,8 +154,13 @@ export function ActionsTab() {
 
       {/* Notification functionality */}
       {notificationState.sendStatus && (
-        <div className="text-sm w-full">
-          Send notification result: {notificationState.sendStatus}
+        <div className="card p-4">
+          <p className="text-sm font-medium text-gray-700 dark:text-gray-200">
+            <span className="text-gray-500 dark:text-gray-400">Status: </span>
+            <span className={notificationState.sendStatus === 'Success' ? 'text-success' : 'text-error'}>
+              {notificationState.sendStatus}
+            </span>
+          </p>
         </div>
       )}
       <Button
@@ -176,8 +181,8 @@ export function ActionsTab() {
       </Button>
 
       {/* Haptic feedback controls */}
-      <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+      <div className="space-y-3">
+        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
           Haptic Intensity
         </label>
         <select
@@ -187,7 +192,8 @@ export function ActionsTab() {
               e.target.value as Haptics.ImpactOccurredType
             )
           }
-          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary"
+          className="input"
+          aria-label="Haptic intensity selection"
         >
           <option value={'light'}>Light</option>
           <option value={'medium'}>Medium</option>

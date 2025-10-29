@@ -42,11 +42,11 @@ export function SharePageClient({ fid }: { fid: number }) {
   const displayName = user?.display_name || user?.username || "User";
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary-dark/10 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-500/10 to-primary-700/10 p-4">
       <div className="max-w-md w-full">
         <div className="card shadow-2xl overflow-hidden">
           {/* Header with refresh icon */}
-          <div className="bg-gradient-to-br from-primary to-primary-dark p-6 relative">
+          <div className="bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 p-6 relative">
             <div className="absolute top-4 right-4">
               <button
                 onClick={() => window.location.reload()}

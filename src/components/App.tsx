@@ -5,7 +5,7 @@ import { useMiniApp } from "@neynar/react";
 import { sdk } from "@farcaster/miniapp-sdk";
 import { Header } from "~/components/ui/Header";
 import { Footer } from "~/components/ui/Footer";
-import { HomeTab, WalletTab } from "~/components/ui/tabs";
+import { HomeTab, ActionsTab, ContextTab, WalletTab } from "~/components/ui/tabs";
 import { USE_WALLET } from "~/lib/constants";
 import { useNeynarUser } from "../hooks/useNeynarUser";
 
@@ -91,10 +91,10 @@ export default function App(
   // --- Early Returns ---
   if (!isSDKLoaded) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-center">
-          <div className="spinner h-8 w-8 mx-auto mb-4"></div>
-          <p>Loading SDK...</p>
+      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+        <div className="text-center space-y-4">
+          <div className="spinner h-10 w-10 mx-auto"></div>
+          <p className="text-gray-600 dark:text-gray-400 font-medium">Loading SDK...</p>
         </div>
       </div>
     );
@@ -114,9 +114,7 @@ export default function App(
       <Header neynarUser={neynarUser} />
 
       {/* Main content and footer should be centered */}
-      <div className="container py-2 pb-20">
-        {/* Main title */}
-        <h1 className="text-2xl font-bold text-center mb-4">{title}</h1>
+      <div className="container py-4 pb-24">
 
         {/* Tab content rendering */}
         {currentTab === Tab.Home && (
@@ -133,6 +131,8 @@ export default function App(
             checkFollowStatus={checkFollowStatus}
           />
         )}
+        {currentTab === Tab.Actions && <ActionsTab />}
+        {currentTab === Tab.Context && <ContextTab />}
         {currentTab === Tab.Wallet && <WalletTab />}
 
         {/* Footer with navigation */}

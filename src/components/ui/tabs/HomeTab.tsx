@@ -35,24 +35,24 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
   const isDeveloper = fid === DEVELOPER_FID;
   
   return (
-    <div className="relative flex items-center justify-center min-h-[calc(100vh-200px)] px-4 py-6">
+    <div className="relative flex items-center justify-center min-h-[calc(100vh-200px)] px-4 py-8">
       {/* ambient background blobs */}
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute -top-10 -left-10 h-40 w-40 rounded-full bg-primary/20 blur-3xl" />
-        <div className="absolute bottom-0 right-0 h-44 w-44 rounded-full bg-primary-dark/20 blur-3xl" />
+        <div className="absolute -top-10 -left-10 h-40 w-40 rounded-full bg-primary-400/20 blur-3xl animate-pulse" />
+        <div className="absolute bottom-0 right-0 h-44 w-44 rounded-full bg-primary-600/20 blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
       </div>
-      <div className="w-full max-w-md mx-auto space-y-4">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-dark">Check your Neynar score</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Only visible inside Farcaster</p>
+      <div className="w-full max-w-md mx-auto space-y-6">
+        <div className="text-center space-y-1.5">
+          <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-700">Check your Neynar score</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Only visible inside Farcaster</p>
         </div>
         
         {/* Follow gate: show prompt if follow status known and false (but not for developer) */}
         {fid && !isDeveloper && isFollowing === false && !isCheckingFollow && (
-          <div className="space-y-3">
-            <div className="card p-4">
-              <p className="text-sm text-gray-700 dark:text-gray-200">Follow the developer to check your score.</p>
-              <div className="mt-3 grid grid-cols-2 gap-3">
+          <div className="space-y-4">
+            <div className="card p-5">
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-4">Follow the developer to check your score.</p>
+              <div className="grid grid-cols-2 gap-3">
                 <a
                   href="https://farcaster.xyz/vaibhavmule"
                   target="_blank"
@@ -92,7 +92,7 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
         
         {/* Show action buttons if score exists */}
         {hasScore && score !== null && score !== undefined && !loading && fid && (
-          <div className="space-y-3 pt-2">
+          <div className="space-y-3 pt-1">
             <ShareButton
               buttonText="Share Score"
               cast={{

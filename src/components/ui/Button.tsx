@@ -23,8 +23,8 @@ export function Button({
   
   const sizeClasses = {
     sm: "px-3 py-1.5 text-xs",
-    md: "px-4 py-2 text-sm",
-    lg: "px-6 py-3 text-base"
+    md: "px-4 py-2.5 text-sm",
+    lg: "px-6 py-3 text-base font-semibold"
   };
 
   const fullWidthClasses = "w-full max-w-xs mx-auto block";

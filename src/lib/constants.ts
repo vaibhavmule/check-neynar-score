@@ -62,7 +62,7 @@ export const APP_NAME: string = 'Check Neynar Score';
  * A brief description of the mini app's functionality.
  * Used in app store listings and metadata.
  */
-export const APP_DESCRIPTION: string = 'Check your Neynar score';
+export const APP_DESCRIPTION: string = 'Check your Neynar quality score and discover your reputation on Farcaster';
 
 /**
  * The primary category for the mini app.

@@ -40,6 +40,28 @@ export async function GET(request: NextRequest) {
   const scoreDisplay = score !== null ? score.toFixed(2) : null;
   const displayName = user?.display_name || user?.username || 'User';
 
+  // If no user/fid provided, show a welcoming default image
+  if (!user || !fid) {
+    return new ImageResponse(
+      (
+        <div tw="flex h-full w-full flex-col justify-center items-center relative" style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)' }}>
+          <div tw="flex flex-col items-center justify-center">
+            <h1 tw="text-7xl font-bold text-white mb-6">Check Your Neynar Score</h1>
+            <p tw="text-4xl text-white opacity-90 mb-8">Discover your quality score on Farcaster</p>
+            <div tw="flex items-center justify-center bg-white/20 rounded-3xl px-12 py-8 border-4 border-white">
+              <p tw="text-5xl font-semibold text-white">Launch the app →</p>
+            </div>
+            <p tw="text-3xl text-white opacity-80 mt-10">Powered by Neynar</p>
+          </div>
+        </div>
+      ),
+      {
+        width: 1200,
+        height: 630,
+      }
+    );
+  }
+
   return new ImageResponse(
     (
       <div tw="flex h-full w-full flex-col justify-center items-center relative" style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)' }}>

@@ -62,7 +62,17 @@ export function WhatIsNeynarScoreTab() {
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
               How to Improve Your Score
             </h3>
-            <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 border border-primary-200 dark:border-primary-800">
+            <span 
+              className="px-2 py-0.5 text-xs font-medium rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 border border-primary-200 dark:border-primary-800 select-none cursor-default"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+              onMouseDown={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            >
               Coming Soon
             </span>
           </div>

@@ -103,9 +103,6 @@ export function SharePageClient({ fid }: { fid: number }) {
 
           {/* Footer */}
           <div className="p-6 bg-white dark:bg-gray-900">
-            <p className="text-sm text-gray-600 dark:text-gray-400 text-center mb-6">
-              Check your score at check-neynar-score.vercel.app
-            </p>
             <a href={APP_URL || "/"}>
               <Button variant="primary" size="lg" className="w-full">
                 Launch Mini App

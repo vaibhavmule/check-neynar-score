@@ -22,9 +22,6 @@ export function WhatIsNeynarScoreTab() {
 
       <div className="card p-6 space-y-4">
         <div className="space-y-3">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            What is Neynar User Score?
-          </h3>
           <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
             The Neynar User Score is a metric that evaluates the quality of user activity 
             on the platform. It reflects the confidence in a user being high-quality, based 
@@ -61,9 +58,14 @@ export function WhatIsNeynarScoreTab() {
         </div>
 
         <div className="space-y-3 pt-4 border-t border-gray-200 dark:border-gray-700">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            How to Improve Your Score
-          </h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              How to Improve Your Score
+            </h3>
+            <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 border border-primary-200 dark:border-primary-800">
+              Coming Soon
+            </span>
+          </div>
           <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
             Focus on engaging in high-quality interactions with other users. The score updates 
             weekly, so consistent positive activity can lead to an improved score over time.

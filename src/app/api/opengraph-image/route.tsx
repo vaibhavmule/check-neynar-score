@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
         ) : (
           <p tw="text-5xl text-white opacity-80">Score not available</p>
         )}
-        <p tw="text-4xl mt-6 text-white opacity-90">Check your score at check-neynar-score.vercel.app</p>
+        <p tw="text-4xl mt-6 text-white opacity-90">Check your Neynar score</p>
       </div>
     ),
     {

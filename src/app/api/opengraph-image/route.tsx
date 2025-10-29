@@ -82,7 +82,12 @@ export async function GET(request: NextRequest) {
             <div tw="text-9xl font-bold text-white">{scoreDisplay}</div>
           </div>
         ) : (
-          <p tw="text-5xl text-white opacity-80">Score not available</p>
+          <div tw="flex flex-col items-center justify-center">
+            <p tw="text-5xl text-white opacity-80 mb-4">Open the app to check your score</p>
+            <div tw="flex items-center justify-center bg-white/20 rounded-2xl px-8 py-4 border-2 border-white">
+              <p tw="text-4xl font-semibold text-white">Launch Mini App →</p>
+            </div>
+          </div>
         )}
         <p tw="text-4xl mt-6 text-white opacity-90">Check your Neynar score</p>
       </div>

@@ -15,8 +15,30 @@ import { type AccountAssociation } from '@farcaster/miniapp-core/src/manifest';
 /**
  * The base URL of the application.
  * Used for generating absolute URLs for assets and API endpoints.
+ * 
+ * Priority:
+ * 1. NEXT_PUBLIC_URL (explicitly set)
+ * 2. VERCEL_URL (automatically set by Vercel, prefixed with https://)
+ * 3. Throws error if neither is set
  */
-export const APP_URL: string = process.env.NEXT_PUBLIC_URL!;
+function getAppUrl(): string {
+  const explicitUrl = process.env.NEXT_PUBLIC_URL;
+  if (explicitUrl) {
+    return explicitUrl;
+  }
+
+  const vercelUrl = process.env.VERCEL_URL;
+  if (vercelUrl) {
+    return `https://${vercelUrl}`;
+  }
+
+  throw new Error(
+    'APP_URL is not set. Please set NEXT_PUBLIC_URL environment variable ' +
+    'or deploy to Vercel where VERCEL_URL is automatically set.'
+  );
+}
+
+export const APP_URL: string = getAppUrl();
 
 /**
  * The name of the mini app as displayed to users.

@@ -44,19 +44,61 @@ export function getMiniAppEmbedMetadata(ogImageUrl?: string) {
   };
 }
 
+/**
+ * Validates that a URL is a valid HTTPS URL (not localhost or IP)
+ */
+function validateHttpsUrl(url: string | undefined, fieldName: string): string {
+  if (!url) {
+    throw new Error(`${fieldName} is required but was undefined. Please set NEXT_PUBLIC_URL environment variable.`);
+  }
+
+  try {
+    const parsedUrl = new URL(url);
+    
+    // Must use HTTPS
+    if (parsedUrl.protocol !== 'https:') {
+      throw new Error(`${fieldName} must use HTTPS protocol, got: ${url}`);
+    }
+
+    // Cannot be localhost or IP address
+    const hostname = parsedUrl.hostname;
+    if (hostname === 'localhost' || hostname === '127.0.0.1' || /^\d+\.\d+\.\d+\.\d+$/.test(hostname)) {
+      throw new Error(`${fieldName} cannot use localhost or IP addresses, got: ${url}`);
+    }
+
+    return url;
+  } catch (error) {
+    if (error instanceof TypeError) {
+      throw new Error(`${fieldName} is not a valid URL: ${url}`);
+    }
+    throw error;
+  }
+}
+
 export async function getFarcasterDomainManifest(): Promise<Manifest> {
+  // Validate all URLs are HTTPS and not localhost
+  const homeUrl = validateHttpsUrl(APP_URL, 'homeUrl');
+  const iconUrl = validateHttpsUrl(APP_ICON_URL, 'iconUrl');
+  const imageUrl = validateHttpsUrl(APP_OG_IMAGE_URL, 'imageUrl');
+  const splashImageUrl = validateHttpsUrl(APP_SPLASH_URL, 'splashImageUrl');
+  const webhookUrl = validateHttpsUrl(APP_WEBHOOK_URL, 'webhookUrl');
+
+  if (!APP_ACCOUNT_ASSOCIATION) {
+    throw new Error('APP_ACCOUNT_ASSOCIATION is required but was undefined');
+  }
+
   return {
-    accountAssociation: APP_ACCOUNT_ASSOCIATION!,
+    accountAssociation: APP_ACCOUNT_ASSOCIATION,
     miniapp: {
       version: '1',
       name: APP_NAME ?? 'Neynar Starter Kit',
-      homeUrl: APP_URL,
-      iconUrl: APP_ICON_URL,
-      imageUrl: APP_OG_IMAGE_URL,
+      homeUrl,
+      iconUrl,
+      imageUrl,
       buttonTitle: APP_BUTTON_TEXT ?? 'Launch Mini App',
-      splashImageUrl: APP_SPLASH_URL,
+      splashImageUrl,
       splashBackgroundColor: APP_SPLASH_BACKGROUND_COLOR,
-      webhookUrl: APP_WEBHOOK_URL,
+      webhookUrl,
     },
   };
 }

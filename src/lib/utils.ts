@@ -105,8 +105,14 @@ export async function getFarcasterDomainManifest(): Promise<Manifest> {
     webhookUrl,
   } as unknown as Manifest['miniapp'];
 
-  return {
+  const manifest = {
     accountAssociation: APP_ACCOUNT_ASSOCIATION,
     miniapp: miniappConfig,
-  };
+    // Base App Directory specific metadata
+    baseBuilder: {
+      ownerAddress: '0x6828D9e13B9C5BF166d58F60340FD8C3D1FE7693',
+    },
+  } as unknown as Manifest;
+
+  return manifest;
 }

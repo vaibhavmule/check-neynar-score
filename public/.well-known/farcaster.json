@@ -8,5 +8,9 @@
   "contactEmail": "vaibhavmule135@gmail.com",
   "privacyUrl": "https://check-neynar-score.vercel.app",
   "termsUrl": "https://check-neynar-score.vercel.app"
+  ,
+  "baseBuilder": {
+    "ownerAddress": "0x6828D9e13B9C5BF166d58F60340FD8C3D1FE7693"
+  }
 }
 

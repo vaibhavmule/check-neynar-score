@@ -75,7 +75,7 @@ function validateHttpsUrl(url: string | undefined, fieldName: string): string {
   }
 }
 
-export async function getFarcasterDomainManifest(): Promise<Manifest> {
+export async function getFarcasterDomainManifest(forBaseDirectory = false): Promise<Manifest> {
   // Validate all URLs are HTTPS and not localhost
   const homeUrl = validateHttpsUrl(APP_URL, 'homeUrl');
   const iconUrl = validateHttpsUrl(APP_ICON_URL, 'iconUrl');
@@ -105,14 +105,17 @@ export async function getFarcasterDomainManifest(): Promise<Manifest> {
     webhookUrl,
   } as unknown as Manifest['miniapp'];
 
-  const manifest = {
+  const manifest: any = {
     accountAssociation: APP_ACCOUNT_ASSOCIATION,
     miniapp: miniappConfig,
-    // Base App Directory specific metadata
-    baseBuilder: {
-      ownerAddress: '0x6828D9e13B9C5BF166d58F60340FD8C3D1FE7693',
-    },
-  } as unknown as Manifest;
+  };
 
-  return manifest;
+  // Only include Base Directory metadata when requested
+  if (forBaseDirectory) {
+    manifest.baseBuilder = {
+      ownerAddress: '0x6828D9e13B9C5BF166d58F60340FD8C3D1FE7693',
+    };
+  }
+
+  return manifest as Manifest;
 }

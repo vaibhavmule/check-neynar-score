@@ -87,18 +87,23 @@ export async function getFarcasterDomainManifest(): Promise<Manifest> {
     throw new Error('APP_ACCOUNT_ASSOCIATION is required but was undefined');
   }
 
+  const miniappConfig = {
+    version: '1',
+    name: APP_NAME ?? 'Neynar Starter Kit',
+    homeUrl,
+    iconUrl,
+    imageUrl,
+    buttonTitle: APP_BUTTON_TEXT ?? 'Launch Mini App',
+    splashImageUrl,
+    splashBackgroundColor: APP_SPLASH_BACKGROUND_COLOR,
+    // Additional fields used by Base App Directory
+    primaryCategory: 'social',
+    tags: APP_TAGS,
+    webhookUrl,
+  } as unknown as Manifest['miniapp'];
+
   return {
     accountAssociation: APP_ACCOUNT_ASSOCIATION,
-    miniapp: {
-      version: '1',
-      name: APP_NAME ?? 'Neynar Starter Kit',
-      homeUrl,
-      iconUrl,
-      imageUrl,
-      buttonTitle: APP_BUTTON_TEXT ?? 'Launch Mini App',
-      splashImageUrl,
-      splashBackgroundColor: APP_SPLASH_BACKGROUND_COLOR,
-      webhookUrl,
-    },
+    miniapp: miniappConfig,
   };
 }

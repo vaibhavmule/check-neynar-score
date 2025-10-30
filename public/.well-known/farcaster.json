@@ -1,0 +1,12 @@
+{
+  "name": "Check Neynar Score",
+  "description": "Look up a user's Neynar Quality Score and share it to Farcaster.",
+  "websiteUrl": "https://check-neynar-score.vercel.app",
+  "icon": "https://check-neynar-score.vercel.app/icon.png",
+  "primaryCategory": "developer-tools",
+  "tags": ["utility", "farcaster", "neynar", "score"],
+  "contactEmail": "dev@example.com",
+  "privacyUrl": "https://check-neynar-score.vercel.app",
+  "termsUrl": "https://check-neynar-score.vercel.app"
+}
+

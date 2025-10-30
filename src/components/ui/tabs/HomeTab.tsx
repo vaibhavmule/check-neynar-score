@@ -44,7 +44,6 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
       <div className="w-full max-w-md mx-auto space-y-6">
         <div className="text-center space-y-1.5 -mt-4">
           <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-700">Check your Neynar score</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Only visible inside Farcaster</p>
         </div>
         
         {/* Follow gate: show prompt if follow status known and false (but not for developer) */}

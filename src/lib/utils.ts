@@ -96,7 +96,7 @@ export async function getFarcasterDomainManifest(): Promise<Manifest> {
     homeUrl,
     iconUrl,
     imageUrl,
-    buttonTitle: APP_BUTTON_TEXT ?? 'Launch Mini App',
+    buttonTitle: APP_BUTTON_TEXT ?? 'Check Neynar Score',
     splashImageUrl,
     splashBackgroundColor: APP_SPLASH_BACKGROUND_COLOR,
     // Additional fields used by Base App Directory

@@ -103,8 +103,8 @@ export default function App(
   // --- Render ---
   return (
     <>
-      {/* Early "Add to App" prompt - shows immediately when app loads */}
-      <AddAppPrompt delay={1500} />
+      {/* Auto-trigger "Add to App" 1 second after score is checked */}
+      <AddAppPrompt hasScore={neynarUser !== null} delay={1000} />
       
       <div
         style={{

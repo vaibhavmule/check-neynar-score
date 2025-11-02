@@ -4,7 +4,6 @@ import { ScoreCard } from "../ScoreCard";
 import { Button } from "../Button";
 import { ShareButton } from "../Share";
 import { DEVELOPER_FID } from "~/lib/constants";
-import { useMiniApp } from '@neynar/react';
 
 /**
  * HomeTab component displays the main landing content for the mini app.
@@ -34,9 +33,6 @@ type HomeTabProps = {
 export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, hasScore, isFollowing, isCheckingFollow, checkFollowStatus }: HomeTabProps) {
   // Skip follow gate entirely if viewer is the developer
   const isDeveloper = fid === DEVELOPER_FID;
-  
-  // Get mini app actions for "Add to App" functionality
-  const { actions, added } = useMiniApp();
   
   return (
     <div className="relative flex items-center justify-center min-h-[calc(100vh-200px)] px-4 py-8">
@@ -95,36 +91,8 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
         
         {/* Show action buttons if score exists */}
         {hasScore && score !== null && score !== undefined && !loading && fid && (
-          <div className="space-y-3 pt-1">
-            {/* Prominent "Add to App" CTA with value proposition */}
-            {!added && (
-              <div className="space-y-2">
-                <div className="card p-4 bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20 border border-primary-200 dark:border-primary-700">
-                  <p className="text-sm font-medium text-gray-800 dark:text-gray-100 mb-2">
-                    💡 Add to your app for quick access & score tracking
-                  </p>
-                  <Button
-                    onClick={actions.addMiniApp}
-                    variant="primary"
-                    size="lg"
-                    className="w-full"
-                  >
-                    ⭐ Add to App
-                  </Button>
-                </div>
-              </div>
-            )}
-            
-            {/* Show success message if already added */}
-            {added && (
-              <div className="card p-3 bg-success/10 border border-success/20">
-                <p className="text-sm font-medium text-success text-center">
-                  ✓ Added to your app!
-                </p>
-              </div>
-            )}
-            
-            {/* Share button with improved messaging */}
+          <div className="pt-1">
+            {/* Prominent Share button */}
             <ShareButton
               buttonText="Share Score"
               cast={{

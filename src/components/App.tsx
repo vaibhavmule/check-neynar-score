@@ -6,6 +6,7 @@ import { sdk } from "@farcaster/miniapp-sdk";
 import { Header } from "~/components/ui/Header";
 import { Footer } from "~/components/ui/Footer";
 import { HomeTab, WhatIsNeynarScoreTab, WalletTab } from "~/components/ui/tabs";
+import { AddAppPrompt } from "~/components/ui/AddAppPrompt";
 import { USE_WALLET } from "~/lib/constants";
 import { useNeynarUser } from "../hooks/useNeynarUser";
 
@@ -101,16 +102,20 @@ export default function App(
 
   // --- Render ---
   return (
-    <div
-      style={{
-        paddingTop: context?.client.safeAreaInsets?.top ?? 0,
-        paddingBottom: context?.client.safeAreaInsets?.bottom ?? 0,
-        paddingLeft: context?.client.safeAreaInsets?.left ?? 0,
-        paddingRight: context?.client.safeAreaInsets?.right ?? 0,
-      }}
-    >
-      {/* Header should be full width */}
-      <Header neynarUser={neynarUser} />
+    <>
+      {/* Early "Add to App" prompt - shows immediately when app loads */}
+      <AddAppPrompt delay={1500} />
+      
+      <div
+        style={{
+          paddingTop: context?.client.safeAreaInsets?.top ?? 0,
+          paddingBottom: context?.client.safeAreaInsets?.bottom ?? 0,
+          paddingLeft: context?.client.safeAreaInsets?.left ?? 0,
+          paddingRight: context?.client.safeAreaInsets?.right ?? 0,
+        }}
+      >
+        {/* Header should be full width */}
+        <Header neynarUser={neynarUser} />
 
       {/* Main content and footer should be centered */}
       <div className="container py-4 pb-24">
@@ -137,6 +142,7 @@ export default function App(
         <Footer activeTab={currentTab as Tab} setActiveTab={setActiveTab} showWallet={USE_WALLET} />
       </div>
     </div>
+    </>
   );
 }
 

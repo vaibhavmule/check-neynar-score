@@ -128,7 +128,7 @@ export function ActionsTab() {
       <ShareButton
         buttonText="Share Mini App"
         cast={{
-          text: 'Check out this awesome frame @1 @2 @3! 🚀🪐',
+          text: '📊 Check your Neynar Score - discover your Farcaster reputation and influence! Add the app to track your score anytime:',
           bestFriends: true,
           embeds: [`${APP_URL}/share/${context?.user?.fid || ''}`],
         }}
@@ -148,9 +148,23 @@ export function ActionsTab() {
         Open Link
       </Button>
 
-      <Button onClick={actions.addMiniApp} disabled={added} className="w-full">
-        Add Mini App to Client
-      </Button>
+      <div className="space-y-2">
+        {!added && (
+          <div className="card p-3 bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-700 mb-2">
+            <p className="text-xs text-gray-700 dark:text-gray-300 mb-2">
+              Get quick access to check your score anytime
+            </p>
+          </div>
+        )}
+        <Button 
+          onClick={actions.addMiniApp} 
+          disabled={added} 
+          className="w-full"
+          variant={added ? "secondary" : "primary"}
+        >
+          {added ? "✓ Added to App" : "⭐ Add Mini App to Client"}
+        </Button>
+      </div>
 
       {/* Notification functionality */}
       {notificationState.sendStatus && (

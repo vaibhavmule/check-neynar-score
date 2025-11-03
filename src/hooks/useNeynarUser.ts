@@ -82,6 +82,7 @@ export function useNeynarUser(context?: { user?: { fid?: number } }) {
   }, [context?.user?.fid]);
 
   const fetchScore = useCallback(async () => {
+    if (loading) return; // prevent concurrent fetches
     if (!context?.user?.fid) {
       setUser(null);
       setError(null);
@@ -122,7 +123,7 @@ export function useNeynarUser(context?: { user?: { fid?: number } }) {
     } finally {
       setLoading(false);
     }
-  }, [context?.user?.fid, isFollowing, checkFollowStatus]);
+  }, [context?.user?.fid, isFollowing, checkFollowStatus, loading]);
 
   // Auto re-check when window/tab gains focus (helps resolve stale states)
   useEffect(() => {

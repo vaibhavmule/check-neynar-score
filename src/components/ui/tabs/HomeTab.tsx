@@ -81,6 +81,8 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
             variant="primary"
             size="lg"
             className="w-full"
+            isLoading={loading}
+            disabled={loading}
           >
             Check My Score
           </Button>

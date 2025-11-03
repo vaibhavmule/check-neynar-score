@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { useMiniApp } from "@neynar/react";
 import { sdk } from "@farcaster/miniapp-sdk";
 import { Header } from "~/components/ui/Header";
@@ -61,6 +62,7 @@ export default function App(
     setActiveTab,
     currentTab,
   } = useMiniApp();
+  const searchParams = useSearchParams();
 
   // --- Neynar user hook ---
   const {
@@ -82,11 +84,20 @@ export default function App(
    */
   useEffect(() => {
     if (isSDKLoaded) {
-      setInitialTab(Tab.Home);
+      // Support deep links via URL params
+      const hasScoreFlag = searchParams?.has("score");
+      const tabParam = searchParams?.get("tab");
+      if (hasScoreFlag || tabParam === "score" || tabParam === "what-is-neynar-score") {
+        setInitialTab(Tab.WhatIsNeynarScore);
+      } else if (tabParam === "wallet") {
+        setInitialTab(Tab.Wallet);
+      } else {
+        setInitialTab(Tab.Home);
+      }
       // Signal that the app is ready to be displayed
       sdk.actions.ready();
     }
-  }, [isSDKLoaded, setInitialTab]);
+  }, [isSDKLoaded, setInitialTab, searchParams]);
 
   // --- Early Returns ---
   if (!isSDKLoaded) {

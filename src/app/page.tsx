@@ -4,7 +4,8 @@ import App from "./app";
 import { APP_NAME, APP_DESCRIPTION, APP_OG_IMAGE_URL } from "~/lib/constants";
 import { getMiniAppEmbedMetadata } from "~/lib/utils";
 
-export const revalidate = 300;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function generateMetadata(): Promise<Metadata> {
   // Read query params from request headers (for embed fetchers)

@@ -5,16 +5,25 @@ import { getMiniAppEmbedMetadata } from "~/lib/utils";
 
 export const revalidate = 300;
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams?: Record<string, string | string[] | undefined>;
+} = {}): Promise<Metadata> {
+  const isScore = !!(searchParams?.score !== undefined || searchParams?.tab === 'score' || searchParams?.tab === 'what-is-neynar-score');
+  const embed = getMiniAppEmbedMetadata(undefined, { mode: isScore ? 'scoreInfo' : 'default' });
+  const title = isScore ? 'What is Neynar Score?' : APP_NAME;
+  const description = APP_DESCRIPTION;
+
   return {
-    title: APP_NAME,
+    title,
     openGraph: {
-      title: APP_NAME,
-      description: APP_DESCRIPTION,
+      title,
+      description,
       images: [APP_OG_IMAGE_URL],
     },
     other: {
-      "fc:frame": JSON.stringify(getMiniAppEmbedMetadata()),
+      "fc:frame": JSON.stringify(embed),
     },
   };
 }

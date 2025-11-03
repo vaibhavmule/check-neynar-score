@@ -20,24 +20,32 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function getMiniAppEmbedMetadata(ogImageUrl?: string) {
+export function getMiniAppEmbedMetadata(
+  ogImageUrl?: string,
+  options?: { mode?: 'default' | 'scoreInfo' }
+) {
+  const mode = options?.mode ?? 'default';
+  const isScoreInfo = mode === 'scoreInfo';
+  const embedTitle = isScoreInfo ? 'What is Neynar Score?' : APP_NAME;
+  const embedUrl = isScoreInfo ? `${APP_URL}?score` : APP_URL;
+  const embedDescription = APP_DESCRIPTION;
+
   return {
     version: 'next',
     imageUrl: ogImageUrl ?? APP_OG_IMAGE_URL,
-    ogTitle: APP_NAME,
-    ogDescription: APP_DESCRIPTION,
+    ogTitle: embedTitle,
+    ogDescription: embedDescription,
     ogImageUrl: ogImageUrl ?? APP_OG_IMAGE_URL,
     button: {
-      title: APP_BUTTON_TEXT,
+      title: isScoreInfo ? 'Learn more' : APP_BUTTON_TEXT,
       action: {
         type: 'launch_frame',
-        name: APP_NAME,
-        // Open the info tab by default inside the embed
-        url: `${APP_URL}?score`,
+        name: embedTitle,
+        url: embedUrl,
         splashImageUrl: APP_SPLASH_URL,
         iconUrl: APP_ICON_URL,
         splashBackgroundColor: APP_SPLASH_BACKGROUND_COLOR,
-        description: APP_DESCRIPTION,
+        description: embedDescription,
         primaryCategory: APP_PRIMARY_CATEGORY,
         tags: APP_TAGS,
       },

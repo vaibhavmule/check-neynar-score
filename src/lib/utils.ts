@@ -32,7 +32,8 @@ export function getMiniAppEmbedMetadata(ogImageUrl?: string) {
       action: {
         type: 'launch_frame',
         name: APP_NAME,
-        url: APP_URL,
+        // Open the info tab by default inside the embed
+        url: `${APP_URL}?score`,
         splashImageUrl: APP_SPLASH_URL,
         iconUrl: APP_ICON_URL,
         splashBackgroundColor: APP_SPLASH_BACKGROUND_COLOR,

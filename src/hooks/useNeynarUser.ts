@@ -1,5 +1,6 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { DEVELOPER_FID } from "~/lib/constants";
+import { getItem, setItem } from "~/lib/localStorage";
 
 export interface NeynarUser {
   fid: number;
@@ -12,6 +13,13 @@ export function useNeynarUser(context?: { user?: { fid?: number } }) {
   const [error, setError] = useState<string | null>(null);
   const [isFollowing, setIsFollowing] = useState<boolean | null>(null);
   const [isCheckingFollow, setIsCheckingFollow] = useState<boolean>(false);
+  const followCheckInFlight = useRef(false);
+
+  const FOLLOW_CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+
+  function getFollowCacheKey(fid: number) {
+    return `follow_status_${fid}`;
+  }
 
   const checkFollowStatus = useCallback(async () => {
     const viewerFid = context?.user?.fid;
@@ -26,21 +34,50 @@ export function useNeynarUser(context?: { user?: { fid?: number } }) {
       return true;
     }
     try {
-      setIsCheckingFollow(true);
-      const res = await fetch(`/api/follow/check?viewerFid=${viewerFid}`);
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
+      // Serve from cache immediately if fresh, then refresh in background
+      const cacheKey = getFollowCacheKey(viewerFid);
+      const cached = getItem<{ value: boolean; ts: number }>(cacheKey);
+      if (cached && Date.now() - cached.ts < FOLLOW_CACHE_TTL_MS) {
+        setIsFollowing(cached.value);
       }
-      const data = await res.json();
-      const following = Boolean(data?.isFollowing);
+
+      // Prevent overlapping requests
+      if (followCheckInFlight.current) {
+        return isFollowing ?? cached?.value ?? false;
+      }
+      followCheckInFlight.current = true;
+      setIsCheckingFollow(true);
+
+      const doRequest = async () => {
+        const res = await fetch(`/api/follow/check?viewerFid=${viewerFid}`);
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        const data = await res.json();
+        return Boolean(data?.isFollowing);
+      };
+
+      // First attempt
+      let following = await doRequest();
+      // Retry once after short delay if not following (handles propagation lag)
+      if (!following) {
+        await new Promise((r) => setTimeout(r, 800));
+        following = await doRequest();
+      }
+
       setIsFollowing(following);
+      setItem(cacheKey, { value: following, ts: Date.now() });
       return following;
     } catch (e) {
       console.error('Failed to check follow status', e);
-      setIsFollowing(false);
+      // Don't overwrite a truthy cached value on error
+      if (isFollowing === null) {
+        setIsFollowing(false);
+      }
       return false;
     } finally {
       setIsCheckingFollow(false);
+      followCheckInFlight.current = false;
     }
   }, [context?.user?.fid]);
 
@@ -86,6 +123,21 @@ export function useNeynarUser(context?: { user?: { fid?: number } }) {
       setLoading(false);
     }
   }, [context?.user?.fid, isFollowing, checkFollowStatus]);
+
+  // Auto re-check when window/tab gains focus (helps resolve stale states)
+  useEffect(() => {
+    function onVisibilityOrFocus() {
+      if (document.visibilityState === 'visible') {
+        void checkFollowStatus();
+      }
+    }
+    window.addEventListener('focus', onVisibilityOrFocus);
+    document.addEventListener('visibilitychange', onVisibilityOrFocus);
+    return () => {
+      window.removeEventListener('focus', onVisibilityOrFocus);
+      document.removeEventListener('visibilitychange', onVisibilityOrFocus);
+    };
+  }, [checkFollowStatus]);
 
   return { user, loading, error, fetchScore, isFollowing, isCheckingFollow, checkFollowStatus };
 } 

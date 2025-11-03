@@ -64,8 +64,10 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
                   variant="primary"
                   size="lg"
                   className="w-full"
+                  isLoading={isCheckingFollow}
+                  disabled={isCheckingFollow}
                 >
-                  Check Again
+                  {isCheckingFollow ? 'Checking…' : 'Check Again'}
                 </Button>
               </div>
             </div>

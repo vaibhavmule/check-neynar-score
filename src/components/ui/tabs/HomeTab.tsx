@@ -178,22 +178,21 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
 
             <div className="space-y-3 text-sm text-gray-700 dark:text-gray-300">
               <p className="leading-relaxed">
-                Neynar looks at casts, replies, reactions, and follows to estimate how helpful and
-                trustworthy your presence is. Scores run from 0.00 to 1.00.
+                The Neynar User Score is a metric ranging from 0 to 1 that evaluates the quality of user interactions on the platform. A higher score indicates a higher confidence in the user being of high quality.
               </p>
 
               <ul className="space-y-2">
                 <li className="flex items-start gap-2">
                   <span className="text-primary-500 mt-0.5" aria-hidden="true">-</span>
-                  <span>Helpful casts and genuine replies raise your score.</span>
+                  <span>This score is updated weekly and reflects user behavior, rewarding genuine and positive interactions.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary-500 mt-0.5" aria-hidden="true">-</span>
-                  <span>Low-effort or spammy behaviour nudges it downward.</span>
+                  <span>It is not a proof of humanity but rather a measure of account quality and the value added to the network by that account.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary-500 mt-0.5" aria-hidden="true">-</span>
-                  <span>It updates weekly, so steady consistency matters.</span>
+                  <span>It can distinguish between high and low-quality AI activity.</span>
                 </li>
               </ul>
 

@@ -53,9 +53,6 @@ export function Header({ neynarUser }: HeaderProps) {
           className="mb-5 flex items-center justify-between rounded-2xl border border-white/50 bg-white/70 px-5 py-4 shadow-glow backdrop-blur dark:border-white/10 dark:bg-gray-900/60"
         >
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary-500">
-              Farcaster helper
-            </p>
             <div className="text-xl font-semibold leading-tight">
               <span className="bg-gradient-to-r from-primary-500 via-primary-400 to-accent-500 bg-clip-text text-transparent">
                 {APP_NAME}

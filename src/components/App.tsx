@@ -1,22 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
 import { useMiniApp } from "@neynar/react";
 import { sdk } from "@farcaster/miniapp-sdk";
 import { Header } from "~/components/ui/Header";
-import { Footer } from "~/components/ui/Footer";
-import { HomeTab, WhatIsNeynarScoreTab, WalletTab } from "~/components/ui/tabs";
+import { HomeTab } from "~/components/ui/tabs";
 import { AddAppPrompt } from "~/components/ui/AddAppPrompt";
-import { USE_WALLET } from "~/lib/constants";
 import { useNeynarUser } from "../hooks/useNeynarUser";
-
-// --- Types ---
-export enum Tab {
-  Home = "home",
-  WhatIsNeynarScore = "what-is-neynar-score",
-  Wallet = "wallet",
-}
 
 export interface AppProps {
   title?: string;
@@ -58,11 +48,7 @@ export default function App(
   const {
     isSDKLoaded,
     context,
-    setInitialTab,
-    setActiveTab,
-    currentTab,
   } = useMiniApp();
-  const searchParams = useSearchParams();
 
   // --- Neynar user hook ---
   const {
@@ -73,28 +59,17 @@ export default function App(
 
   // --- Effects ---
   /**
-   * Sets the initial tab to "home" and signals readiness when the SDK is loaded.
+   * Signals readiness when the SDK is loaded.
    * 
-   * This effect ensures that users start on the home tab when they first
-   * load the mini app. It also calls sdk.actions.ready() to signal that
+   * This effect calls sdk.actions.ready() to signal that
    * the app is ready to be displayed, which dismisses the splash screen.
    */
   useEffect(() => {
     if (isSDKLoaded) {
-      // Support deep links via URL params
-      const hasScoreFlag = searchParams?.has("score");
-      const tabParam = searchParams?.get("tab");
-      if (hasScoreFlag || tabParam === "score" || tabParam === "what-is-neynar-score") {
-        setInitialTab(Tab.WhatIsNeynarScore);
-      } else if (tabParam === "wallet") {
-        setInitialTab(Tab.Wallet);
-      } else {
-        setInitialTab(Tab.Home);
-      }
       // Signal that the app is ready to be displayed
       sdk.actions.ready();
     }
-  }, [isSDKLoaded, setInitialTab, searchParams]);
+  }, [isSDKLoaded]);
 
   // --- Early Returns ---
   if (!isSDKLoaded) {
@@ -135,26 +110,18 @@ export default function App(
 
           {/* Main content area */}
           <main className="flex-1">
-            <div className="container py-5 pb-28">
-              {/* Tab content rendering */}
-              {currentTab === Tab.Home && (
-                <HomeTab
-                  fid={context?.user?.fid}
-                  username={context?.user?.username}
-                  pfpUrl={context?.user?.pfpUrl}
-                  score={neynarUser?.score}
-                  loading={scoreLoading}
-                  fetchScore={fetchScore}
-                  hasScore={neynarUser !== null}
-                />
-              )}
-              {currentTab === Tab.WhatIsNeynarScore && <WhatIsNeynarScoreTab />}
-              {currentTab === Tab.Wallet && <WalletTab />}
+            <div className="container py-5 pb-8">
+              <HomeTab
+                fid={neynarUser?.fid ?? context?.user?.fid}
+                username={neynarUser?.username ?? context?.user?.username}
+                pfpUrl={neynarUser?.pfpUrl ?? context?.user?.pfpUrl}
+                score={neynarUser?.score}
+                loading={scoreLoading}
+                fetchScore={fetchScore}
+                hasScore={neynarUser !== null}
+              />
             </div>
           </main>
-
-          {/* Footer with navigation */}
-          <Footer activeTab={currentTab as Tab} setActiveTab={setActiveTab} showWallet={USE_WALLET} />
         </div>
       </div>
     </>

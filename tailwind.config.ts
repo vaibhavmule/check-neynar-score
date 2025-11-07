@@ -20,39 +20,50 @@ export default {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-  	extend: {
-  		colors: {
-				// Main theme color - refined purple palette
+		extend: {
+			colors: {
+				// Main theme color - sunrise apricot palette
 				primary: {
-					DEFAULT: "#7C3AED", // Main brand color - softer purple
-					50: "#F5F3FF",
-					100: "#EDE9FE",
-					200: "#DDD6FE",
-					300: "#C4B5FD",
-					400: "#A78BFA",
-					500: "#7C3AED", // Base
-					600: "#6D28D9",
-					700: "#5B21B6",
-					800: "#4C1D95",
-					900: "#3730A3",
+					DEFAULT: "#FF7A3D",
+					50: "#FFF6EF",
+					100: "#FFE7D6",
+					200: "#FFCFAD",
+					300: "#FFB385",
+					400: "#FF9861",
+					500: "#FF7A3D",
+					600: "#F0642D",
+					700: "#D25220",
+					800: "#A13C16",
+					900: "#6F2810",
 				},
-				"primary-light": "#A78BFA", // For hover states
-				"primary-dark": "#6D28D9", // For active states
-  			
-  			// Secondary colors for backgrounds and text
-  			secondary: "#F8FAFC", // Light backgrounds
-  			"secondary-dark": "#1E293B", // Dark backgrounds
-  			
-  			// Semantic colors
-  			success: "#10B981",
-  			error: "#EF4444",
-  			warning: "#F59E0B",
-  			info: "#3B82F6",
-  			
-  			// Legacy CSS variables for backward compatibility
-  			background: 'var(--background)',
-  			foreground: 'var(--foreground)'
-  		},
+				"primary-light": "#FF9861",
+				"primary-dark": "#D25220",
+				// Accent palette for orchid highlights
+				accent: {
+					DEFAULT: "#8A68FF",
+					50: "#F4F1FF",
+					100: "#E7DEFF",
+					200: "#CFC0FF",
+					300: "#B49DFF",
+					400: "#9B7EFF",
+					500: "#8A68FF",
+					600: "#704CF2",
+					700: "#5736D6",
+					800: "#3E259B",
+					900: "#27176B",
+				},
+				// Secondary colors for backgrounds and text
+				secondary: "#FFF9F3",
+				"secondary-dark": "#1F2933",
+				// Semantic colors
+				success: "#10B981",
+				error: "#EF4444",
+				warning: "#F59E0B",
+				info: "#3B82F6",
+				// Legacy CSS variables for backward compatibility
+				background: 'var(--background)',
+				foreground: 'var(--foreground)'
+			},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',

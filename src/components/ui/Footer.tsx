@@ -8,16 +8,16 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ activeTab, setActiveTab, showWallet = false }) => {
-  const tabButtonClass = (isActive: boolean) => 
-    `flex flex-col items-center justify-center w-full h-full focus-ring rounded-lg transition-all duration-200 ${
-      isActive 
-        ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20' 
-        : 'text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-700/50'
+  const tabButtonClass = (isActive: boolean) =>
+    `flex h-full w-full flex-col items-center justify-center rounded-xl px-3 py-2 text-[11px] font-semibold uppercase tracking-wide transition-all focus-ring ${
+      isActive
+        ? 'bg-primary-100/70 text-primary-700 shadow-soft dark:bg-primary-900/30 dark:text-primary-200'
+        : 'text-gray-500 hover:bg-white/70 hover:text-primary-600 dark:text-gray-400 dark:hover:bg-gray-800/70 dark:hover:text-primary-200'
     }`;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 mx-4 mb-4 bg-white dark:bg-gray-800 border-2 border-primary-200 dark:border-primary-800 px-3 py-2.5 rounded-xl z-50 shadow-medium">
-      <nav className="flex justify-around items-center h-14" role="tablist" aria-label="Main navigation">
+    <div className="fixed bottom-0 left-0 right-0 z-50 mx-4 mb-4 rounded-2xl border border-white/60 bg-white/80 px-4 py-3 shadow-glow backdrop-blur dark:border-white/10 dark:bg-gray-900/80">
+      <nav className="flex h-14 items-center justify-around" role="tablist" aria-label="Main navigation">
         <button
           type="button"
           onClick={() => setActiveTab(Tab.Home)}
@@ -26,8 +26,8 @@ export const Footer: React.FC<FooterProps> = ({ activeTab, setActiveTab, showWal
           aria-label="Home tab"
           className={tabButtonClass(activeTab === Tab.Home)}
         >
-          <span className="text-xl mb-0.5" aria-hidden="true">🏠</span>
-          <span className="text-xs font-medium">Home</span>
+          <span className="text-lg" aria-hidden="true">🏡</span>
+          <span>Home</span>
         </button>
         <button
           type="button"
@@ -37,8 +37,8 @@ export const Footer: React.FC<FooterProps> = ({ activeTab, setActiveTab, showWal
           aria-label="What is Neynar Score tab"
           className={tabButtonClass(activeTab === Tab.WhatIsNeynarScore)}
         >
-          <span className="text-xl mb-0.5" aria-hidden="true">ℹ️</span>
-          <span className="text-xs font-medium">What is Score?</span>
+          <span className="text-lg" aria-hidden="true">📚</span>
+          <span>About</span>
         </button>
         {showWallet && (
           <button
@@ -49,8 +49,8 @@ export const Footer: React.FC<FooterProps> = ({ activeTab, setActiveTab, showWal
             aria-label="Wallet tab"
             className={tabButtonClass(activeTab === Tab.Wallet)}
           >
-            <span className="text-xl mb-0.5" aria-hidden="true">👛</span>
-            <span className="text-xs font-medium">Wallet</span>
+            <span className="text-lg" aria-hidden="true">👛</span>
+            <span>Wallet</span>
           </button>
         )}
       </nav>

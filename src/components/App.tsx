@@ -52,7 +52,7 @@ export interface AppProps {
  * ```
  */
 export default function App(
-  { title }: AppProps = { title: "Neynar Starter Kit" }
+  { title: _title }: AppProps = { title: "Neynar Starter Kit" }
 ) {
   // --- Hooks ---
   const {
@@ -113,8 +113,9 @@ export default function App(
     <>
       {/* Auto-trigger "Add to App" 1 second after score is checked */}
       <AddAppPrompt hasScore={neynarUser !== null} delay={1000} />
-      
+
       <div
+        className="relative min-h-screen bg-gradient-to-br from-secondary via-white to-primary-50 dark:from-gray-950 dark:via-gray-950 dark:to-gray-900"
         style={{
           paddingTop: context?.client.safeAreaInsets?.top ?? 0,
           paddingBottom: context?.client.safeAreaInsets?.bottom ?? 0,
@@ -122,31 +123,40 @@ export default function App(
           paddingRight: context?.client.safeAreaInsets?.right ?? 0,
         }}
       >
-        {/* Header should be full width */}
-        <Header neynarUser={neynarUser} />
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute -top-32 -right-16 h-64 w-64 rounded-full bg-primary-200/50 blur-3xl" />
+          <div className="absolute -bottom-24 -left-10 h-72 w-72 rounded-full bg-accent-200/40 blur-3xl" />
+          <div className="absolute top-1/3 left-1/2 h-80 w-80 -translate-x-1/2 rounded-full bg-primary-100/30 blur-[120px]" />
+        </div>
 
-      {/* Main content and footer should be centered */}
-      <div className="container py-4 pb-24">
+        <div className="relative flex min-h-screen flex-col">
+          {/* Header should be full width */}
+          <Header neynarUser={neynarUser} />
 
-        {/* Tab content rendering */}
-        {currentTab === Tab.Home && (
-          <HomeTab
-            fid={context?.user?.fid}
-            username={context?.user?.username}
-            pfpUrl={context?.user?.pfpUrl}
-            score={neynarUser?.score}
-            loading={scoreLoading}
-            fetchScore={fetchScore}
-            hasScore={neynarUser !== null}
-          />
-        )}
-        {currentTab === Tab.WhatIsNeynarScore && <WhatIsNeynarScoreTab />}
-        {currentTab === Tab.Wallet && <WalletTab />}
+          {/* Main content area */}
+          <main className="flex-1">
+            <div className="container py-5 pb-28">
+              {/* Tab content rendering */}
+              {currentTab === Tab.Home && (
+                <HomeTab
+                  fid={context?.user?.fid}
+                  username={context?.user?.username}
+                  pfpUrl={context?.user?.pfpUrl}
+                  score={neynarUser?.score}
+                  loading={scoreLoading}
+                  fetchScore={fetchScore}
+                  hasScore={neynarUser !== null}
+                />
+              )}
+              {currentTab === Tab.WhatIsNeynarScore && <WhatIsNeynarScoreTab />}
+              {currentTab === Tab.Wallet && <WalletTab />}
+            </div>
+          </main>
 
-        {/* Footer with navigation */}
-        <Footer activeTab={currentTab as Tab} setActiveTab={setActiveTab} showWallet={USE_WALLET} />
+          {/* Footer with navigation */}
+          <Footer activeTab={currentTab as Tab} setActiveTab={setActiveTab} showWallet={USE_WALLET} />
+        </div>
       </div>
-    </div>
     </>
   );
 }

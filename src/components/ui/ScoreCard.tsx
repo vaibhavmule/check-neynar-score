@@ -12,7 +12,7 @@ type ScoreCardProps = {
   error?: string | null;
 };
 
-export function ScoreCard({ fid, score, username, pfpUrl, loading, timeAgo, error }: ScoreCardProps) {
+export function ScoreCard({ fid, score, username, pfpUrl, loading, timeAgo: _timeAgo, error }: ScoreCardProps) {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
@@ -40,10 +40,10 @@ export function ScoreCard({ fid, score, username, pfpUrl, loading, timeAgo, erro
 
   return (
     <div className="relative mx-auto w-full max-w-md">
-      <div className={`card overflow-hidden ${animationClass}`}>
+      <div className={`overflow-hidden rounded-3xl border border-white/60 bg-white/80 shadow-glow backdrop-blur dark:border-white/10 dark:bg-gray-900/80 ${animationClass}`}>
         {error ? (
           // Error state
-          <div className="card-primary p-6">
+          <div className="bg-primary-50/80 p-6 text-primary-700 dark:bg-primary-900/30 dark:text-primary-200">
             <div className="flex items-center gap-3">
               <div className="flex-shrink-0">
                 <svg className="w-6 h-6 text-error" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -62,8 +62,8 @@ export function ScoreCard({ fid, score, username, pfpUrl, loading, timeAgo, erro
           </div>
         ) : (
           <>
-            <div className="bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 p-8">
-              <div className="flex items-center justify-between mb-6">
+            <div className="bg-gradient-to-br from-primary-400 via-primary-500 to-accent-500 p-7">
+              <div className="mb-6 flex items-center justify-between">
                 <div className="flex items-center gap-5">
                   {/* Modernized Gauge */}
                   <div
@@ -71,12 +71,12 @@ export function ScoreCard({ fid, score, username, pfpUrl, loading, timeAgo, erro
                     role="img"
                     aria-label={scoreLabel}
                     style={{
-                      backgroundImage: `conic-gradient(from 0deg, rgb(255 255 255 / 0.95) ${angle}deg, rgb(255 255 255 / 0.15) ${angle}deg 360deg)`,
+                      backgroundImage: `conic-gradient(from 0deg, rgba(255,255,255,0.95) ${angle}deg, rgba(255,255,255,0.2) ${angle}deg 360deg)`,
                       transition: prefersReducedMotion ? "none" : "background-image 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
                     }}
                   >
-                    <div className="h-20 w-20 rounded-full bg-black/20 backdrop-blur-sm grid place-items-center shadow-inner">
-                      <span className="text-white text-2xl font-bold drop-shadow-sm">
+                    <div className="grid h-20 w-20 place-items-center rounded-full bg-black/20 backdrop-blur-sm shadow-inner">
+                      <span className="text-2xl font-bold text-white drop-shadow-sm">
                         {loading ? (
                           <span 
                             className="spinner-primary h-6 w-6 block" 
@@ -90,13 +90,13 @@ export function ScoreCard({ fid, score, username, pfpUrl, loading, timeAgo, erro
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <p className="text-white text-sm tracking-wide font-semibold mb-1">Neynar Score</p>
-                    <p className="text-white/85 text-xs">Your quality score snapshot</p>
+                    <p className="mb-1 text-sm font-semibold uppercase tracking-[0.3em] text-white/90">Neynar score</p>
+                    <p className="text-xs text-white/80">Your friendly quality snapshot</p>
                   </div>
                 </div>
 
                 {pfpUrl ? (
-                  <div className="relative h-14 w-14 rounded-full ring-3 ring-white/50 shadow-lg overflow-hidden flex-shrink-0">
+                  <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-full ring-4 ring-white/40 shadow-lg">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img 
                       src={pfpUrl} 
@@ -105,44 +105,44 @@ export function ScoreCard({ fid, score, username, pfpUrl, loading, timeAgo, erro
                     />
                   </div>
                 ) : loading ? (
-                  <div className="relative h-14 w-14 rounded-full ring-3 ring-white/50 shadow-lg overflow-hidden flex-shrink-0" aria-hidden="true">
-                    <div className="h-full w-full bg-white/20" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer" />
+                  <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-full ring-4 ring-white/40 shadow-lg" aria-hidden="true">
+                    <div className="h-full w-full bg-white/30" />
+                    <div className="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-white/50 to-transparent" />
                   </div>
                 ) : null}
               </div>
             </div>
 
-            <div className="p-5 bg-gray-50/50 dark:bg-gray-900/50">
+            <div className="bg-white/70 p-5 dark:bg-gray-900/70">
               <div className="flex flex-wrap items-center gap-2.5">
                 {loading && !fid && !username ? (
                   <>
-                    <div className="relative h-7 w-20 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer" />
+                    <div className="relative h-7 w-20 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+                      <div className="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-white/40 to-transparent" />
                     </div>
-                    <div className="relative h-7 w-24 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer" />
+                    <div className="relative h-7 w-24 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+                      <div className="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-white/40 to-transparent" />
                     </div>
-                    <span className="ml-auto inline-flex items-center rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300">
-                      <span className="spinner h-3 w-3 mr-2" aria-hidden="true" />
+                    <span className="ml-auto inline-flex items-center rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+                      <span className="spinner mr-2 h-3 w-3" aria-hidden="true" />
                       Loading...
                     </span>
                   </>
                 ) : (
                   <>
                     {typeof fid === "number" && (
-                      <span className="inline-flex items-center rounded-full bg-primary-100 text-primary-700 border border-primary-200 px-3.5 py-1.5 text-xs font-semibold dark:bg-primary-900/30 dark:text-primary-300 dark:border-primary-700/50">
+                      <span className="inline-flex items-center rounded-full border border-primary-200 bg-primary-50 px-3.5 py-1.5 text-xs font-semibold text-primary-700 dark:border-primary-900/40 dark:bg-primary-900/30 dark:text-primary-200">
                         FID: {fid}
                       </span>
                     )}
                     {username && (
-                      <span className="inline-flex items-center rounded-full bg-gray-200 text-gray-800 px-3.5 py-1.5 text-xs font-semibold dark:bg-gray-700 dark:text-gray-200">
+                      <span className="inline-flex items-center rounded-full bg-gray-200 px-3.5 py-1.5 text-xs font-semibold text-gray-800 dark:bg-gray-700 dark:text-gray-200">
                         @{username}
                       </span>
                     )}
                     {loading && (
-                      <span className="ml-auto inline-flex items-center rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300">
-                        <span className="spinner h-3 w-3 mr-2" aria-hidden="true" />
+                      <span className="ml-auto inline-flex items-center rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+                        <span className="spinner mr-2 h-3 w-3" aria-hidden="true" />
                         Loading...
                       </span>
                     )}

@@ -47,32 +47,37 @@ export function Header({ neynarUser }: HeaderProps) {
   };
 
   return (
-    <div className="container">
+    <div className="container pt-6">
       <div className="relative">
-        <div 
-          className="mt-4 mb-4 px-4 py-3.5 bg-white dark:bg-gray-800 rounded-xl flex items-center justify-between border-2 border-primary-200 dark:border-primary-800 shadow-soft"
+        <div
+          className="mb-5 flex items-center justify-between rounded-2xl border border-white/50 bg-white/70 px-5 py-4 shadow-glow backdrop-blur dark:border-white/10 dark:bg-gray-900/60"
         >
-          <div className="text-lg font-semibold">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-700">
-              {APP_NAME}
-            </span>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary-500">
+              Farcaster helper
+            </p>
+            <div className="text-xl font-semibold leading-tight">
+              <span className="bg-gradient-to-r from-primary-500 via-primary-400 to-accent-500 bg-clip-text text-transparent">
+                {APP_NAME}
+              </span>
+            </div>
           </div>
           {context?.user && (
             <button
               ref={buttonRef}
               type="button"
               onClick={toggleDropdown}
-              className="cursor-pointer focus-ring rounded-full p-1 transition-all hover:ring-2 hover:ring-primary-300 active:scale-95"
+              className="cursor-pointer rounded-full border border-white/70 bg-white/80 p-1 shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-glow focus-ring dark:border-white/10 dark:bg-gray-900/80"
               aria-label="User menu"
               aria-expanded={isUserDropdownOpen}
               aria-controls="user-dropdown"
               aria-haspopup="true"
             >
               {context.user.pfpUrl && (
-                <img 
-                  src={context.user.pfpUrl} 
-                  alt={`${context.user.displayName || context.user.username}'s profile`} 
-                  className="w-10 h-10 rounded-full border-2 border-primary-300 dark:border-primary-600 shadow-sm"
+                <img
+                  src={context.user.pfpUrl}
+                  alt={`${context.user.displayName || context.user.username}'s profile`}
+                  className="h-11 w-11 rounded-full border border-white/70 shadow-sm dark:border-white/10"
                 />
               )}
             </button>
@@ -84,16 +89,16 @@ export function Header({ neynarUser }: HeaderProps) {
               <div
                 ref={dropdownRef}
                 id="user-dropdown"
-                className="absolute top-full right-0 z-50 w-fit mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-medium border border-gray-200 dark:border-gray-700 animate-scale-in"
+                className="absolute right-0 top-full z-50 mt-3 w-fit rounded-2xl border border-white/60 bg-white/90 shadow-soft backdrop-blur-lg dark:border-white/10 dark:bg-gray-900/90"
                 role="menu"
                 aria-orientation="vertical"
               >
-                <div className="p-5 space-y-3 min-w-[200px]">
+                <div className="min-w-[220px] space-y-3 p-5">
                   <div className="space-y-2">
                     <button
                       type="button"
                       onClick={handleViewProfile}
-                      className="font-semibold text-sm hover:text-primary-600 dark:hover:text-primary-400 cursor-pointer inline-block focus-ring rounded-lg px-2 py-1 text-left transition-colors w-full text-gray-900 dark:text-gray-100"
+                      className="inline-block w-full rounded-lg px-2 py-1 text-left text-sm font-semibold text-gray-900 transition-colors hover:text-primary-600 focus-ring dark:text-gray-100 dark:hover:text-primary-300"
                       role="menuitem"
                     >
                       {context.user.displayName || context.user.username}
@@ -101,12 +106,12 @@ export function Header({ neynarUser }: HeaderProps) {
                     <p className="text-xs text-gray-600 dark:text-gray-400">
                       @{context.user.username}
                     </p>
-                    <div className="pt-2 border-t border-gray-200 dark:border-gray-700 space-y-1.5">
+                    <div className="space-y-1.5 border-t border-gray-200 pt-2 dark:border-gray-700">
                       <p className="text-xs text-gray-500 dark:text-gray-500">
                         FID: {context.user.fid}
                       </p>
                       {neynarUser && (
-                        <p className="text-xs text-primary-600 dark:text-primary-400 font-medium">
+                        <p className="text-xs font-medium text-primary-600 dark:text-primary-300">
                           Neynar Score: {neynarUser.score ?? 'N/A'}
                         </p>
                       )}

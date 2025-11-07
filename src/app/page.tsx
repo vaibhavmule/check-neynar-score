@@ -24,11 +24,11 @@ export async function generateMetadata(): Promise<Metadata> {
         isScore = urlObj.searchParams.has('score') || 
                   urlObj.searchParams.get('tab') === 'score' ||
                   urlObj.searchParams.get('tab') === 'what-is-neynar-score';
-      } catch (e) {
+      } catch (_error) {
         // URL parsing failed, fall through to default
       }
     }
-  } catch (e) {
+  } catch (_error) {
     // Headers reading failed, use default
   }
   

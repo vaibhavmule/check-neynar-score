@@ -62,7 +62,7 @@ export const APP_NAME: string = 'Check Neynar Score';
  * A brief description of the mini app's functionality.
  * Used in app store listings and metadata.
  */
-export const APP_DESCRIPTION: string = 'Your friendly companion for checking Neynar scores, celebrating wins, and keeping Farcaster vibes high.';
+export const APP_DESCRIPTION: string = 'Check your Neynar User Score - a metric ranging from 0 to 1 that evaluates the quality of user interactions on the Farcaster platform.';
 
 /**
  * The primary category for the mini app.
@@ -122,7 +122,7 @@ export const APP_ACCOUNT_ASSOCIATION: AccountAssociation | undefined = {
  * Text displayed on the main action button.
  * Used for the primary call-to-action in the mini app.
  */
-export const APP_BUTTON_TEXT: string = 'Check my Neynar score';
+export const APP_BUTTON_TEXT: string = 'Check Neynar Score';
 
 // --- Integration Configuration ---
 /**

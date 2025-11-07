@@ -109,7 +109,7 @@ export function Header({ neynarUser }: HeaderProps) {
                       </p>
                       {neynarUser && (
                         <p className="text-xs font-medium text-primary-600 dark:text-primary-300">
-                          Neynar Score: {neynarUser.score ?? 'N/A'}
+                          Neynar User Score: {neynarUser.score ?? 'N/A'}
                         </p>
                       )}
                     </div>

@@ -53,10 +53,10 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
           <div className="rounded-3xl border border-white/60 bg-white/80 p-6 shadow-glow backdrop-blur dark:border-white/10 dark:bg-gray-900/80">
             <div className="space-y-3 text-center">
               <h2 className="text-2xl font-bold leading-tight text-gray-900 dark:text-gray-50">
-                Keep your Neynar glow going
+                Check Your Neynar Score
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-300">
-                Tap below to refresh your score and make sure your Farcaster presence stays warm and welcoming.
+                View your Neynar User Score - a metric ranging from 0 to 1 that evaluates the quality of user interactions on the Farcaster platform.
               </p>
             </div>
 
@@ -71,7 +71,7 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
                   isLoading={loading}
                   disabled={loading}
                 >
-                  Check my score
+                  Check Neynar Score
                 </Button>
               </div>
             )}
@@ -80,7 +80,7 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
               <div className="mt-6 space-y-3">
                 <div className="space-y-2">
                   <label htmlFor="fid-input" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Enter FID to check score
+                    Enter FID to check Neynar Score
                   </label>
                   <Input
                     id="fid-input"
@@ -110,7 +110,7 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
                   isLoading={loading}
                   disabled={loading || !inputFid.trim()}
                 >
-                  Check score
+                  Check Neynar Score
                 </Button>
               </div>
             )}
@@ -128,16 +128,16 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
             <div className="space-y-4">
               <div className="space-y-1 text-center">
                 <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                  Celebrate the win
+                  Share Your Score
                 </p>
                 <p className="text-xs text-gray-600 dark:text-gray-400">
-                  Share your score or follow along for future boosts.
+                  Share your Neynar User Score with others.
                 </p>
               </div>
               <ShareButton
-                buttonText="Share score"
+                buttonText="Share Score"
                 cast={{
-                  text: `I just checked my Neynar score: ${(score ?? 0).toFixed(2)}. Keep tabs on your Farcaster vibes with Check Neynar Score:`,
+                  text: `My Neynar User Score is ${(score ?? 0).toFixed(2)}. Check your score:`,
                   embeds: [
                     {
                       path: `/share/${fid}`,
@@ -169,30 +169,27 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
           <div className="space-y-4">
             <div className="text-center space-y-2">
               <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
-                What is Neynar Score?
+                What is Neynar User Score?
               </h3>
-              <p className="text-xs text-gray-600 dark:text-gray-400">
-                A quick primer on what the number means
-              </p>
             </div>
 
             <div className="space-y-3 text-sm text-gray-700 dark:text-gray-300">
               <p className="leading-relaxed">
-                The Neynar User Score is a metric ranging from 0 to 1 that evaluates the quality of user interactions on the platform. A higher score indicates a higher confidence in the user being of high quality.
+                The Neynar User Score is a metric ranging from 0 to 1 that evaluates the quality of user interactions on the Farcaster platform. A higher score indicates a higher confidence in the user being of high quality. This score is updated weekly and reflects the value an account adds to the network.
               </p>
 
               <ul className="space-y-2">
                 <li className="flex items-start gap-2">
                   <span className="text-primary-500 mt-0.5" aria-hidden="true">-</span>
-                  <span>This score is updated weekly and reflects user behavior, rewarding genuine and positive interactions.</span>
+                  <span>The score measures account quality and the positive impact of user activity on the network.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary-500 mt-0.5" aria-hidden="true">-</span>
-                  <span>It is not a proof of humanity but rather a measure of account quality and the value added to the network by that account.</span>
+                  <span>It is not a proof of humanity but assesses account quality, distinguishing between high and low-quality activities, including AI-generated content.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary-500 mt-0.5" aria-hidden="true">-</span>
-                  <span>It can distinguish between high and low-quality AI activity.</span>
+                  <span>Users can enhance their scores by engaging in meaningful interactions with other reputable users.</span>
                 </li>
               </ul>
 

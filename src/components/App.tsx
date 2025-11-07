@@ -16,20 +16,18 @@ export interface AppProps {
  * App component serves as the main container for the mini app interface.
  * 
  * This component orchestrates the overall mini app experience by:
- * - Managing tab navigation and state
  * - Handling Farcaster mini app initialization
- * - Coordinating wallet and context state
+ * - Coordinating user context and score fetching
  * - Providing error handling and loading states
- * - Rendering the appropriate tab content based on user selection
+ * - Rendering the single-page score checking interface
  * 
- * The component integrates with the Neynar SDK for Farcaster functionality
- * and Wagmi for wallet management. It provides a complete mini app
- * experience with multiple tabs for different functionality areas.
+ * The component integrates with the Neynar SDK for Farcaster functionality.
+ * It provides a single-page app experience for checking Neynar scores.
  * 
  * Features:
- * - Tab-based navigation (Home, Actions, Context, Wallet)
+ * - Single-page interface (no tabs)
  * - Farcaster mini app integration
- * - Wallet connection management
+ * - Score fetching for connected users or by FID input
  * - Error handling and display
  * - Loading states for async operations
  * 

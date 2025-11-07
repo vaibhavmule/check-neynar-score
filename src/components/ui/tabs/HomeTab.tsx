@@ -25,13 +25,10 @@ type HomeTabProps = {
   loading?: boolean;
   fetchScore: () => Promise<void>;
   hasScore: boolean;
-  isFollowing?: boolean | null;
-  isCheckingFollow?: boolean;
-  checkFollowStatus?: () => Promise<boolean>;
 };
 
-export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, hasScore, isFollowing, isCheckingFollow, checkFollowStatus }: HomeTabProps) {
-  // Skip follow gate entirely if viewer is the developer
+export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, hasScore }: HomeTabProps) {
+  // Hide follow CTA when the developer is viewing their own score
   const isDeveloper = fid === DEVELOPER_FID;
   
   return (
@@ -46,36 +43,8 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
           <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-700">Check your Neynar score</h2>
         </div>
         
-        {/* Follow gate: show prompt if follow status known and false (but not for developer) */}
-        {fid && !isDeveloper && isFollowing === false && !isCheckingFollow && (
-          <div className="space-y-4">
-            <div className="card p-5">
-              <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-4">Follow the developer to check your score.</p>
-              <div className="grid grid-cols-2 gap-3">
-                <a
-                  href="https://farcaster.xyz/vaibhavmule"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Button variant="secondary" size="lg" className="w-full">Open Profile</Button>
-                </a>
-                <Button
-                  onClick={() => { void checkFollowStatus?.(); }}
-                  variant="primary"
-                  size="lg"
-                  className="w-full"
-                  isLoading={isCheckingFollow}
-                  disabled={isCheckingFollow}
-                >
-                  {isCheckingFollow ? 'Checking…' : 'Check Again'}
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Show button if no score or allow refresh (only if following, not checked yet, or is developer) */}
-        {fid && (isDeveloper || isFollowing === null || isFollowing === true) && (!hasScore || score === null || score === undefined) && !loading && (
+        {fid && (!hasScore || score === null || score === undefined) && !loading && (
           <Button
             onClick={fetchScore}
             variant="primary"
@@ -95,7 +64,7 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
         
         {/* Show action buttons if score exists */}
         {hasScore && score !== null && score !== undefined && !loading && fid && (
-          <div className="pt-1">
+          <div className="pt-1 space-y-3">
             {/* Prominent Share button */}
             <ShareButton
               buttonText="Share Score"
@@ -109,6 +78,20 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
               }}
               className="w-full"
             />
+            {!isDeveloper && (
+              <div className="flex flex-col items-center gap-2">
+                <p className="text-xs text-muted-foreground">Support future updates</p>
+                <a
+                  href="https://farcaster.xyz/vaibhavmule"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Button variant="secondary" size="sm" className="px-4 text-xs">
+                    Follow the developer
+                  </Button>
+                </a>
+              </div>
+            )}
           </div>
         )}
       </div>

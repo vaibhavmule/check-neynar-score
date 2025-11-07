@@ -69,9 +69,6 @@ export default function App(
     user: neynarUser,
     fetchScore,
     loading: scoreLoading,
-    isFollowing,
-    isCheckingFollow,
-    checkFollowStatus,
   } = useNeynarUser(context || undefined);
 
   // --- Effects ---
@@ -141,9 +138,6 @@ export default function App(
             loading={scoreLoading}
             fetchScore={fetchScore}
             hasScore={neynarUser !== null}
-            isFollowing={isFollowing}
-            isCheckingFollow={isCheckingFollow}
-            checkFollowStatus={checkFollowStatus}
           />
         )}
         {currentTab === Tab.WhatIsNeynarScore && <WhatIsNeynarScoreTab />}

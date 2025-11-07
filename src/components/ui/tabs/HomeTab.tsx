@@ -64,7 +64,7 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
             {fid && (
               <div className="mt-6">
                 <Button
-                  onClick={fetchScore}
+                  onClick={() => fetchScore()}
                   variant="primary"
                   size="lg"
                   className="w-full"

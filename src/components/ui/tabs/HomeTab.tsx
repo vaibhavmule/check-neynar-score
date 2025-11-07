@@ -124,94 +124,92 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
 
         {/* Show action buttons if score exists */}
         {hasScore && score !== null && score !== undefined && !loading && fid && (
-          <>
-            <div className="rounded-3xl border border-white/60 bg-white/80 p-5 shadow-soft backdrop-blur dark:border-white/10 dark:bg-gray-900/80">
-              <div className="space-y-4">
-                <div className="space-y-1 text-center">
-                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                    Celebrate the win
-                  </p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">
-                    Share your score or follow along for future boosts.
-                  </p>
-                </div>
-                <ShareButton
-                  buttonText="Share score"
-                  cast={{
-                    text: `I just checked my Neynar score: ${(score ?? 0).toFixed(2)}. Keep tabs on your Farcaster vibes with Check Neynar Score:`,
-                    embeds: [
-                      {
-                        path: `/share/${fid}`,
-                      },
-                    ],
-                  }}
-                  className="w-full"
-                />
-                {!isDeveloper && (
-                  <div className="flex flex-col items-center gap-2">
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Support future updates</p>
-                    <a
-                      href="https://farcaster.xyz/vaibhavmule"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <Button variant="secondary" size="sm" className="px-4 text-xs">
-                        Follow the developer
-                      </Button>
-                    </a>
-                  </div>
-                )}
+          <div className="rounded-3xl border border-white/60 bg-white/80 p-5 shadow-soft backdrop-blur dark:border-white/10 dark:bg-gray-900/80">
+            <div className="space-y-4">
+              <div className="space-y-1 text-center">
+                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                  Celebrate the win
+                </p>
+                <p className="text-xs text-gray-600 dark:text-gray-400">
+                  Share your score or follow along for future boosts.
+                </p>
               </div>
-            </div>
-
-            {/* What is Neynar Score section */}
-            <div className="rounded-3xl border border-white/60 bg-white/80 p-6 shadow-soft backdrop-blur dark:border-white/10 dark:bg-gray-900/80">
-              <div className="space-y-4">
-                <div className="text-center space-y-2">
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
-                    What is Neynar Score?
-                  </h3>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">
-                    A quick primer on what the number means
-                  </p>
+              <ShareButton
+                buttonText="Share score"
+                cast={{
+                  text: `I just checked my Neynar score: ${(score ?? 0).toFixed(2)}. Keep tabs on your Farcaster vibes with Check Neynar Score:`,
+                  embeds: [
+                    {
+                      path: `/share/${fid}`,
+                    },
+                  ],
+                }}
+                className="w-full"
+              />
+              {!isDeveloper && (
+                <div className="flex flex-col items-center gap-2">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Support future updates</p>
+                  <a
+                    href="https://farcaster.xyz/vaibhavmule"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <Button variant="secondary" size="sm" className="px-4 text-xs">
+                      Follow the developer
+                    </Button>
+                  </a>
                 </div>
-
-                <div className="space-y-3 text-sm text-gray-700 dark:text-gray-300">
-                  <p className="leading-relaxed">
-                    Neynar looks at casts, replies, reactions, and follows to estimate how helpful and
-                    trustworthy your presence is. Scores run from 0.00 to 1.00.
-                  </p>
-
-                  <ul className="space-y-2">
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary-500 mt-0.5" aria-hidden="true">-</span>
-                      <span>Helpful casts and genuine replies raise your score.</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary-500 mt-0.5" aria-hidden="true">-</span>
-                      <span>Low-effort or spammy behaviour nudges it downward.</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary-500 mt-0.5" aria-hidden="true">-</span>
-                      <span>It updates weekly, so steady consistency matters.</span>
-                    </li>
-                  </ul>
-
-                  <div className="pt-2 border-t border-gray-200 dark:border-gray-700 text-center">
-                    <a
-                      href="https://docs.neynar.com/docs/neynar-user-quality-score"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-xs text-primary-600 dark:text-primary-400 hover:underline"
-                    >
-                      Learn more in Neynar documentation →
-                    </a>
-                  </div>
-                </div>
-              </div>
+              )}
             </div>
-          </>
+          </div>
         )}
+
+        {/* What is Neynar Score section - always shown */}
+        <div className="rounded-3xl border border-white/60 bg-white/80 p-6 shadow-soft backdrop-blur dark:border-white/10 dark:bg-gray-900/80">
+          <div className="space-y-4">
+            <div className="text-center space-y-2">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                What is Neynar Score?
+              </h3>
+              <p className="text-xs text-gray-600 dark:text-gray-400">
+                A quick primer on what the number means
+              </p>
+            </div>
+
+            <div className="space-y-3 text-sm text-gray-700 dark:text-gray-300">
+              <p className="leading-relaxed">
+                Neynar looks at casts, replies, reactions, and follows to estimate how helpful and
+                trustworthy your presence is. Scores run from 0.00 to 1.00.
+              </p>
+
+              <ul className="space-y-2">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-500 mt-0.5" aria-hidden="true">-</span>
+                  <span>Helpful casts and genuine replies raise your score.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-500 mt-0.5" aria-hidden="true">-</span>
+                  <span>Low-effort or spammy behaviour nudges it downward.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-500 mt-0.5" aria-hidden="true">-</span>
+                  <span>It updates weekly, so steady consistency matters.</span>
+                </li>
+              </ul>
+
+              <div className="pt-2 border-t border-gray-200 dark:border-gray-700 text-center">
+                <a
+                  href="https://docs.neynar.com/docs/neynar-user-quality-score"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-xs text-primary-600 dark:text-primary-400 hover:underline"
+                >
+                  Learn more in Neynar documentation →
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

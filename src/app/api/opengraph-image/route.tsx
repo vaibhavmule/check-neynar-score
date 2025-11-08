@@ -90,7 +90,7 @@ export async function GET(request: NextRequest) {
     (
       <div style={{ display: 'flex', height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center', background: darkBackground }}>
         <div style={{ width: '940px', borderRadius: '36px', padding: '48px', background: '#111324', boxShadow: '0 24px 72px rgba(8,10,22,0.6)', display: 'flex', flexDirection: 'column', gap: '32px' }}>
-          <div style={{ background: gradientBackground, borderRadius: '28px', padding: '44px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '28px' }}>
+          <div style={{ background: gradientBackground, borderRadius: '28px', padding: '44px', display: 'flex', alignItems: 'center', gap: '32px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
               <div style={{ width: '200px', height: '200px', borderRadius: '50%', padding: '14px', background: 'rgba(255,255,255,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: gaugeGradient, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -118,12 +118,6 @@ export async function GET(request: NextRequest) {
                 </div>
               </div>
             </div>
-            {user?.pfp_url && (
-              <div style={{ width: '170px', height: '170px', borderRadius: '50%', overflow: 'hidden', border: '8px solid rgba(255,255,255,0.9)' }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={user.pfp_url} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              </div>
-            )}
           </div>
           <div style={{ textAlign: 'center', color: 'rgba(255,255,255,0.75)', fontSize: '28px', fontWeight: 500 }}>
             Check your Neynar User Score

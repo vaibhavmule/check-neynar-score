@@ -37,7 +37,7 @@ export function TipButton({ recipientFid, username, className, variant, size }: 
       const result = await actions.sendToken({
         recipientFid,
         token: "eip155:8453/erc20:0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-        amount: "0.39",
+        amount: "390000", // 0.39 USDC in base units (6 decimals)
       });
       if (result.success) {
         setStatus("success");

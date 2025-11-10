@@ -11,6 +11,7 @@ type HeaderProps = {
   neynarUser?: {
     fid: number;
     score: number | null;
+    username?: string;
   } | null;
 };
 

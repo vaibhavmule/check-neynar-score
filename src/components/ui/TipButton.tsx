@@ -34,7 +34,11 @@ export function TipButton({ recipientFid, username, className, variant, size }: 
     setErrorMessage(null);
 
     try {
-      const result = await actions.sendToken({ recipientFid });
+      const result = await actions.sendToken({
+        recipientFid,
+        token: "0xFFe16898FC0af80ee9BCF29D2B54a0F20F9498ad",
+        amount: "0.39",
+      });
       if (result.success) {
         setStatus("success");
         // Allow the user to tip again after a short confirmation window

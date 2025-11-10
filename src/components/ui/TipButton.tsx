@@ -169,7 +169,7 @@ export function TipButton({
       : "Opening tip flow..."
     : isSuccess
       ? "Tip sent!"
-      : `Tip ${username ? `@${username}` : "this user"}`;
+      : "Tip ❤️";
 
   const resolvedVariant = variant ?? (isSuccess ? "primary" : "secondary");
   const resolvedSize = size ?? "md";

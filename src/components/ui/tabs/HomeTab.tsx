@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import { useMiniApp } from "@neynar/react";
 import { ScoreCard } from "../ScoreCard";
 import { Button } from "../Button";
 import { ShareButton } from "../Share";
 import { Input } from "../input";
 import { TipButton } from "../TipButton";
+import { DEVELOPER_FID, DEVELOPER_USERNAME } from "~/lib/constants";
 
 /**
  * HomeTab component displays the main landing content for the mini app.
@@ -30,8 +32,22 @@ type HomeTabProps = {
 };
 
 export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, hasScore }: HomeTabProps) {
+  const { actions } = useMiniApp();
   const [inputFid, setInputFid] = useState("");
   const [inputError, setInputError] = useState<string | null>(null);
+
+  const handleFollowDeveloper = useCallback(() => {
+    if (!actions) {
+      return;
+    }
+    if (typeof actions.viewProfile === "function") {
+      actions.viewProfile({ fid: DEVELOPER_FID });
+      return;
+    }
+    if (typeof actions.openUrl === "function") {
+      actions.openUrl(`https://warpcast.com/${DEVELOPER_USERNAME}`);
+    }
+  }, [actions]);
 
   const handleFidSubmit = async () => {
     const parsedFid = parseInt(inputFid.trim(), 10);
@@ -151,22 +167,41 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
                   variant="secondary"
                   size="md"
                 />
-                <div className="flex flex-col items-center gap-2">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Support future updates</p>
-                  <a
-                    href="https://farcaster.xyz/vaibhavmule"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <Button variant="outline" size="sm" className="px-4 text-xs">
-                      Follow the developer
-                    </Button>
-                  </a>
-                </div>
               </div>
             </div>
           </div>
         )}
+
+        <div className="rounded-3xl border border-white/60 bg-white/80 p-5 shadow-soft backdrop-blur dark:border-white/10 dark:bg-gray-900/80">
+          <div className="space-y-4">
+            <div className="space-y-1 text-center">
+              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                Support the developer
+              </p>
+              <p className="text-xs text-gray-600 dark:text-gray-400">
+                Follow and tip to keep updates coming.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <Button
+                onClick={handleFollowDeveloper}
+                variant="outline"
+                size="sm"
+                className="w-full text-xs"
+              >
+                Follow @{DEVELOPER_USERNAME}
+              </Button>
+              <TipButton
+                recipientFid={DEVELOPER_FID}
+                username={DEVELOPER_USERNAME}
+                variant="secondary"
+                size="md"
+                className="w-full"
+              />
+            </div>
+          </div>
+        </div>
 
         {/* What is Neynar Score section - always shown */}
         <div className="rounded-3xl border border-white/60 bg-white/80 p-6 shadow-soft backdrop-blur dark:border-white/10 dark:bg-gray-900/80">

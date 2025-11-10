@@ -81,6 +81,11 @@ export const APP_TAGS: string[] = ['neynar', 'farcaster', 'analytics', 'reputati
  */
 export const DEVELOPER_FID: number = 1356870;
 
+/**
+ * Username of the developer for quick display and profile navigation.
+ */
+export const DEVELOPER_USERNAME: string = 'vaibhavmule';
+
 // --- Asset URLs ---
 /**
  * URL for the app's icon image.

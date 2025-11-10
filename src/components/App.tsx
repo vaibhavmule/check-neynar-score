@@ -63,10 +63,30 @@ export default function App(
    * the app is ready to be displayed, which dismisses the splash screen.
    */
   useEffect(() => {
-    if (isSDKLoaded) {
-      // Signal that the app is ready to be displayed
-      sdk.actions.ready();
+    if (!isSDKLoaded) {
+      return;
     }
+
+    let cancelled = false;
+    const signalReady = async () => {
+      try {
+        await sdk.actions.ready();
+      } catch (error) {
+        if (!cancelled) {
+          console.error("Failed to signal mini app readiness", error);
+        }
+      }
+    };
+
+    // Defer to the next animation frame to give the layout time to mount
+    const raf = window.requestAnimationFrame(() => {
+      void signalReady();
+    });
+
+    return () => {
+      cancelled = true;
+      window.cancelAnimationFrame(raf);
+    };
   }, [isSDKLoaded]);
 
   // --- Early Returns ---

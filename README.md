@@ -82,4 +82,4 @@ If you update environment variable handling, remember to replicate any changes i
 
 ## References
 
-- Neynar User Score docs: https://docs.neynar.com/docs/neynar-user-quality-score
+- Neynar Score docs: https://docs.neynar.com/docs/neynar-user-quality-score

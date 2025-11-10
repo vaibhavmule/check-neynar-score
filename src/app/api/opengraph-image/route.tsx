@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
       (
         <div tw="flex h-full w-full flex-col justify-center items-center relative" style={{ background: 'linear-gradient(135deg, #FF9861 0%, #FF7A3D 50%, #8A68FF 100%)' }}>
           <div tw="flex flex-col items-center justify-center">
-            <h1 tw="text-7xl font-bold text-white mb-6">Check Your Neynar User Score</h1>
+            <h1 tw="text-7xl font-bold text-white mb-6">Check Your Neynar Score</h1>
             <p tw="text-4xl text-white opacity-90 mb-8">A metric ranging from 0 to 1 that evaluates the quality of user interactions on the Farcaster platform</p>
             <div tw="flex items-center justify-center bg-white/20 rounded-3xl px-12 py-8 border-4 border-white/80 backdrop-blur">
               <p tw="text-5xl font-semibold text-white">Launch the app →</p>
@@ -76,20 +76,20 @@ export async function GET(request: NextRequest) {
             <img src={user.pfp_url} alt="Profile" tw="w-full h-full object-cover" />
           </div>
         )}
-        <h1 tw="text-6xl font-bold text-white mb-4">{displayName}&apos;s Neynar User Score</h1>
+        <h1 tw="text-6xl font-bold text-white mb-4">{displayName}&apos;s Neynar Score</h1>
         {scoreDisplay !== null ? (
           <div tw="flex items-center justify-center mb-4">
             <div tw="text-9xl font-bold text-white drop-shadow-lg">{scoreDisplay}</div>
           </div>
         ) : (
           <div tw="flex flex-col items-center justify-center mb-4">
-            <p tw="text-5xl text-white opacity-80 mb-4">Open the app to check your Neynar User Score</p>
+            <p tw="text-5xl text-white opacity-80 mb-4">Open the app to check your Neynar Score</p>
             <div tw="flex items-center justify-center bg-white/20 rounded-2xl px-8 py-4 border-2 border-white/80 backdrop-blur">
               <p tw="text-4xl font-semibold text-white">Launch Mini App →</p>
             </div>
           </div>
         )}
-        <p tw="text-4xl mt-6 text-white opacity-90">Check your Neynar User Score</p>
+        <p tw="text-4xl mt-6 text-white opacity-90">Check your Neynar Score</p>
       </div>
     ),
     {

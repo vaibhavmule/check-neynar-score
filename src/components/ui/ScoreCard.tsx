@@ -31,8 +31,8 @@ export function ScoreCard({ fid, score, username, pfpUrl, loading, timeAgo: _tim
   const angle = typeof numericScore === "number" ? (numericScore / 100) * 360 : 0;
   
   const scoreLabel = typeof numericScore === "number" 
-    ? `Neynar User Score: ${numericScore} out of 100` 
-    : "Neynar User Score: not available";
+    ? `Neynar Score: ${numericScore} out of 100` 
+    : "Neynar Score: not available";
 
   const animationClass = prefersReducedMotion 
     ? "" 
@@ -90,7 +90,7 @@ export function ScoreCard({ fid, score, username, pfpUrl, loading, timeAgo: _tim
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <p className="mb-1 text-sm font-semibold uppercase tracking-[0.3em] text-white/90">Neynar User Score</p>
+                    <p className="mb-1 text-sm font-semibold uppercase tracking-[0.3em] text-white/90">Neynar Score</p>
                     <p className="text-xs text-white/80">Quality metric for Farcaster</p>
                   </div>
                 </div>

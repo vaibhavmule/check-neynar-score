@@ -24,4 +24,4 @@ A seeded `.env.local` is tracked; treat it as the template and never commit prod
 
 ## References
 
-- Neynar User Score docs: https://docs.neynar.com/docs/neynar-user-quality-score
+- Neynar Score docs: https://docs.neynar.com/docs/neynar-user-quality-score

@@ -56,7 +56,7 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
                 Check Your Neynar Score
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-300">
-                View your Neynar User Score - a metric ranging from 0 to 1 that evaluates the quality of user interactions on the Farcaster platform.
+                View your Neynar Score - a metric ranging from 0 to 1 that evaluates the quality of user interactions on the Farcaster platform.
               </p>
             </div>
 
@@ -131,13 +131,13 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
                   Share Your Score
                 </p>
                 <p className="text-xs text-gray-600 dark:text-gray-400">
-                  Share your Neynar User Score with others.
+                  Share your Neynar Score with others.
                 </p>
               </div>
               <ShareButton
                 buttonText="Share Score"
                 cast={{
-                  text: `My Neynar User Score is ${(score ?? 0).toFixed(2)}. Check your score:`,
+                  text: `My Neynar Score is ${(score ?? 0).toFixed(2)}. Check your score:`,
                   embeds: [
                     {
                       path: `/share/${fid}`,
@@ -169,13 +169,13 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
           <div className="space-y-4">
             <div className="text-center space-y-2">
               <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
-                What is Neynar User Score?
+                What is Neynar Score?
               </h3>
             </div>
 
             <div className="space-y-3 text-sm text-gray-700 dark:text-gray-300">
               <p className="leading-relaxed">
-                The Neynar User Score is a metric ranging from 0 to 1 that evaluates the quality of user interactions on the Farcaster platform. A higher score indicates a higher confidence in the user being of high quality. This score is updated weekly and reflects the value an account adds to the network.
+                The Neynar Score is a metric ranging from 0 to 1 that evaluates the quality of user interactions on the Farcaster platform. A higher score indicates a higher confidence in the user being of high quality. This score is updated weekly and reflects the value an account adds to the network.
               </p>
 
               <ul className="space-y-2">

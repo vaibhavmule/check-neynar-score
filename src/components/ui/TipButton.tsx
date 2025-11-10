@@ -14,6 +14,8 @@ type TipButtonProps = {
 
 type TipStatus = "idle" | "pending" | "success" | "error";
 
+const TIP_ETH_WEI = "111000000000000"; // 0.000111 ETH in wei (18 decimals)
+
 export function TipButton({ recipientFid, username, className, variant, size }: TipButtonProps) {
   const { actions, isSDKLoaded } = useMiniApp();
   const [status, setStatus] = useState<TipStatus>("idle");
@@ -40,8 +42,8 @@ export function TipButton({ recipientFid, username, className, variant, size }: 
     try {
       const result = await actions.sendToken({
         recipientFid,
-        token: "eip155:8453/erc20:0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-        amount: "390000", // 0.39 USDC in base units (6 decimals)
+        token: "eip155:8453/slip44:60", // Native ETH on Base (CAIP-19)
+        amount: TIP_ETH_WEI,
       });
       if (result.success) {
         setStatus("success");
@@ -77,7 +79,7 @@ export function TipButton({ recipientFid, username, className, variant, size }: 
     ? "Opening tip flow..."
     : isSuccess
       ? "Tip sent!"
-      : `Tip ${username ? `@${username}` : "this user"}`;
+      : `Tip ${username ? `@${username}` : "this user"} 0.000111 ETH`;
 
   const resolvedVariant = variant ?? (isSuccess ? "primary" : "secondary");
   const resolvedSize = size ?? "md";

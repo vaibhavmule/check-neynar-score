@@ -15,7 +15,7 @@ type TipButtonProps = {
 type TipStatus = "idle" | "pending" | "success" | "error";
 
 export function TipButton({ recipientFid, username, className, variant, size }: TipButtonProps) {
-  const { actions, context, isSDKLoaded } = useMiniApp();
+  const { actions, isSDKLoaded } = useMiniApp();
   const [status, setStatus] = useState<TipStatus>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -67,11 +67,10 @@ export function TipButton({ recipientFid, username, className, variant, size }: 
     }
   }, [actions, readyToTip, recipientFid]);
 
-  const viewingOwnProfile = recipientFid !== undefined && context?.user?.fid === recipientFid;
   const isPending = status === "pending";
   const isSuccess = status === "success";
 
-  const preventSend = !readyToTip || viewingOwnProfile;
+  const preventSend = !readyToTip;
   const buttonDisabled = preventSend || isPending;
 
   const label = isPending
@@ -93,7 +92,7 @@ export function TipButton({ recipientFid, username, className, variant, size }: 
         size={resolvedSize}
         className="max-w-full"
       >
-        {preventSend && !viewingOwnProfile && !isPending ? "Preparing Warpcast..." : label}
+        {preventSend && !isPending ? "Preparing Warpcast..." : label}
       </Button>
       {status === "error" && errorMessage && (
         <p className="text-xs text-error">{errorMessage}</p>

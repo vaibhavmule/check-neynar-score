@@ -32,12 +32,12 @@ type HomeTabProps = {
 };
 
 export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, hasScore }: HomeTabProps) {
-  const { actions } = useMiniApp();
+  const { actions, isSDKLoaded } = useMiniApp();
   const [inputFid, setInputFid] = useState("");
   const [inputError, setInputError] = useState<string | null>(null);
 
   const handleFollowDeveloper = useCallback(() => {
-    if (!actions) {
+    if (!isSDKLoaded || !actions) {
       return;
     }
     if (typeof actions.viewProfile === "function") {
@@ -189,6 +189,7 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
                 variant="outline"
                 size="sm"
                 className="w-full text-xs"
+                disabled={!isSDKLoaded || (!actions?.viewProfile && !actions?.openUrl)}
               >
                 Follow @{DEVELOPER_USERNAME}
               </Button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useMiniApp } from "@neynar/react";
 import { Button } from "./Button";
 
@@ -15,7 +15,7 @@ type TipButtonProps = {
 type TipStatus = "idle" | "pending" | "success" | "error";
 
 export function TipButton({ recipientFid, username, className, variant, size }: TipButtonProps) {
-  const { actions, context } = useMiniApp();
+  const { actions, context, isSDKLoaded } = useMiniApp();
   const [status, setStatus] = useState<TipStatus>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -25,8 +25,12 @@ export function TipButton({ recipientFid, username, className, variant, size }: 
     setErrorMessage(null);
   }, [recipientFid]);
 
+  const readyToTip = useMemo(() => {
+    return Boolean(recipientFid && isSDKLoaded && typeof actions?.sendToken === "function");
+  }, [actions, isSDKLoaded, recipientFid]);
+
   const handleTip = useCallback(async () => {
-    if (!recipientFid) {
+    if (!readyToTip || !recipientFid || typeof actions?.sendToken !== "function") {
       return;
     }
 
@@ -61,13 +65,13 @@ export function TipButton({ recipientFid, username, className, variant, size }: 
         error instanceof Error ? error.message : "Something went wrong while sending the tip.";
       setErrorMessage(message);
     }
-  }, [actions, recipientFid]);
+  }, [actions, readyToTip, recipientFid]);
 
   const viewingOwnProfile = recipientFid !== undefined && context?.user?.fid === recipientFid;
   const isPending = status === "pending";
   const isSuccess = status === "success";
 
-  const preventSend = !recipientFid;
+  const preventSend = !readyToTip || viewingOwnProfile;
   const buttonDisabled = preventSend || isPending;
 
   const label = isPending
@@ -89,7 +93,7 @@ export function TipButton({ recipientFid, username, className, variant, size }: 
         size={resolvedSize}
         className="max-w-full"
       >
-        {label}
+        {preventSend && !viewingOwnProfile && !isPending ? "Preparing Warpcast..." : label}
       </Button>
       {status === "error" && errorMessage && (
         <p className="text-xs text-error">{errorMessage}</p>

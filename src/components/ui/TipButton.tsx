@@ -8,11 +8,13 @@ type TipButtonProps = {
   recipientFid?: number;
   username?: string;
   className?: string;
+  variant?: "primary" | "secondary" | "outline";
+  size?: "sm" | "md" | "lg";
 };
 
 type TipStatus = "idle" | "pending" | "success" | "error";
 
-export function TipButton({ recipientFid, username, className }: TipButtonProps) {
+export function TipButton({ recipientFid, username, className, variant, size }: TipButtonProps) {
   const { actions, context } = useMiniApp();
   const [status, setStatus] = useState<TipStatus>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -57,33 +59,43 @@ export function TipButton({ recipientFid, username, className }: TipButtonProps)
     }
   }, [actions, recipientFid]);
 
-  // Hide button if we are missing the required data or the user is trying to tip themselves
-  if (!recipientFid || context?.user?.fid === recipientFid) {
-    return null;
-  }
-
+  const viewingOwnProfile = recipientFid !== undefined && context?.user?.fid === recipientFid;
   const isPending = status === "pending";
   const isSuccess = status === "success";
+
+  const preventSend = !recipientFid || viewingOwnProfile;
+  const buttonDisabled = preventSend || isPending;
+
   const label = isPending
     ? "Opening tip flow..."
     : isSuccess
       ? "Tip sent!"
-      : `Tip ${username ? `@${username}` : "this user"}`;
+      : viewingOwnProfile
+        ? "Tips unavailable for your account"
+        : `Tip ${username ? `@${username}` : "this user"}`;
+
+  const resolvedVariant = variant ?? (isSuccess ? "primary" : "secondary");
+  const resolvedSize = size ?? "md";
 
   return (
-    <div className="w-full space-y-1.5 text-center">
+    <div className={`w-full space-y-1.5 text-center ${className ?? ""}`}>
       <Button
         onClick={handleTip}
-        disabled={isPending}
+        disabled={buttonDisabled}
         isLoading={isPending}
-        variant="primary"
-        size="lg"
-        className={`max-w-full ${className ?? ""}`}
+        variant={resolvedVariant}
+        size={resolvedSize}
+        className="max-w-full"
       >
         {label}
       </Button>
       {status === "error" && errorMessage && (
         <p className="text-xs text-error">{errorMessage}</p>
+      )}
+      {viewingOwnProfile && (
+        <p className="text-xs text-gray-500 dark:text-gray-400">
+          Open another user&apos;s profile to send them a tip.
+        </p>
       )}
     </div>
   );

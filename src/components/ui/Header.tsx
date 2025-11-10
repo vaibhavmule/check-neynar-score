@@ -5,6 +5,7 @@ import { APP_NAME } from "~/lib/constants";
 import sdk from "@farcaster/miniapp-sdk";
 import { useMiniApp } from "@neynar/react";
 import { useDetectClickOutside } from "~/hooks/useDetectClickOutside";
+import { TipButton } from "./TipButton";
 
 type HeaderProps = {
   neynarUser?: {
@@ -90,7 +91,7 @@ export function Header({ neynarUser }: HeaderProps) {
                 role="menu"
                 aria-orientation="vertical"
               >
-                <div className="min-w-[220px] space-y-3 p-5">
+                <div className="min-w-[240px] space-y-4 p-5">
                   <div className="space-y-2">
                     <button
                       type="button"
@@ -114,6 +115,12 @@ export function Header({ neynarUser }: HeaderProps) {
                       )}
                     </div>
                   </div>
+                  <TipButton
+                    recipientFid={neynarUser?.fid ?? context.user.fid}
+                    username={neynarUser?.username ?? context.user.username}
+                    variant="secondary"
+                    size="sm"
+                  />
                 </div>
               </div>
             )}

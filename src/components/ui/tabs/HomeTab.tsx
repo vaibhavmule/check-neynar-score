@@ -132,33 +132,37 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
                   Share your Neynar Score with others.
                 </p>
               </div>
-              <ShareButton
-                buttonText="Share Score"
-                cast={{
-                  text: `My Neynar Score is ${(score ?? 0).toFixed(2)}. Check your score:`,
-                  embeds: [
-                    {
-                      path: `/share/${fid}`,
-                    },
-                  ],
-                }}
-                className="w-full"
-              />
-              <TipButton
-                recipientFid={fid}
-                username={username}
-              />
-              <div className="flex flex-col items-center gap-2">
-                <p className="text-xs text-gray-500 dark:text-gray-400">Support future updates</p>
-                <a
-                  href="https://farcaster.xyz/vaibhavmule"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Button variant="secondary" size="sm" className="px-4 text-xs">
-                    Follow the developer
-                  </Button>
-                </a>
+              <div className="space-y-3">
+                <ShareButton
+                  buttonText="Share Score"
+                  cast={{
+                    text: `My Neynar Score is ${(score ?? 0).toFixed(2)}. Check your score:`,
+                    embeds: [
+                      {
+                        path: `/share/${fid}`,
+                      },
+                    ],
+                  }}
+                  className="w-full"
+                />
+                <TipButton
+                  recipientFid={fid}
+                  username={username}
+                  variant="secondary"
+                  size="md"
+                />
+                <div className="flex flex-col items-center gap-2">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Support future updates</p>
+                  <a
+                    href="https://farcaster.xyz/vaibhavmule"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <Button variant="outline" size="sm" className="px-4 text-xs">
+                      Follow the developer
+                    </Button>
+                  </a>
+                </div>
               </div>
             </div>
           </div>

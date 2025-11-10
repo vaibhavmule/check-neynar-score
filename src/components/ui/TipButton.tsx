@@ -63,16 +63,14 @@ export function TipButton({ recipientFid, username, className, variant, size }: 
   const isPending = status === "pending";
   const isSuccess = status === "success";
 
-  const preventSend = !recipientFid || viewingOwnProfile;
+  const preventSend = !recipientFid;
   const buttonDisabled = preventSend || isPending;
 
   const label = isPending
     ? "Opening tip flow..."
     : isSuccess
       ? "Tip sent!"
-      : viewingOwnProfile
-        ? "Tips unavailable for your account"
-        : `Tip ${username ? `@${username}` : "this user"}`;
+      : `Tip ${username ? `@${username}` : "this user"}`;
 
   const resolvedVariant = variant ?? (isSuccess ? "primary" : "secondary");
   const resolvedSize = size ?? "md";
@@ -91,11 +89,6 @@ export function TipButton({ recipientFid, username, className, variant, size }: 
       </Button>
       {status === "error" && errorMessage && (
         <p className="text-xs text-error">{errorMessage}</p>
-      )}
-      {viewingOwnProfile && (
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          Open another user&apos;s profile to send them a tip.
-        </p>
       )}
     </div>
   );

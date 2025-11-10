@@ -36,7 +36,7 @@ export function TipButton({ recipientFid, username, className, variant, size }: 
     try {
       const result = await actions.sendToken({
         recipientFid,
-        token: "0xFFe16898FC0af80ee9BCF29D2B54a0F20F9498ad",
+        token: "eip155:8453/erc20:0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
         amount: "0.39",
       });
       if (result.success) {

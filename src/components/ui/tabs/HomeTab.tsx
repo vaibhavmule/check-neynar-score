@@ -7,7 +7,7 @@ import { Button } from "../Button";
 import { ShareButton } from "../Share";
 import { Input } from "../input";
 import { TipButton } from "../TipButton";
-import { DEVELOPER_FID, DEVELOPER_USERNAME } from "~/lib/constants";
+import { DEVELOPER_FID, DEVELOPER_TIP_ADDRESS, DEVELOPER_USERNAME } from "~/lib/constants";
 
 /**
  * HomeTab component displays the main landing content for the mini app.
@@ -196,6 +196,7 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
               <TipButton
                 recipientFid={DEVELOPER_FID}
                 username={DEVELOPER_USERNAME}
+                recipientAddress={DEVELOPER_TIP_ADDRESS}
                 variant="secondary"
                 size="md"
                 className="w-full"

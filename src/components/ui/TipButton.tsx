@@ -2,11 +2,15 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useMiniApp } from "@neynar/react";
+import { useAccount, useSendTransaction, useWaitForTransactionReceipt } from "wagmi";
+import { parseEther } from "viem";
 import { Button } from "./Button";
+import { truncateAddress } from "../../lib/truncateAddress";
 
 type TipButtonProps = {
   recipientFid?: number;
   username?: string;
+  recipientAddress?: `0x${string}`;
   className?: string;
   variant?: "primary" | "secondary" | "outline";
   size?: "sm" | "md" | "lg";
@@ -14,25 +18,101 @@ type TipButtonProps = {
 
 type TipStatus = "idle" | "pending" | "success" | "error";
 
-const TIP_ETH_WEI = "111000000000000"; // 0.000111 ETH in wei (18 decimals)
+const MINI_APP_TOKEN = "eip155:8453/erc20:0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
+const MINI_APP_AMOUNT = "390000"; // 0.39 USDC (6 decimals)
+const TIP_ETH_WEI = parseEther("0.000111");
 
-export function TipButton({ recipientFid, username, className, variant, size }: TipButtonProps) {
+function getErrorMessage(error: unknown): string {
+  if (typeof error === "object" && error !== null && "shortMessage" in error) {
+    const shortMessage = (error as { shortMessage?: unknown }).shortMessage;
+    if (typeof shortMessage === "string" && shortMessage.length > 0) {
+      return shortMessage;
+    }
+  }
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return "Unable to complete tip.";
+}
+
+export function TipButton({
+  recipientFid,
+  username,
+  recipientAddress,
+  className,
+  variant,
+  size,
+}: TipButtonProps) {
   const { actions, isSDKLoaded } = useMiniApp();
+  const { isConnected } = useAccount();
+  const {
+    sendTransaction,
+    data: evmTransactionHash,
+    error: evmTransactionError,
+    isPending: isEvmTransactionPending,
+  } = useSendTransaction();
+  const {
+    isLoading: isEvmTransactionConfirming,
+    isSuccess: isEvmTransactionConfirmed,
+  } = useWaitForTransactionReceipt({
+    hash: evmTransactionHash,
+  });
+
   const [status, setStatus] = useState<TipStatus>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const usingEvmTip = Boolean(recipientAddress);
 
   // Reset transient states when recipient changes
   useEffect(() => {
     setStatus("idle");
     setErrorMessage(null);
-  }, [recipientFid]);
+  }, [recipientFid, recipientAddress]);
 
-  const readyToTip = useMemo(() => {
+  const miniAppReady = useMemo(() => {
+    if (usingEvmTip) {
+      return false;
+    }
     return Boolean(recipientFid && isSDKLoaded && typeof actions?.sendToken === "function");
-  }, [actions, isSDKLoaded, recipientFid]);
+  }, [actions, isSDKLoaded, recipientFid, usingEvmTip]);
 
   const handleTip = useCallback(async () => {
-    if (!readyToTip || !recipientFid || typeof actions?.sendToken !== "function") {
+    if (usingEvmTip) {
+      if (!recipientAddress || !isConnected) {
+        return;
+      }
+
+      setStatus("pending");
+      setErrorMessage(null);
+
+      try {
+        sendTransaction(
+          {
+            to: recipientAddress,
+            value: TIP_ETH_WEI,
+          },
+          {
+            onSuccess: () => {
+              setStatus("success");
+              setTimeout(() => {
+                setStatus("idle");
+              }, 2500);
+            },
+            onError: (error) => {
+              setStatus("error");
+              setErrorMessage(getErrorMessage(error));
+            },
+          }
+        );
+      } catch (error) {
+        setStatus("error");
+        setErrorMessage(getErrorMessage(error));
+      }
+
+      return;
+    }
+
+    if (!miniAppReady || !recipientFid || typeof actions?.sendToken !== "function") {
       return;
     }
 
@@ -42,8 +122,8 @@ export function TipButton({ recipientFid, username, className, variant, size }: 
     try {
       const result = await actions.sendToken({
         recipientFid,
-        token: "eip155:8453/slip44:60", // Native ETH on Base (CAIP-19)
-        amount: TIP_ETH_WEI,
+        token: MINI_APP_TOKEN,
+        amount: MINI_APP_AMOUNT,
       });
       if (result.success) {
         setStatus("success");
@@ -63,23 +143,33 @@ export function TipButton({ recipientFid, username, className, variant, size }: 
       setErrorMessage(result.error?.message ?? "Unable to complete tip.");
     } catch (error) {
       setStatus("error");
-      const message =
-        error instanceof Error ? error.message : "Something went wrong while sending the tip.";
-      setErrorMessage(message);
+      setErrorMessage(getErrorMessage(error));
     }
-  }, [actions, readyToTip, recipientFid]);
+  }, [
+    actions,
+    isConnected,
+    miniAppReady,
+    recipientAddress,
+    recipientFid,
+    sendTransaction,
+    usingEvmTip,
+  ]);
 
   const isPending = status === "pending";
   const isSuccess = status === "success";
 
-  const preventSend = !readyToTip;
-  const buttonDisabled = preventSend || isPending;
+  const preventSend = usingEvmTip ? !isConnected : !miniAppReady;
+  const buttonDisabled = usingEvmTip
+    ? preventSend || isEvmTransactionPending
+    : preventSend || isPending;
 
   const label = isPending
-    ? "Opening tip flow..."
+    ? usingEvmTip
+      ? "Confirm in wallet..."
+      : "Opening tip flow..."
     : isSuccess
       ? "Tip sent!"
-      : `Tip ${username ? `@${username}` : "this user"} 0.000111 ETH`;
+      : `Tip ${username ? `@${username}` : "this user"}`;
 
   const resolvedVariant = variant ?? (isSuccess ? "primary" : "secondary");
   const resolvedSize = size ?? "md";
@@ -89,15 +179,33 @@ export function TipButton({ recipientFid, username, className, variant, size }: 
       <Button
         onClick={handleTip}
         disabled={buttonDisabled}
-        isLoading={isPending}
+        isLoading={usingEvmTip ? isEvmTransactionPending || isPending : isPending}
         variant={resolvedVariant}
         size={resolvedSize}
         className="max-w-full"
       >
         {preventSend && !isPending ? "Preparing Warpcast..." : label}
       </Button>
+      {usingEvmTip && evmTransactionHash && (
+        <div className="text-xs text-left w-full text-gray-600 dark:text-gray-300">
+          <div>Hash: {truncateAddress(evmTransactionHash)}</div>
+          <div>
+            Status:{" "}
+            {isEvmTransactionConfirming
+              ? "Confirming..."
+              : isEvmTransactionConfirmed
+              ? "Confirmed!"
+              : "Pending"}
+          </div>
+        </div>
+      )}
       {status === "error" && errorMessage && (
         <p className="text-xs text-error">{errorMessage}</p>
+      )}
+      {usingEvmTip && status !== "error" && evmTransactionError && (
+        <p className="text-xs text-error">
+          {getErrorMessage(evmTransactionError)}
+        </p>
       )}
     </div>
   );

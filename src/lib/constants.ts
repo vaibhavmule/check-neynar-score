@@ -86,6 +86,11 @@ export const DEVELOPER_FID: number = 1356870;
  */
 export const DEVELOPER_USERNAME: string = 'vaibhavmule';
 
+/**
+ * Wallet address used to receive developer tips via the wallet flow.
+ */
+export const DEVELOPER_TIP_ADDRESS: `0x${string}` = '0x6828D9e13B9C5BF166d58F60340FD8C3D1FE7693';
+ 
 // --- Asset URLs ---
 /**
  * URL for the app's icon image.

@@ -5,7 +5,7 @@ import { ScoreCard } from "../ScoreCard";
 import { Button } from "../Button";
 import { ShareButton } from "../Share";
 import { Input } from "../input";
-import { DEVELOPER_FID } from "~/lib/constants";
+import { TipButton } from "../TipButton";
 
 /**
  * HomeTab component displays the main landing content for the mini app.
@@ -30,8 +30,6 @@ type HomeTabProps = {
 };
 
 export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, hasScore }: HomeTabProps) {
-  // Hide follow CTA when the developer is viewing their own score
-  const isDeveloper = fid === DEVELOPER_FID;
   const [inputFid, setInputFid] = useState("");
   const [inputError, setInputError] = useState<string | null>(null);
 
@@ -146,20 +144,22 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
                 }}
                 className="w-full"
               />
-              {!isDeveloper && (
-                <div className="flex flex-col items-center gap-2">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Support future updates</p>
-                  <a
-                    href="https://farcaster.xyz/vaibhavmule"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <Button variant="secondary" size="sm" className="px-4 text-xs">
-                      Follow the developer
-                    </Button>
-                  </a>
-                </div>
-              )}
+              <TipButton
+                recipientFid={fid}
+                username={username}
+              />
+              <div className="flex flex-col items-center gap-2">
+                <p className="text-xs text-gray-500 dark:text-gray-400">Support future updates</p>
+                <a
+                  href="https://farcaster.xyz/vaibhavmule"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Button variant="secondary" size="sm" className="px-4 text-xs">
+                    Follow the developer
+                  </Button>
+                </a>
+              </div>
             </div>
           </div>
         )}

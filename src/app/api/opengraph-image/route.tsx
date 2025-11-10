@@ -38,39 +38,21 @@ export async function GET(request: NextRequest) {
 
   const user = fid ? await getUserWithScore(Number(fid)) : null;
   const score = user?.score ?? null;
+  const scoreDisplay = score !== null ? score.toFixed(2) : null;
   const displayName = user?.display_name || user?.username || 'User';
-
-  const rawScore = score;
-  const normalizedScore = rawScore !== null
-    ? Math.max(0, Math.min(1, rawScore <= 1 ? rawScore : rawScore / 100))
-    : null;
-  const scoreDisplayValue = rawScore !== null
-    ? (rawScore <= 1 ? rawScore : rawScore / 100)
-    : null;
-  const scoreText = scoreDisplayValue !== null ? scoreDisplayValue.toFixed(2) : null;
-  const gaugeDegrees = normalizedScore !== null ? normalizedScore * 360 : 0;
-  const gaugeGradient = `conic-gradient(rgba(255,255,255,0.92) 0deg ${gaugeDegrees}deg, rgba(255,255,255,0.18) ${gaugeDegrees}deg 360deg)`;
-
-  const gradientBackground = 'linear-gradient(135deg, #FF9861 0%, #FF7A3D 45%, #8A68FF 100%)';
-  const darkBackground = '#080A16';
 
   // If no user/fid provided, show a welcoming default image
   if (!user || !fid) {
     return new ImageResponse(
       (
-        <div style={{ display: 'flex', height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center', background: darkBackground }}>
-          <div style={{ width: '940px', borderRadius: '36px', padding: '48px', background: '#111324', boxShadow: '0 24px 72px rgba(8,10,22,0.6)', display: 'flex', flexDirection: 'column', gap: '32px' }}>
-            <div style={{ background: gradientBackground, borderRadius: '28px', padding: '40px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              <h1 style={{ fontSize: '76px', lineHeight: '1.05', fontWeight: 700, color: '#FFFFFF' }}>Check Your Neynar User Score</h1>
-              <p style={{ fontSize: '32px', lineHeight: '1.35', color: 'rgba(255,255,255,0.92)' }}>
-                The Neynar User Score is a metric ranging from 0 to 1 that evaluates the quality of user
-                interactions on the Farcaster platform. View yours instantly by launching the app.
-              </p>
-              <div style={{ display: 'inline-flex', padding: '14px 36px', borderRadius: '24px', border: '2px solid rgba(255,255,255,0.85)', color: '#FFFFFF', fontSize: '34px', fontWeight: 600 }}>
-                Launch the app →
-              </div>
+        <div tw="flex h-full w-full flex-col justify-center items-center relative" style={{ background: 'linear-gradient(135deg, #FF9861 0%, #FF7A3D 50%, #8A68FF 100%)' }}>
+          <div tw="flex flex-col items-center justify-center">
+            <h1 tw="text-7xl font-bold text-white mb-6">Check Your Neynar User Score</h1>
+            <p tw="text-4xl text-white opacity-90 mb-8">A metric ranging from 0 to 1 that evaluates the quality of user interactions on the Farcaster platform</p>
+            <div tw="flex items-center justify-center bg-white/20 rounded-3xl px-12 py-8 border-4 border-white/80 backdrop-blur">
+              <p tw="text-5xl font-semibold text-white">Launch the app →</p>
             </div>
-            <div style={{ textAlign: 'center', color: 'rgba(255,255,255,0.7)', fontSize: '28px', fontWeight: 500 }}>Powered by Neynar</div>
+            <p tw="text-3xl text-white opacity-80 mt-10">Powered by Neynar</p>
           </div>
         </div>
       ),
@@ -88,41 +70,26 @@ export async function GET(request: NextRequest) {
 
   return new ImageResponse(
     (
-      <div style={{ display: 'flex', height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center', background: darkBackground }}>
-        <div style={{ width: '940px', borderRadius: '36px', padding: '48px', background: '#111324', boxShadow: '0 24px 72px rgba(8,10,22,0.6)', display: 'flex', flexDirection: 'column', gap: '32px' }}>
-          <div style={{ background: gradientBackground, borderRadius: '28px', padding: '44px', display: 'flex', alignItems: 'center', gap: '32px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
-              <div style={{ width: '200px', height: '200px', borderRadius: '50%', padding: '14px', background: 'rgba(255,255,255,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: gaugeGradient, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <div style={{ width: '70%', height: '70%', borderRadius: '50%', background: 'rgba(8,10,22,0.65)', color: '#FFFFFF', fontSize: '66px', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {scoreText ?? '—'}
-                  </div>
-                </div>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <span style={{ fontSize: '28px', color: 'rgba(255,255,255,0.9)', fontWeight: 600 }}>{displayName}&apos;s</span>
-                <span style={{ fontSize: '34px', fontWeight: 700, letterSpacing: '0.36em', color: 'rgba(255,255,255,0.95)' }}>NEYNAR USER SCORE</span>
-                <span style={{ fontSize: '26px', color: 'rgba(255,255,255,0.9)' }}>Quality metric for Farcaster</span>
-                <span style={{ fontSize: '21px', color: 'rgba(255,255,255,0.78)' }}>Updated weekly to reflect the value an account adds to the network.</span>
-                <div style={{ display: 'flex', gap: '14px', marginTop: '14px' }}>
-                  {user?.fid && (
-                    <div style={{ padding: '12px 24px', borderRadius: '999px', background: 'rgba(8,10,22,0.55)', border: '1px solid rgba(255,255,255,0.28)', color: 'rgba(255,255,255,0.9)', fontSize: '22px', fontWeight: 500 }}>
-                      FID: {user.fid}
-                    </div>
-                  )}
-                  {user?.username && (
-                    <div style={{ padding: '12px 24px', borderRadius: '999px', background: 'rgba(8,10,22,0.55)', border: '1px solid rgba(255,255,255,0.28)', color: 'rgba(255,255,255,0.9)', fontSize: '22px', fontWeight: 500 }}>
-                      @{user.username}
-                    </div>
-                  )}
-                </div>
-              </div>
+      <div tw="flex h-full w-full flex-col justify-center items-center relative" style={{ background: 'linear-gradient(135deg, #FF9861 0%, #FF7A3D 50%, #8A68FF 100%)' }}>
+        {user?.pfp_url && (
+          <div tw="flex w-64 h-64 rounded-full overflow-hidden mb-8 border-8 border-white/80 shadow-2xl">
+            <img src={user.pfp_url} alt="Profile" tw="w-full h-full object-cover" />
+          </div>
+        )}
+        <h1 tw="text-6xl font-bold text-white mb-4">{displayName}&apos;s Neynar User Score</h1>
+        {scoreDisplay !== null ? (
+          <div tw="flex items-center justify-center mb-4">
+            <div tw="text-9xl font-bold text-white drop-shadow-lg">{scoreDisplay}</div>
+          </div>
+        ) : (
+          <div tw="flex flex-col items-center justify-center mb-4">
+            <p tw="text-5xl text-white opacity-80 mb-4">Open the app to check your Neynar User Score</p>
+            <div tw="flex items-center justify-center bg-white/20 rounded-2xl px-8 py-4 border-2 border-white/80 backdrop-blur">
+              <p tw="text-4xl font-semibold text-white">Launch Mini App →</p>
             </div>
           </div>
-          <div style={{ textAlign: 'center', color: 'rgba(255,255,255,0.75)', fontSize: '28px', fontWeight: 500 }}>
-            Check your Neynar User Score
-          </div>
-        </div>
+        )}
+        <p tw="text-4xl mt-6 text-white opacity-90">Check your Neynar User Score</p>
       </div>
     ),
     {

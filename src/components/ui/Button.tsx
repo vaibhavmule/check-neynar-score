@@ -11,6 +11,7 @@ export function Button({
   isLoading = false, 
   variant = 'primary',
   size = 'md',
+  type = "button",
   ...props 
 }: ButtonProps) {
   const baseClasses = "btn";
@@ -40,6 +41,7 @@ export function Button({
   return (
     <button
       className={combinedClasses}
+      type={type}
       {...props}
     >
       {isLoading ? (

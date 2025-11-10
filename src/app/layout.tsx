@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 
-import '~/app/globals.css';
 import { Plus_Jakarta_Sans } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
+
+import '~/app/globals.css';
 import { Providers } from '~/app/providers';
 import { APP_NAME, APP_DESCRIPTION } from '~/lib/constants';
 
@@ -27,6 +29,7 @@ export default async function RootLayout({
       <body className={plusJakartaSans.variable}>
         <Providers>
           {children}
+          <Analytics />
         </Providers>
       </body>
     </html>

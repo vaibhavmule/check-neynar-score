@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
  * The component handles wallet connection, chain switching, and transaction status.
  */
 export function DailyRewardCard() {
-  const { address, isConnected, chainId } = useAccount();
+  const { isConnected, chainId } = useAccount();
   const { switchChain } = useSwitchChain();
   const {
     canClaim,

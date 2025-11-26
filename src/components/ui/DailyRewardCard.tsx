@@ -144,18 +144,6 @@ export function DailyRewardCard() {
             </div>
           )}
 
-          {!hash && isConnected && !needsChainSwitch && (
-            <div className="text-center">
-              <a
-                href={arbiscanUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-primary-600 dark:text-primary-400 hover:underline"
-              >
-                View Contract on Arbiscan
-              </a>
-            </div>
-          )}
         </div>
       </div>
     </div>

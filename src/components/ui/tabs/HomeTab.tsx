@@ -36,7 +36,7 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
     if (typeof actions.openUrl === "function") {
       actions.openUrl(`https://warpcast.com/${DEVELOPER_USERNAME}`);
     }
-  }, [actions]);
+  }, [actions, isSDKLoaded]);
 
   const handleFidSubmit = async () => {
     const parsedFid = parseInt(inputFid.trim(), 10);

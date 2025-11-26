@@ -37,7 +37,7 @@ function getErrorMessage(error: unknown): string {
 
 export function TipButton({
   recipientFid,
-  username,
+  username: _username,
   recipientAddress,
   className,
   variant,

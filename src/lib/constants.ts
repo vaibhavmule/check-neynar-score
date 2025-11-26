@@ -200,3 +200,57 @@ export const SIGNED_KEY_REQUEST_TYPE = [
   { name: 'key', type: 'bytes' },
   { name: 'deadline', type: 'uint256' },
 ];
+
+// --- Daily Reward Contract Configuration ---
+/**
+ * Daily reward contract address on Arbitrum.
+ * Users can claim 0.025 ARB tokens once per day from this contract.
+ */
+export const REWARD_CONTRACT_ADDRESS: `0x${string}` = '0xE4895Ee66a1C1A890Abb158CDfC66925f92eE2A5';
+
+/**
+ * ARB token contract address on Arbitrum.
+ */
+export const ARB_TOKEN_ADDRESS: `0x${string}` = '0x912CE59144191C1204E64559FE8253a0e49E6548';
+
+/**
+ * Arbitrum chain ID.
+ */
+export const ARBITRUM_CHAIN_ID = 42161;
+
+/**
+ * DailyClaim contract ABI.
+ * Minimal ABI containing only the functions needed for frontend interaction.
+ */
+export const DAILY_CLAIM_ABI = [
+  {
+    inputs: [],
+    name: 'claim',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'address', name: '', type: 'address' }],
+    name: 'lastClaimTime',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'dailyAmount',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: false, internalType: 'address', name: 'user', type: 'address' },
+      { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' },
+    ],
+    name: 'Claimed',
+    type: 'event',
+  },
+] as const;

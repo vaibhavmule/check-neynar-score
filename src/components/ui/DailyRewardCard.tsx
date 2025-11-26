@@ -3,22 +3,20 @@
 import { useDailyReward } from "~/hooks/useDailyReward";
 import { Button } from "./Button";
 import { useAccount, useSwitchChain } from "wagmi";
-import { ARBITRUM_CHAIN_ID, REWARD_CONTRACT_ADDRESS } from "~/lib/constants";
+import { ARBITRUM_CHAIN_ID } from "~/lib/constants";
 import { truncateAddress } from "~/lib/truncateAddress";
 import { useEffect, useState } from "react";
 
 /**
  * DailyRewardCard component displays daily reward claim functionality.
  * 
- * Users can claim rewards once per day by calling the contract's claim() function.
+ * Users can claim rewards by calling the contract's claim() function.
  * The component handles wallet connection, chain switching, and transaction status.
  */
 export function DailyRewardCard() {
   const { isConnected, chainId } = useAccount();
   const { switchChain } = useSwitchChain();
   const {
-    canClaim,
-    timeUntilNextClaim,
     claim,
     hash,
     isPending,
@@ -45,18 +43,6 @@ export function DailyRewardCard() {
     claim();
   };
 
-  const formatTimeRemaining = () => {
-    if (!timeUntilNextClaim) return null;
-    const { hours, minutes, seconds } = timeUntilNextClaim;
-    if (hours > 0) {
-      return `${hours}h ${minutes}m`;
-    }
-    if (minutes > 0) {
-      return `${minutes}m ${seconds}s`;
-    }
-    return `${seconds}s`;
-  };
-
   const getButtonText = () => {
     if (!isConnected) {
       return "Connect Wallet";
@@ -70,26 +56,17 @@ export function DailyRewardCard() {
     if (isSuccess) {
       return "Claimed! ✓";
     }
-    if (canClaim) {
-      return "Claim";
-    }
-    if (timeUntilNextClaim) {
-      return `Next claim in ${formatTimeRemaining()}`;
-    }
-    return "Check Claim Status";
+    return "Claim";
   };
 
   const isButtonDisabled = () => {
     if (!isConnected) return false; // Allow connecting
     if (needsChainSwitch) return false; // Allow switching
     if (isPending) return true;
-    if (isSuccess) return true;
-    return !canClaim;
+    return false;
   };
 
-  const arbiscanUrl = hash
-    ? `https://arbiscan.io/tx/${hash}`
-    : `https://arbiscan.io/address/${REWARD_CONTRACT_ADDRESS}`;
+  const arbiscanUrl = hash ? `https://arbiscan.io/tx/${hash}` : null;
 
   return (
     <div className="rounded-3xl border border-white/60 bg-white/80 p-5 shadow-soft backdrop-blur dark:border-white/10 dark:bg-gray-900/80">
@@ -121,7 +98,7 @@ export function DailyRewardCard() {
             </p>
           )}
 
-          {hash && (
+          {hash && arbiscanUrl && (
             <div className="space-y-1 text-xs text-gray-600 dark:text-gray-300">
               <div className="text-center">
                 <a

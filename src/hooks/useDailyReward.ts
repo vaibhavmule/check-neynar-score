@@ -101,7 +101,7 @@ export function useDailyReward() {
 
   // Claim function
   const claim = () => {
-    if (!canClaim || isWritePending) {
+    if (isWritePending) {
       return;
     }
 

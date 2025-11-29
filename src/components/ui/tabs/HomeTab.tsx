@@ -141,7 +141,7 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
                 <ShareButton
                   buttonText="Share Score"
                   cast={{
-                    text: `My Neynar Score is ${(score ?? 0).toFixed(2)}. Check your score:`,
+                    text: `My Neynar Score is ${Math.round(score ?? 0)}. Check your score and Claim $ARB, a mini app by @${DEVELOPER_USERNAME}`,
                     embeds: [
                       {
                         path: `/share/${fid}`,

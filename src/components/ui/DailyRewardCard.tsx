@@ -6,6 +6,7 @@ import { useAccount, useSwitchChain } from "wagmi";
 import { ARBITRUM_CHAIN_ID } from "~/lib/constants";
 import { truncateAddress } from "~/lib/truncateAddress";
 import { useEffect, useState } from "react";
+import { useMiniApp } from "@neynar/react";
 
 /**
  * DailyRewardCard component displays daily reward claim functionality.
@@ -16,6 +17,7 @@ import { useEffect, useState } from "react";
 export function DailyRewardCard() {
   const { isConnected, chainId } = useAccount();
   const { switchChain } = useSwitchChain();
+  const { actions } = useMiniApp();
   const {
     claim,
     hash,
@@ -41,6 +43,12 @@ export function DailyRewardCard() {
       return;
     }
     claim();
+  };
+
+  const handleOpenSisterApp = () => {
+    if (actions?.openUrl) {
+      actions.openUrl('https://farcaster.xyz/miniapps/CxzrOOFoUDV7/neynar-score');
+    }
   };
 
   const getButtonText = () => {
@@ -90,6 +98,16 @@ export function DailyRewardCard() {
             className="w-full"
           >
             {getButtonText()}
+          </Button>
+
+          <Button
+            onClick={handleOpenSisterApp}
+            disabled={!actions?.openUrl}
+            variant="secondary"
+            size="md"
+            className="w-full"
+          >
+            Claim in Sister App
           </Button>
 
           {error && (

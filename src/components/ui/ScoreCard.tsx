@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { useMiniApp } from "@neynar/react";
+import { APP_URL, DEVELOPER_USERNAME } from "~/lib/constants";
 
 type ScoreCardProps = {
   fid?: number;
@@ -14,6 +16,7 @@ type ScoreCardProps = {
 
 export function ScoreCard({ fid, score, username, pfpUrl, loading, timeAgo: _timeAgo, error }: ScoreCardProps) {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const { context, actions } = useMiniApp();
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -26,6 +29,35 @@ export function ScoreCard({ fid, score, username, pfpUrl, loading, timeAgo: _tim
     mediaQuery.addEventListener("change", handleChange);
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
+
+  const handleShare = useCallback(async () => {
+    if (!context?.user?.fid) {
+      console.warn("User FID not available");
+      alert("Share functionality is not available. Please try again later.");
+      return;
+    }
+    
+    if (!actions || typeof actions.composeCast !== 'function') {
+      console.warn("composeCast action not available");
+      alert("Share functionality is not available. Please try again later.");
+      return;
+    }
+    
+    try {
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : APP_URL;
+      const shareUrl = `${baseUrl}/share/${context.user.fid}`;
+      const shareText = score !== undefined && score !== null
+        ? `My Neynar Score is ${Math.round(score)}. Check your score and Claim $ARB, a mini app by @${DEVELOPER_USERNAME}`
+        : `Check your Neynar Score and Claim $ARB, a mini app by @${DEVELOPER_USERNAME}`;
+      await actions.composeCast({
+        text: shareText,
+        embeds: [shareUrl],
+      });
+    } catch (error) {
+      console.error("Failed to share:", error);
+      alert(`Failed to share: ${error instanceof Error ? error.message : "Unknown error"}`);
+    }
+  }, [context?.user?.fid, actions, score]);
 
   const numericScore = typeof score === "number" ? Math.max(0, Math.min(100, score)) : undefined;
   const angle = typeof numericScore === "number" ? (numericScore / 100) * 360 : 0;
@@ -130,11 +162,39 @@ export function ScoreCard({ fid, score, username, pfpUrl, loading, timeAgo: _tim
                   </>
                 ) : (
                   <>
-                    {typeof fid === "number" && (
-                      <span className="inline-flex items-center rounded-full border border-primary-200 bg-primary-50 px-3.5 py-1.5 text-xs font-semibold text-primary-700 dark:border-primary-900/40 dark:bg-primary-900/30 dark:text-primary-200">
-                        FID: {fid}
-                      </span>
-                    )}
+                    <div className="flex items-center gap-2.5">
+                      {typeof fid === "number" && (
+                        <span className="inline-flex items-center rounded-full border border-primary-200 bg-primary-50 px-3.5 py-1.5 text-xs font-semibold text-primary-700 dark:border-primary-900/40 dark:bg-primary-900/30 dark:text-primary-200">
+                          FID: {fid}
+                        </span>
+                      )}
+                      {actions && typeof actions.composeCast === 'function' && context?.user?.fid && (
+                        <button
+                          onClick={handleShare}
+                          className="cursor-pointer transition-all duration-300 hover:opacity-80 flex items-center justify-center p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                          title="Share your score"
+                          aria-label="Share your score"
+                        >
+                          <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="text-gray-600 dark:text-gray-400"
+                          >
+                            <circle cx="18" cy="5" r="3" />
+                            <circle cx="6" cy="12" r="3" />
+                            <circle cx="18" cy="19" r="3" />
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
                     {username && (
                       <span className="inline-flex items-center rounded-full bg-gray-200 px-3.5 py-1.5 text-xs font-semibold text-gray-800 dark:bg-gray-700 dark:text-gray-200">
                         @{username}

@@ -53,7 +53,7 @@ export function DailyRewardCard() {
 
   const handleOpenImproveApp = () => {
     if (actions?.openUrl) {
-      actions.openUrl('https://improve-neynar-score.vercel.app');
+      actions.openUrl('https://farcaster.xyz/miniapps/g-g7n6Jhbugh/improve-neynar-score');
     }
   };
 

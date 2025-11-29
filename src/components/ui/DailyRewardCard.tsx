@@ -51,6 +51,12 @@ export function DailyRewardCard() {
     }
   };
 
+  const handleOpenImproveApp = () => {
+    if (actions?.openUrl) {
+      actions.openUrl('https://improve-neynar-score.vercel.app');
+    }
+  };
+
   const getButtonText = () => {
     if (!isConnected) {
       return "Connect Wallet";
@@ -108,6 +114,16 @@ export function DailyRewardCard() {
             className="w-full"
           >
             Claim in Sister App
+          </Button>
+
+          <Button
+            onClick={handleOpenImproveApp}
+            disabled={!actions?.openUrl}
+            variant="secondary"
+            size="md"
+            className="w-full"
+          >
+            Improve Neynar Score
           </Button>
 
           {error && (

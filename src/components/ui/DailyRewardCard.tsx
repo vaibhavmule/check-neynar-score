@@ -119,7 +119,7 @@ export function DailyRewardCard() {
           <Button
             onClick={handleOpenImproveApp}
             disabled={!actions?.openUrl}
-            variant="secondary"
+            variant="primary"
             size="md"
             className="w-full"
           >

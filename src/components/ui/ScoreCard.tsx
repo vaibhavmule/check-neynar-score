@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useMiniApp } from "@neynar/react";
 import { APP_URL, DEVELOPER_USERNAME } from "~/lib/constants";
+import { Button } from "./Button";
 
 type ScoreCardProps = {
   fid?: number;
@@ -162,29 +163,36 @@ export function ScoreCard({ fid, score, username, pfpUrl, loading, timeAgo: _tim
                   </>
                 ) : (
                   <>
-                    <div className="flex items-center gap-2.5">
+                    <div className="flex flex-wrap items-center gap-2.5">
                       {typeof fid === "number" && (
                         <span className="inline-flex items-center rounded-full border border-primary-200 bg-primary-50 px-3.5 py-1.5 text-xs font-semibold text-primary-700 dark:border-primary-900/40 dark:bg-primary-900/30 dark:text-primary-200">
                           FID: {fid}
                         </span>
                       )}
+                      {username && (
+                        <span className="inline-flex items-center rounded-full bg-gray-200 px-3.5 py-1.5 text-xs font-semibold text-gray-800 dark:bg-gray-700 dark:text-gray-200">
+                          @{username}
+                        </span>
+                      )}
                       {actions && typeof actions.composeCast === 'function' && context?.user?.fid && (
-                        <button
+                        <Button
                           onClick={handleShare}
-                          className="cursor-pointer transition-all duration-300 hover:opacity-80 flex items-center justify-center p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                          variant="secondary"
+                          size="sm"
+                          className="!w-auto !max-w-none !mx-0 inline-flex items-center gap-1.5"
                           title="Share your score"
                           aria-label="Share your score"
                         >
                           <svg
-                            width="18"
-                            height="18"
+                            width="16"
+                            height="16"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="2"
                             strokeLinecap="round"
                             strokeLinejoin="round"
-                            className="text-gray-600 dark:text-gray-400"
+                            className="text-current"
                           >
                             <circle cx="18" cy="5" r="3" />
                             <circle cx="6" cy="12" r="3" />
@@ -192,14 +200,10 @@ export function ScoreCard({ fid, score, username, pfpUrl, loading, timeAgo: _tim
                             <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
                             <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
                           </svg>
-                        </button>
+                          <span>Share</span>
+                        </Button>
                       )}
                     </div>
-                    {username && (
-                      <span className="inline-flex items-center rounded-full bg-gray-200 px-3.5 py-1.5 text-xs font-semibold text-gray-800 dark:bg-gray-700 dark:text-gray-200">
-                        @{username}
-                      </span>
-                    )}
                     {loading && (
                       <span className="ml-auto inline-flex items-center rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-300">
                         <span className="spinner mr-2 h-3 w-3" aria-hidden="true" />

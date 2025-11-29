@@ -89,17 +89,7 @@ export async function GET(request: NextRequest) {
             </div>
           </div>
         )}
-        <p tw="text-4xl mt-6 text-white opacity-90 mb-8">Check your Neynar Score</p>
-        <div tw="flex items-center gap-6 mt-4">
-          <div tw="flex items-center justify-center bg-[#5C3A2A] rounded-2xl px-6 py-3 shadow-lg">
-            <p tw="text-2xl font-semibold text-white">FID: {fid}</p>
-          </div>
-          {user?.username && (
-            <div tw="flex items-center justify-center bg-gray-800 rounded-2xl px-6 py-3 shadow-lg">
-              <p tw="text-2xl font-semibold text-white">@{user.username}</p>
-            </div>
-          )}
-        </div>
+        <p tw="text-4xl mt-6 text-white opacity-90">Check your Neynar Score</p>
       </div>
     ),
     {

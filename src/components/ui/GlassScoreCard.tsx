@@ -15,7 +15,7 @@ type GlassScoreCardProps = {
 };
 
 export function GlassScoreCard({ fid, score, username, pfpUrl, loading, error, design = 'glass' }: GlassScoreCardProps) {
-  const { context, actions } = useMiniApp();
+  const { actions } = useMiniApp();
   const [animatedScore, setAnimatedScore] = useState<number | null>(null);
   const animationRef = useRef<number | null>(null);
   const previousScoreRef = useRef<number | null>(null);
@@ -74,25 +74,6 @@ export function GlassScoreCard({ fid, score, username, pfpUrl, loading, error, d
 
   // Display score rounded for glass design
   const displayScore = animatedScore !== null ? Math.round(animatedScore) : null;
-
-  const handleTip = useCallback(async () => {
-    if (!actions?.sendToken) {
-      console.warn("sendToken action not available");
-      alert("Tip functionality is not available. Please try again later.");
-      return;
-    }
-    
-    try {
-      await actions.sendToken({
-        recipientFid: 1356870,
-        token: "eip155:8453/erc20:0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", // USDC on Base
-        amount: "1000000", // 1 USDC (6 decimals)
-      });
-    } catch (error) {
-      console.error("Failed to tip:", error);
-      alert(`Failed to send tip: ${error instanceof Error ? error.message : "Unknown error"}`);
-    }
-  }, [actions]);
 
   const handleShare = useCallback(async () => {
     if (!fid) {
@@ -229,21 +210,7 @@ export function GlassScoreCard({ fid, score, username, pfpUrl, loading, error, d
 
       {/* Footer */}
       <div className="text-center relative z-10" style={{ pointerEvents: 'auto' }}>
-        <div className="flex justify-center items-center gap-4 sm:gap-6 md:gap-8 relative z-10">
-          {/* Tip Button */}
-          <button
-            onClick={handleTip}
-            className="bg-transparent border-none cursor-pointer transition-all duration-300"
-            style={{
-              ...buttonStyle,
-              fontSize: '1.8rem',
-            }}
-            onMouseEnter={handleButtonHover}
-            onMouseLeave={handleButtonLeave}
-          >
-            tip
-          </button>
-
+        <div className="flex justify-center items-center relative z-10">
           {/* Share Button */}
           <button
             onClick={handleShare}

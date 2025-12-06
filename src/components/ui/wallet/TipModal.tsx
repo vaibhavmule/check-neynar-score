@@ -79,8 +79,8 @@ export function TipModal({
         onClick={onClose}
       />
 
-      {/* Modal */}
-      <div className="relative w-full max-w-md rounded-3xl border border-white/60 bg-white/95 p-6 shadow-2xl backdrop-blur dark:border-white/10 dark:bg-gray-900/95 z-10">
+      {/* Modal - centered both horizontally and vertically */}
+      <div className="relative w-full max-w-md rounded-3xl border border-white/60 bg-white/95 p-6 shadow-2xl backdrop-blur dark:border-white/10 dark:bg-gray-900/95">
         {/* Close button */}
         <button
           onClick={onClose}

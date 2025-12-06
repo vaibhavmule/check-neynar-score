@@ -260,7 +260,6 @@ export async function GET(request: NextRequest) {
             </div>
           </div>
         )}
-        <p tw="text-4xl mt-6 text-white opacity-90">Neynar Score</p>
       </div>
     ),
     {

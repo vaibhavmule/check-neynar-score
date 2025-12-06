@@ -134,6 +134,7 @@ export function ScoreCard({ fid, score, username, pfpUrl, loading, timeAgo: _tim
                   </div>
 
                   <div className="flex-1 min-w-0">
+                    <p className="mb-1 text-sm font-semibold uppercase tracking-[0.3em] text-white/90">Neynar Score</p>
                     <p className="text-xs text-white/80">Quality metric for Farcaster</p>
                   </div>
                 </div>

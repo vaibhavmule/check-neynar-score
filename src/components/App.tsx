@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useMiniApp } from "@neynar/react";
 import { sdk } from "@farcaster/miniapp-sdk";
 import { Header } from "~/components/ui/Header";
-import { HomeTab } from "~/components/ui/tabs";
+import { BottomNav, type TabType } from "~/components/ui/BottomNav";
+import { HomeTab, TipsTab, MoreTab, WhatIsNeynarScoreTab } from "~/components/ui/tabs";
 import { AddAppPrompt } from "~/components/ui/AddAppPrompt";
 import { useNeynarUser } from "../hooks/useNeynarUser";
 
@@ -18,18 +19,20 @@ export interface AppProps {
  * This component orchestrates the overall mini app experience by:
  * - Handling Farcaster mini app initialization
  * - Coordinating user context and score fetching
+ * - Managing bottom tab navigation
  * - Providing error handling and loading states
- * - Rendering the single-page score checking interface
+ * - Integrating haptic feedback and back navigation
  * 
  * The component integrates with the Neynar SDK for Farcaster functionality.
- * It provides a single-page app experience for checking Neynar scores.
+ * It provides a mobile-first experience with score as default view and tabs for additional content.
  * 
  * Features:
- * - Single-page interface (no tabs)
+ * - Score always visible (primary feature)
+ * - Bottom tab navigation (Tips, About, More)
  * - Farcaster mini app integration
+ * - Haptic feedback for mobile interactions
+ * - Back navigation support
  * - Score fetching for connected users or by FID input
- * - Error handling and display
- * - Loading states for async operations
  * 
  * @param props - Component props
  * @param props.title - Optional title for the mini app (defaults to "Neynar Starter Kit")
@@ -42,6 +45,9 @@ export interface AppProps {
 export default function App(
   { title: _title }: AppProps = { title: "Neynar Starter Kit" }
 ) {
+  // --- State ---
+  const [activeTab, setActiveTab] = useState<TabType>("tips");
+
   // --- Hooks ---
   const {
     isSDKLoaded,
@@ -54,6 +60,11 @@ export default function App(
     fetchScore,
     loading: scoreLoading,
   } = useNeynarUser(context || undefined);
+
+  // --- Enhanced fetchScore wrapper ---
+  const handleFetchScore = useCallback(async (fid?: number) => {
+    await fetchScore(fid);
+  }, [fetchScore]);
 
   // --- Effects ---
   /**
@@ -88,6 +99,67 @@ export default function App(
       window.cancelAnimationFrame(raf);
     };
   }, [isSDKLoaded]);
+
+  /**
+   * Enable back navigation integration with Farcaster SDK.
+   * This provides native back button/gesture support.
+   */
+  useEffect(() => {
+    if (!isSDKLoaded) {
+      return;
+    }
+
+    let cancelled = false;
+    const enableBackNav = async () => {
+      try {
+        const capabilities = await sdk.getCapabilities();
+        if (capabilities.includes("back")) {
+          await sdk.back.enableWebNavigation();
+        }
+      } catch (error) {
+        if (!cancelled) {
+          console.debug("Back navigation not available:", error);
+        }
+      }
+    };
+
+    enableBackNav();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isSDKLoaded]);
+
+  /**
+   * Trigger haptic feedback when score is successfully loaded.
+   */
+  useEffect(() => {
+    if (!isSDKLoaded || !neynarUser || neynarUser.score === null || scoreLoading) {
+      return;
+    }
+
+    let cancelled = false;
+    const triggerSuccessHaptic = async () => {
+      try {
+        const capabilities = await sdk.getCapabilities();
+        if (capabilities.includes("haptics.notificationOccurred")) {
+          await sdk.haptics.notificationOccurred("success");
+        }
+      } catch (error) {
+        if (!cancelled) {
+          console.debug("Haptics not available:", error);
+        }
+      }
+    };
+
+    // Small delay to ensure state is settled
+    const timeout = setTimeout(triggerSuccessHaptic, 100);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timeout);
+    };
+  }, [isSDKLoaded, neynarUser?.score, scoreLoading]);
 
   // --- Early Returns ---
   if (!isSDKLoaded) {
@@ -127,19 +199,38 @@ export default function App(
           <Header neynarUser={neynarUser} />
 
           {/* Main content area */}
-          <main className="flex-1">
-            <div className="container py-5 pb-8">
-              <HomeTab
-                fid={neynarUser?.fid ?? context?.user?.fid}
-                username={neynarUser?.username ?? context?.user?.username}
-                pfpUrl={neynarUser?.pfpUrl ?? context?.user?.pfpUrl}
-                score={neynarUser?.score}
-                loading={scoreLoading}
-                fetchScore={fetchScore}
-                hasScore={neynarUser !== null}
-              />
+          <main className="flex-1 pb-20">
+            <div className="container py-5">
+              {/* Score Section - Always Visible */}
+              <div className="mb-6">
+                <HomeTab
+                  fid={neynarUser?.fid ?? context?.user?.fid}
+                  username={neynarUser?.username ?? context?.user?.username}
+                  pfpUrl={neynarUser?.pfpUrl ?? context?.user?.pfpUrl}
+                  score={neynarUser?.score}
+                  loading={scoreLoading}
+                  fetchScore={handleFetchScore}
+                  hasScore={neynarUser !== null}
+                />
+              </div>
+
+              {/* Tab Content Section */}
+              <div className="min-h-[200px]">
+                {activeTab === "tips" && <TipsTab />}
+                {activeTab === "about" && <WhatIsNeynarScoreTab />}
+                {activeTab === "more" && (
+                  <MoreTab
+                    fid={neynarUser?.fid ?? context?.user?.fid}
+                    score={neynarUser?.score ?? null}
+                    username={neynarUser?.username ?? context?.user?.username}
+                  />
+                )}
+              </div>
             </div>
           </main>
+
+          {/* Bottom Navigation */}
+          <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
         </div>
       </div>
     </>

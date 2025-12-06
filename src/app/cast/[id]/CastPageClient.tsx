@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import { useMiniApp } from "@neynar/react";
 import { CastDisplay } from "~/components/ui/CastDisplay";
 import { CASTS, APP_URL } from "~/lib/constants";

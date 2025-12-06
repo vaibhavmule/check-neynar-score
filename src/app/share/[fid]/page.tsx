@@ -34,7 +34,7 @@ export async function generateMetadata({
 
 export default async function SharePage({
   params,
-  searchParams,
+  searchParams: _searchParams,
 }: {
   params: Promise<{ fid: string }>;
   searchParams: Promise<{ design?: string }>;

@@ -14,34 +14,37 @@ type GlassScoreCardProps = {
   design?: string;
 };
 
-export function GlassScoreCard({ fid, score, username, pfpUrl, loading, error, design = 'glass' }: GlassScoreCardProps) {
+export function GlassScoreCard({ fid, score, username, pfpUrl: _pfpUrl, loading, error, design = 'glass' }: GlassScoreCardProps) {
   const { actions } = useMiniApp();
   const [animatedScore, setAnimatedScore] = useState<number | null>(null);
   const animationRef = useRef<number | null>(null);
   const previousScoreRef = useRef<number | null>(null);
 
-  // Target score normalized to 0-100 range
+  // Target score normalized to 0-100 range, then multiply by 100 for animation
   const targetScore = score !== undefined && score !== null 
     ? Math.max(0, Math.min(100, score)) 
     : null;
 
-  // Animate score from 0.01 to target score
+  // Animate score from 0.01 * 100 to target score * 100
   useEffect(() => {
     if (loading || targetScore === null) {
       setAnimatedScore(null);
       return;
     }
 
+    // Calculate animation target (multiply by 100)
+    const animationTarget = targetScore * 100;
+
     // Only animate if score changed
     if (previousScoreRef.current === targetScore) {
-      setAnimatedScore(targetScore);
+      setAnimatedScore(animationTarget);
       return;
     }
 
     previousScoreRef.current = targetScore;
 
-    const startValue = 0.01;
-    const endValue = targetScore;
+    const startValue = 0.01 * 100; // Start from 1
+    const endValue = animationTarget;
     const duration = 1500; // 1.5 seconds
     const startTime = Date.now();
 
@@ -72,8 +75,8 @@ export function GlassScoreCard({ fid, score, username, pfpUrl, loading, error, d
     };
   }, [targetScore, loading]);
 
-  // Display score rounded for glass design
-  const displayScore = animatedScore !== null ? Math.round(animatedScore) : null;
+  // Display score rounded for glass design (divide by 100 to get back to 0-100 range)
+  const displayScore = animatedScore !== null ? Math.round(animatedScore / 100) : null;
 
   const handleShare = useCallback(async () => {
     if (!fid) {

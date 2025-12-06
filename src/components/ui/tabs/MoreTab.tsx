@@ -6,7 +6,7 @@ import { sdk } from "@farcaster/miniapp-sdk";
 import { ShareButton } from "../Share";
 import { Button } from "../Button";
 import { TipButtonWithModal } from "../wallet/TipButtonWithModal";
-import { DEVELOPER_FID, DEVELOPER_TIP_ADDRESS, DEVELOPER_USERNAME, APP_URL } from "~/lib/constants";
+import { DEVELOPER_FID, DEVELOPER_TIP_ADDRESS, DEVELOPER_USERNAME } from "~/lib/constants";
 
 type MoreTabProps = {
   fid?: number;
@@ -23,7 +23,7 @@ type MoreTabProps = {
  * - Future: Settings/preferences
  */
 export function MoreTab({ fid, score, username }: MoreTabProps) {
-  const { actions, isSDKLoaded, context } = useMiniApp();
+  const { actions, isSDKLoaded } = useMiniApp();
 
   const handleFollowDeveloper = useCallback(() => {
     if (!isSDKLoaded || !actions) {
@@ -81,11 +81,13 @@ export function MoreTab({ fid, score, username }: MoreTabProps) {
                     className="w-full"
                   />
                 </div>
-                <TipUsdc
+                <TipButtonWithModal
                   recipientFid={fid}
                   username={username}
                   variant="secondary"
                   size="md"
+                  className="w-full"
+                  buttonText="Tip User"
                 />
               </div>
             </div>

@@ -24,23 +24,26 @@ export function OrangeScoreCard({ fid, score, username, pfpUrl, loading, error, 
   
   const displayName = username || "User";
 
-  // Animate score from 0.01 to target score
+  // Animate score from 0.01 to target score * 100
   useEffect(() => {
     if (loading || targetScore === null) {
       setAnimatedScore(null);
       return;
     }
 
+    // Calculate animation target (multiply by 100)
+    const animationTarget = targetScore * 100;
+
     // Only animate if score changed
     if (previousScoreRef.current === targetScore) {
-      setAnimatedScore(targetScore);
+      setAnimatedScore(animationTarget);
       return;
     }
 
     previousScoreRef.current = targetScore;
 
-    const startValue = 0.01;
-    const endValue = targetScore;
+    const startValue = 0.01 * 100; // Start from 1
+    const endValue = animationTarget;
     const duration = 1500; // 1.5 seconds
     const startTime = Date.now();
 
@@ -71,9 +74,9 @@ export function OrangeScoreCard({ fid, score, username, pfpUrl, loading, error, 
     };
   }, [targetScore, loading]);
 
-  // Format animated score for display
+  // Format animated score for display (divide by 100 if it was a decimal score)
   const scoreDisplay = animatedScore !== null
-    ? (isDecimal ? animatedScore.toFixed(2) : Math.round(animatedScore).toString())
+    ? (isDecimal ? (animatedScore / 100).toFixed(2) : Math.round(animatedScore).toString())
     : null;
 
   const handleShare = useCallback(async () => {

@@ -60,11 +60,6 @@ export default function App(
     error: scoreError,
   } = useNeynarUser(context || undefined);
 
-  // --- Enhanced fetchScore wrapper ---
-  const handleFetchScore = useCallback(async (fid?: number) => {
-    await fetchScore(fid);
-  }, [fetchScore]);
-
   // --- Effects ---
   /**
    * Auto-fetch score when SDK is loaded and user FID is available.

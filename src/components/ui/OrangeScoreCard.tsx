@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 
 type OrangeScoreCardProps = {
   fid?: number;
@@ -14,17 +14,74 @@ type OrangeScoreCardProps = {
 
 export function OrangeScoreCard({ fid, score, username, pfpUrl, loading, error, design = 'orange' }: OrangeScoreCardProps) {
   const [shareSuccess, setShareSuccess] = useState(false);
+  const [animatedScore, setAnimatedScore] = useState<number | null>(null);
+  const animationRef = useRef<number | null>(null);
+  const previousScoreRef = useRef<number | null>(null);
 
   // Display score in original format (0-1 range shows as decimal, 0-100 shows as integer)
-  const scoreDisplay = score !== null && score !== undefined 
-    ? (score <= 1 ? score.toFixed(2) : Math.round(score).toString())
-    : null;
+  const targetScore = score !== null && score !== undefined ? score : null;
+  const isDecimal = targetScore !== null && targetScore <= 1;
   
   const displayName = username || "User";
 
+  // Animate score from 0.01 to target score
+  useEffect(() => {
+    if (loading || targetScore === null) {
+      setAnimatedScore(null);
+      return;
+    }
+
+    // Only animate if score changed
+    if (previousScoreRef.current === targetScore) {
+      setAnimatedScore(targetScore);
+      return;
+    }
+
+    previousScoreRef.current = targetScore;
+
+    const startValue = 0.01;
+    const endValue = targetScore;
+    const duration = 1500; // 1.5 seconds
+    const startTime = Date.now();
+
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Easing function (ease-out)
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      const currentValue = startValue + (endValue - startValue) * easeOut;
+      
+      setAnimatedScore(currentValue);
+
+      if (progress < 1) {
+        animationRef.current = requestAnimationFrame(animate);
+      } else {
+        setAnimatedScore(endValue);
+      }
+    };
+
+    setAnimatedScore(startValue);
+    animationRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationRef.current !== null) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [targetScore, loading]);
+
+  // Format animated score for display
+  const scoreDisplay = animatedScore !== null
+    ? (isDecimal ? animatedScore.toFixed(2) : Math.round(animatedScore).toString())
+    : null;
+
   const handleShare = useCallback(async () => {
     try {
-      const shareScoreText = scoreDisplay || "N/A";
+      // Use target score for sharing (actual value, not animated)
+      const shareScoreText = targetScore !== null
+        ? (isDecimal ? targetScore.toFixed(2) : Math.round(targetScore).toString())
+        : "N/A";
       const shareText = `Check out ${displayName}'s Neynar Score: ${shareScoreText}!`;
       const shareUrl = fid 
         ? `${window.location.origin}/share/${fid}?design=${design}` 
@@ -50,7 +107,7 @@ export function OrangeScoreCard({ fid, score, username, pfpUrl, loading, error, 
       // User cancelled share or clipboard failed
       console.error('Share failed:', error);
     }
-  }, [fid, scoreDisplay, displayName, design]);
+  }, [fid, targetScore, isDecimal, displayName, design]);
 
   return (
     <div className="relative mx-auto w-full max-w-md">

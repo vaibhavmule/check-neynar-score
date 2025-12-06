@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 import { useMiniApp } from "@neynar/react";
 import { APP_URL } from "~/lib/constants";
 
@@ -16,11 +16,64 @@ type GlassScoreCardProps = {
 
 export function GlassScoreCard({ fid, score, username, pfpUrl, loading, error, design = 'glass' }: GlassScoreCardProps) {
   const { context, actions } = useMiniApp();
+  const [animatedScore, setAnimatedScore] = useState<number | null>(null);
+  const animationRef = useRef<number | null>(null);
+  const previousScoreRef = useRef<number | null>(null);
 
-  // Score is normalized to 0-100 range for display
-  const displayScore = score !== undefined && score !== null 
-    ? Math.max(0, Math.min(100, Math.round(score))) 
+  // Target score normalized to 0-100 range
+  const targetScore = score !== undefined && score !== null 
+    ? Math.max(0, Math.min(100, score)) 
     : null;
+
+  // Animate score from 0.01 to target score
+  useEffect(() => {
+    if (loading || targetScore === null) {
+      setAnimatedScore(null);
+      return;
+    }
+
+    // Only animate if score changed
+    if (previousScoreRef.current === targetScore) {
+      setAnimatedScore(targetScore);
+      return;
+    }
+
+    previousScoreRef.current = targetScore;
+
+    const startValue = 0.01;
+    const endValue = targetScore;
+    const duration = 1500; // 1.5 seconds
+    const startTime = Date.now();
+
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Easing function (ease-out)
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      const currentValue = startValue + (endValue - startValue) * easeOut;
+      
+      setAnimatedScore(currentValue);
+
+      if (progress < 1) {
+        animationRef.current = requestAnimationFrame(animate);
+      } else {
+        setAnimatedScore(endValue);
+      }
+    };
+
+    setAnimatedScore(startValue);
+    animationRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationRef.current !== null) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [targetScore, loading]);
+
+  // Display score rounded for glass design
+  const displayScore = animatedScore !== null ? Math.round(animatedScore) : null;
 
   const handleTip = useCallback(async () => {
     if (!actions?.sendToken) {

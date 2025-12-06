@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useMiniApp } from "@neynar/react";
 import { sdk } from "@farcaster/miniapp-sdk";
+import { TipModal } from "./wallet/TipModal";
 
 export type TabType = "score" | "improve";
 
@@ -21,21 +22,17 @@ const RECIPIENT_FID = 1356870;
  * 
  * Features:
  * - 2 tabs: Score, Improve
- * - Tip button that directly triggers USDC tip action
+ * - Tip button that opens a tip modal for USDC tipping
  * - Haptic feedback on tab switch
  * - Safe area inset support
  * - Minimum 44x44px touch targets
  * - Fixed position with backdrop blur
  */
 export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
-  const { context, actions, isSDKLoaded } = useMiniApp();
+  const { context } = useMiniApp();
+  const [isTipModalOpen, setIsTipModalOpen] = useState(false);
 
   const handleTip = useCallback(async () => {
-    if (!actions?.sendToken || !isSDKLoaded) {
-      console.warn("sendToken action not available");
-      return;
-    }
-
     // Trigger haptic feedback
     try {
       const capabilities = await sdk.getCapabilities();
@@ -46,16 +43,9 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
       console.debug("Haptics not available:", error);
     }
 
-    try {
-      await actions.sendToken({
-        recipientFid: RECIPIENT_FID,
-        token: MINI_APP_TOKEN,
-        amount: MINI_APP_AMOUNT,
-      });
-    } catch (error) {
-      console.error("Failed to tip:", error);
-    }
-  }, [actions, isSDKLoaded]);
+    // Open the tip modal
+    setIsTipModalOpen(true);
+  }, []);
 
   const handleTabClick = async (tab: TabType) => {
     if (tab === activeTab) return;
@@ -132,6 +122,11 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
           </span>
         </button>
       </div>
+      <TipModal
+        isOpen={isTipModalOpen}
+        onClose={() => setIsTipModalOpen(false)}
+        recipientFid={RECIPIENT_FID}
+      />
     </nav>
   );
 }

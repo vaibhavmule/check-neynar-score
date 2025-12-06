@@ -115,12 +115,7 @@ export function OrangeScoreCard({ fid, score, username, pfpUrl, loading, error, 
 
   return (
     <div className="relative mx-auto w-full max-w-md">
-      <div 
-        className="relative rounded-2xl overflow-hidden shadow-2xl"
-        style={{
-          background: '#FF7A3D',
-        }}
-      >
+      <div className="card shadow-2xl overflow-hidden">
         {error ? (
           <div className="bg-primary-50/80 p-6 text-primary-700 dark:bg-primary-900/30 dark:text-primary-200">
             <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
@@ -128,67 +123,52 @@ export function OrangeScoreCard({ fid, score, username, pfpUrl, loading, error, 
             </p>
           </div>
         ) : (
-          <div className="p-6 pb-4">
-            {/* Profile Picture - Centered at top */}
-            {pfpUrl && (
-              <div className="flex justify-center mb-4">
-                <div className="relative w-20 h-20 rounded-full overflow-hidden"
-                  style={{
-                    border: '2px solid white',
-                  }}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={pfpUrl}
-                    alt={displayName}
-                    className="w-full h-full object-cover"
-                  />
+          <>
+            {/* Header with gradient background */}
+            <div className="bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 p-6 relative">
+              {/* Profile Picture */}
+              {pfpUrl && (
+                <div className="flex justify-center mb-4">
+                  <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-lg">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={pfpUrl}
+                      alt={displayName}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                 </div>
-              </div>
-            )}
-
-            {/* Username and Neynar Score text - Centered */}
-            <div className="text-center mb-2">
-              <p className="text-white text-sm mb-1">
-                {displayName}&apos;s
-              </p>
-              <h1 className="text-xl font-bold text-white">
-                Neynar Score
-              </h1>
-            </div>
-
-            {/* Score number - Centered, large */}
-            <div className="text-center mb-6">
-              {scoreDisplay !== null ? (
-                <div className="text-6xl font-bold text-white">
-                  {scoreDisplay}
-                </div>
-              ) : loading ? (
-                <div className="flex justify-center">
-                  <div className="spinner-primary h-8 w-8" />
-                </div>
-              ) : (
-                <p className="text-lg text-white/80">No score available</p>
               )}
+
+              {/* Score Display */}
+              <div className="text-center">
+                <h1 className="text-3xl font-bold text-white mb-2">
+                  {displayName}&apos;s Neynar Score
+                </h1>
+                {scoreDisplay !== null ? (
+                  <div className="text-7xl font-bold text-white">
+                    {scoreDisplay}
+                  </div>
+                ) : loading ? (
+                  <div className="flex justify-center">
+                    <div className="spinner-primary h-12 w-12" />
+                  </div>
+                ) : (
+                  <p className="text-xl text-white/80">No score available</p>
+                )}
+              </div>
             </div>
 
             {/* Share button at bottom */}
-            <button
-              onClick={handleShare}
-              className="w-full rounded-lg py-3 px-4 font-semibold text-white transition-colors"
-              style={{
-                background: 'rgba(255, 255, 255, 0.2)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.3)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
-              }}
-            >
-              {shareSuccess ? '✓ Shared!' : 'Share'}
-            </button>
-          </div>
+            <div className="p-6 bg-white dark:bg-gray-900">
+              <button
+                onClick={handleShare}
+                className="w-full rounded-lg py-3 px-4 font-semibold text-white transition-opacity bg-gradient-to-r from-primary-500 to-primary-600 hover:opacity-90"
+              >
+                {shareSuccess ? '✓ Shared!' : 'Share'}
+              </button>
+            </div>
+          </>
         )}
       </div>
     </div>

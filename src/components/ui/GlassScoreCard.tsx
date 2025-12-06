@@ -140,7 +140,7 @@ export function GlassScoreCard({ fid, score, username, pfpUrl: _pfpUrl, loading,
 
   if (error) {
     return (
-      <div className="relative w-full max-w-[380px] h-[80vh] max-h-[700px] flex flex-col justify-center mx-auto">
+      <div className="relative w-full max-w-md h-[80vh] max-h-[700px] flex flex-col justify-center mx-auto">
         <div className="text-center text-white">
           <p className="text-sm font-semibold">Unable to load score</p>
         </div>

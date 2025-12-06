@@ -177,11 +177,11 @@ export function OrangeScoreCard({ fid, score, username, pfpUrl, loading, error, 
               </div>
             </div>
 
-            {/* Share button at bottom */}
-            <div className="p-6 bg-white dark:bg-gray-900">
+            {/* Share button at bottom - black bar with gradient button */}
+            <div className="p-6 bg-black">
               <button
                 onClick={handleShare}
-                className="w-full rounded-lg py-3 px-4 font-semibold text-white transition-opacity bg-gradient-to-r from-primary-500 to-primary-600 hover:opacity-90"
+                className="w-full rounded-lg py-3 px-4 font-semibold text-white transition-opacity bg-gradient-to-r from-orange-500 to-purple-600 hover:opacity-90"
               >
                 {shareSuccess ? '✓ Shared!' : 'Share'}
               </button>

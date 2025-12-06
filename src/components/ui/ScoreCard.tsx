@@ -48,7 +48,7 @@ export function ScoreCard({ fid, score, username, pfpUrl, loading, timeAgo: _tim
       const baseUrl = typeof window !== 'undefined' ? window.location.origin : APP_URL;
       const shareUrl = `${baseUrl}/share/${context.user.fid}`;
       const shareText = score !== undefined && score !== null
-        ? `My Neynar Score is ${Math.round(score)}. Check your score`
+        ? `My Neynar Score is ${score <= 1 ? score.toFixed(2) : Math.round(score)}. Check your score`
         : `Check your score`;
       await actions.composeCast({
         text: shareText,
@@ -60,11 +60,22 @@ export function ScoreCard({ fid, score, username, pfpUrl, loading, timeAgo: _tim
     }
   }, [context?.user?.fid, actions, score]);
 
-  const numericScore = typeof score === "number" ? Math.max(0, Math.min(100, score)) : undefined;
-  const angle = typeof numericScore === "number" ? (numericScore / 100) * 360 : 0;
+  // Handle score in 0-1 range (from API) or 0-100 range
+  // If score <= 1, it's in 0-1 range; otherwise it's in 0-100 range
+  const numericScore = typeof score === "number" 
+    ? (score <= 1 ? Math.max(0, Math.min(1, score)) : Math.max(0, Math.min(100, score)) / 100)
+    : undefined;
+  
+  // Calculate angle: score is now normalized to 0-1 range
+  const angle = typeof numericScore === "number" ? numericScore * 360 : 0;
+  
+  // Display score in original format (0-1 range shows as decimal, 0-100 shows as integer)
+  const displayScore = typeof score === "number" 
+    ? (score <= 1 ? score.toFixed(2) : Math.round(score).toString())
+    : undefined;
   
   const scoreLabel = typeof numericScore === "number" 
-    ? `Neynar Score: ${numericScore} out of 100` 
+    ? `Neynar Score: ${displayScore}` 
     : "Neynar Score: not available";
 
   const animationClass = prefersReducedMotion 
@@ -116,7 +127,7 @@ export function ScoreCard({ fid, score, username, pfpUrl, loading, timeAgo: _tim
                             aria-label="Loading score"
                           />
                         ) : (
-                          <>{typeof numericScore === "number" ? numericScore : "—"}</>
+                          <>{displayScore ?? "—"}</>
                         )}
                       </span>
                     </div>

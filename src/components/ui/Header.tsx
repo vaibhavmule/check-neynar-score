@@ -5,7 +5,7 @@ import { APP_NAME } from "~/lib/constants";
 import sdk from "@farcaster/miniapp-sdk";
 import { useMiniApp } from "@neynar/react";
 import { useDetectClickOutside } from "~/hooks/useDetectClickOutside";
-import { TipButton } from "./TipButton";
+import { TipUsdc } from "./wallet/TipUsdc";
 
 type HeaderProps = {
   neynarUser?: {
@@ -116,7 +116,7 @@ export function Header({ neynarUser }: HeaderProps) {
                       )}
                     </div>
                   </div>
-                  <TipButton
+                  <TipUsdc
                     recipientFid={neynarUser?.fid ?? context.user.fid}
                     username={neynarUser?.username ?? context.user.username}
                     variant="secondary"

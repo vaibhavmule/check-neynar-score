@@ -6,8 +6,7 @@ import { ScoreCard } from "../ScoreCard";
 import { Button } from "../Button";
 import { ShareButton } from "../Share";
 import { Input } from "../input";
-import { TipButton } from "../TipButton";
-import { DailyRewardCard } from "../DailyRewardCard";
+import { TipUsdc } from "../wallet/TipUsdc";
 import { CastList } from "../CastList";
 import { DEVELOPER_FID, DEVELOPER_TIP_ADDRESS, DEVELOPER_USERNAME, CASTS } from "~/lib/constants";
 
@@ -123,10 +122,6 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
           <ScoreCard fid={fid} score={score ?? undefined} username={username} pfpUrl={pfpUrl} loading={loading} />
         )}
 
-        {hasScore && score !== null && score !== undefined && !loading && (
-          <DailyRewardCard />
-        )}
-
         {/* Cast List Section */}
         <div className="rounded-3xl border border-white/60 bg-white/80 p-6 shadow-soft backdrop-blur dark:border-white/10 dark:bg-gray-900/80">
           <div className="space-y-4">
@@ -157,7 +152,7 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
                 <ShareButton
                   buttonText="Share Score"
                   cast={{
-                    text: `My Neynar Score is ${score ?? 0}. Check your score`,
+                    text: `My Neynar Score is ${score !== null && score !== undefined ? (score <= 1 ? score.toFixed(2) : Math.round(score)) : 0}. Check your score`,
                     embeds: [
                       {
                         path: `/share/${fid}`,
@@ -166,7 +161,7 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
                   }}
                   className="w-full"
                 />
-                <TipButton
+                <TipUsdc
                   recipientFid={fid}
                   username={username}
                   variant="secondary"
@@ -198,7 +193,7 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
               >
                 Follow @{DEVELOPER_USERNAME}
               </Button>
-              <TipButton
+              <TipUsdc
                 recipientFid={DEVELOPER_FID}
                 username={DEVELOPER_USERNAME}
                 recipientAddress={DEVELOPER_TIP_ADDRESS}

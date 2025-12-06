@@ -1,6 +1,8 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { OrangeScoreCard } from "./OrangeScoreCard";
+import { GlassScoreCard } from "./GlassScoreCard";
 
 type ScoreCardProps = {
   fid?: number;
@@ -11,143 +13,94 @@ type ScoreCardProps = {
   error?: string | null;
 };
 
+type DesignType = 'orange' | 'glass';
+
+const DESIGN_STORAGE_KEY = 'scoreCardDesign';
+
 export function ScoreCard({ fid, score, username, pfpUrl, loading, error }: ScoreCardProps) {
-  const [shareSuccess, setShareSuccess] = useState(false);
+  const [design, setDesign] = useState<DesignType>('orange');
 
-  // Display score in original format (0-1 range shows as decimal, 0-100 shows as integer)
-  const scoreDisplay = score !== null && score !== undefined 
-    ? (score <= 1 ? score.toFixed(2) : Math.round(score).toString())
-    : null;
-  
-  const displayName = username || "User";
-
-  const handleShare = useCallback(async () => {
-    try {
-      const shareScoreText = scoreDisplay || "N/A";
-      const shareText = `Check out ${displayName}'s Neynar Score: ${shareScoreText}!`;
-      const shareUrl = fid ? `${window.location.origin}?fid=${fid}` : window.location.href;
-
-      // Try Web Share API first (works on mobile and some desktop browsers)
-      if (navigator.share) {
-        await navigator.share({
-          title: `${displayName}'s Neynar Score`,
-          text: shareText,
-          url: shareUrl,
-        });
-        setShareSuccess(true);
-        setTimeout(() => setShareSuccess(false), 2000);
-      } else {
-        // Fallback to clipboard
-        const shareContent = `${shareText}\n${shareUrl}`;
-        await navigator.clipboard.writeText(shareContent);
-        setShareSuccess(true);
-        setTimeout(() => setShareSuccess(false), 2000);
+  // Load design preference from localStorage on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedDesign = localStorage.getItem(DESIGN_STORAGE_KEY) as DesignType | null;
+      if (savedDesign === 'orange' || savedDesign === 'glass') {
+        setDesign(savedDesign);
       }
-    } catch (error) {
-      // User cancelled share or clipboard failed
-      console.error('Share failed:', error);
     }
-  }, [fid, scoreDisplay, displayName]);
+  }, []);
+
+  // Toggle design and save to localStorage
+  const toggleDesign = useCallback(() => {
+    setDesign((prev) => {
+      const newDesign = prev === 'orange' ? 'glass' : 'orange';
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(DESIGN_STORAGE_KEY, newDesign);
+      }
+      return newDesign;
+    });
+  }, []);
 
   return (
-    <div className="relative mx-auto w-full max-w-md">
-      <div 
-        className="relative rounded-2xl overflow-hidden shadow-2xl"
+    <div className="relative w-full">
+      {/* Design Toggle Button */}
+      <button
+        onClick={toggleDesign}
+        className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-black/30 hover:bg-black/50 transition-colors flex items-center justify-center backdrop-blur-sm border border-white/20"
+        aria-label="Toggle design"
+        title={`Switch to ${design === 'orange' ? 'glass' : 'orange'} design`}
         style={{
-          background: '#FF7A3D',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
         }}
       >
-        {error ? (
-          <div className="bg-primary-50/80 p-6 text-primary-700 dark:bg-primary-900/30 dark:text-primary-200">
-            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-              Unable to load score
-            </p>
-          </div>
-        ) : (
-          <div className="p-6 pb-4">
-            {/* Refresh button in top right */}
-            <button
-              onClick={() => window.location.reload()}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center"
-              aria-label="Refresh"
-            >
-              <svg
-                className="w-5 h-5 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                />
-              </svg>
-            </button>
+        <svg
+          className="w-5 h-5 text-white"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          {design === 'orange' ? (
+            // Glass icon (layers)
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1h-4a1 1 0 01-1-1v-3z"
+            />
+          ) : (
+            // Orange/sun icon
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+            />
+          )}
+        </svg>
+      </button>
 
-            {/* Profile Picture - Centered at top */}
-            {pfpUrl && (
-              <div className="flex justify-center mb-4">
-                <div className="relative w-20 h-20 rounded-full overflow-hidden"
-                  style={{
-                    border: '2px solid white',
-                  }}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={pfpUrl}
-                    alt={displayName}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* Username and Neynar Score text - Centered */}
-            <div className="text-center mb-2">
-              <p className="text-white text-sm mb-1">
-                {displayName}&apos;s
-              </p>
-              <h1 className="text-xl font-bold text-white">
-                Neynar Score
-              </h1>
-            </div>
-
-            {/* Score number - Centered, large */}
-            <div className="text-center mb-6">
-              {scoreDisplay !== null ? (
-                <div className="text-6xl font-bold text-white">
-                  {scoreDisplay}
-                </div>
-              ) : loading ? (
-                <div className="flex justify-center">
-                  <div className="spinner-primary h-8 w-8" />
-                </div>
-              ) : (
-                <p className="text-lg text-white/80">No score available</p>
-              )}
-            </div>
-
-            {/* Share button at bottom */}
-            <button
-              onClick={handleShare}
-              className="w-full rounded-lg py-3 px-4 font-semibold text-white transition-colors"
-              style={{
-                background: 'rgba(255, 255, 255, 0.2)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.3)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
-              }}
-            >
-              {shareSuccess ? '✓ Shared!' : 'Share'}
-            </button>
-          </div>
-        )}
-      </div>
+      {/* Render appropriate design variant */}
+      {design === 'orange' ? (
+        <OrangeScoreCard
+          fid={fid}
+          score={score}
+          username={username}
+          pfpUrl={pfpUrl}
+          loading={loading}
+          error={error}
+          design={design}
+        />
+      ) : (
+        <GlassScoreCard
+          fid={fid}
+          score={score}
+          username={username}
+          pfpUrl={pfpUrl}
+          loading={loading}
+          error={error}
+          design={design}
+        />
+      )}
     </div>
   );
 }

@@ -211,6 +211,7 @@ export async function GET(request: NextRequest) {
   const score = user?.score ?? null;
   const scoreDisplay = score !== null ? score.toFixed(2) : null;
   const displayName = user?.display_name || user?.username || 'User';
+  const design = searchParams.get('design') || 'orange';
 
   // If no user/fid provided, show a welcoming default image
   if (!user || !fid) {
@@ -235,6 +236,60 @@ export async function GET(request: NextRequest) {
     );
   }
 
+  // Glass design variant
+  if (design === 'glass') {
+    const displayScore = score !== null ? Math.max(0, Math.min(100, Math.round(score))) : null;
+    return new ImageResponse(
+      (
+        <div tw="flex h-full w-full flex-col justify-center items-center relative" style={{ background: 'radial-gradient(circle at 50% 0%, #1a1a1a 0%, #000000 100%)' }}>
+          {/* Glass card container */}
+          <div tw="flex flex-col justify-center items-center" style={{ 
+            display: 'flex',
+            width: '900px',
+            height: '500px',
+            backgroundColor: 'rgba(255, 255, 255, 0.02)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            borderRadius: '30px',
+            padding: '60px',
+            boxShadow: '0 50px 100px -20px rgba(0,0,0,1)',
+          }}>
+            {/* Header */}
+            <div tw="flex justify-between items-center w-full mb-8">
+              <div tw="text-white text-3xl" style={{ fontFamily: 'serif', fontWeight: 900, letterSpacing: '0.5px' }}>
+                {user?.username ? `@${user.username}` : '—'}
+              </div>
+              <div tw="text-gray-400 text-2xl" style={{ fontFamily: 'monospace', letterSpacing: '1.5px', fontWeight: 500, textTransform: 'uppercase' }}>
+                FID: {fid}
+              </div>
+            </div>
+
+            {/* Score Display */}
+            {displayScore !== null ? (
+              <div tw="text-white text-9xl font-bold" style={{ fontFamily: 'serif', lineHeight: 1 }}>
+                {displayScore}
+              </div>
+            ) : (
+              <div tw="text-white text-5xl opacity-80">Open the app to check your score</div>
+            )}
+          </div>
+        </div>
+      ),
+      {
+        width: 1200,
+        height: 630,
+        ...(user?.pfp_url && {
+          images: [user.pfp_url],
+        }),
+        headers: {
+          'Cache-Control': 'no-store, max-age=0, must-revalidate',
+          'CDN-Cache-Control': 'no-store',
+          'Vercel-CDN-Cache-Control': 'no-store',
+        },
+      }
+    );
+  }
+
+  // Orange design variant (default)
   return new ImageResponse(
     (
       <div tw="flex h-full w-full flex-col justify-center items-center relative" style={{ background: 'linear-gradient(135deg, #FF9861 0%, #FF7A3D 50%, #8A68FF 100%)' }}>

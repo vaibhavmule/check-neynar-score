@@ -1,7 +1,5 @@
 "use client";
 
-import { useCallback } from "react";
-
 type ScoreCardProps = {
   fid?: number;
   score?: number;
@@ -11,12 +9,7 @@ type ScoreCardProps = {
   error?: string | null;
 };
 
-export function ScoreCard({ score, username, pfpUrl, loading, error }: ScoreCardProps) {
-
-  const handleRefresh = useCallback(() => {
-    window.location.reload();
-  }, []);
-
+export function ScoreCard({ fid, score, username, pfpUrl, loading, error }: ScoreCardProps) {
   // Display score in original format (0-1 range shows as decimal, 0-100 shows as integer)
   const scoreDisplay = score !== null && score !== undefined 
     ? (score <= 1 ? score.toFixed(2) : Math.round(score).toString())
@@ -90,27 +83,6 @@ export function ScoreCard({ score, username, pfpUrl, loading, error }: ScoreCard
                 </div>
               </div>
             )}
-
-            {/* Refresh button */}
-            <button
-              onClick={handleRefresh}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center"
-              aria-label="Refresh"
-            >
-              <svg
-                className="w-5 h-5 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                />
-              </svg>
-            </button>
             </div>
           )}
         </div>

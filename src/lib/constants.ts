@@ -56,7 +56,7 @@ export const APP_URL: string = getAppUrl();
  * The name of the mini app as displayed to users.
  * Used in titles, headers, and app store listings.
  */
-export const APP_NAME: string = 'Check Neynar Score';
+export const APP_NAME: string = 'Neynar Score';
 
 /**
  * A brief description of the mini app's functionality.
@@ -132,7 +132,7 @@ export const APP_ACCOUNT_ASSOCIATION: AccountAssociation | undefined = {
  * Text displayed on the main action button.
  * Used for the primary call-to-action in the mini app.
  */
-export const APP_BUTTON_TEXT: string = 'Check Neynar Score';
+export const APP_BUTTON_TEXT: string = 'Neynar Score';
 
 // --- Integration Configuration ---
 /**
@@ -184,6 +184,39 @@ export const APP_REQUIRED_CHAINS: string[] = [];
  * back button is pressed from the home page.
  */
 export const RETURN_URL: string | undefined = undefined;
+
+/**
+ * Cast configuration for the app
+ * Casts from users sharing tips on improving Neynar Score
+ * Order them by priority (lower number = shown first)
+ */
+export interface CastConfig {
+  url: string;
+  priority?: number; // Lower number = shown first (default: order in array)
+  title?: string; // Optional custom title
+  badge?: string; // Optional badge text (e.g., "Featured in docs")
+  badgeUrl?: string; // Optional URL for the badge (e.g., link to docs)
+  imageUrl?: string; // Optional custom image URL for opengraph image
+}
+
+export const CASTS: CastConfig[] = [
+  {
+    url: "https://farcaster.xyz/ted/0x686b5d5a",
+    priority: 1, // Show first - mentioned in Neynar docs
+    title: "Spam Labels on Farcaster - by @ted",
+    badge: "Featured in Neynar Docs",
+    badgeUrl: "https://docs.neynar.com/docs/tutorials/neynar-user-score#as-a-user-how-can-i-improve-my-score",
+  },
+  {
+    url: "https://farcaster.xyz/girl-ua/0xb5446dc5",
+    priority: 2, // Show second
+    title: "How to Improve Your Neynar Score - by @girl-ua",
+    imageUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/b7328fde-35fa-4755-18f5-b4e33fc42900/rectcrop3",
+  },
+];
+
+// Legacy: Simple array for backward compatibility
+export const CAST_URLS: string[] = CASTS.map((cast) => cast.url);
 
 // PLEASE DO NOT UPDATE THIS
 export const SIGNED_KEY_REQUEST_VALIDATOR_EIP_712_DOMAIN = {

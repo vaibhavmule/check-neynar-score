@@ -20,6 +20,8 @@
  * This design system is intentionally minimal to prevent bloat and maintain consistency.
  */
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Abril+Fatface&family=Playfair+Display:ital,wght@1,900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -27,6 +29,11 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --bg-deep: #050505;
+  --glass-bg: rgba(255, 255, 255, 0.02);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --text-white: #ffffff;
+  --fid-color: #a0a0a0;
 }
 
 @media (prefers-color-scheme: dark) {

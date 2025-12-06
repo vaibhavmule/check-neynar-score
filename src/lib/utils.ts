@@ -20,6 +20,22 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/**
+ * Cleans a title by removing "by @username" and trailing dashes/spaces
+ * @param title - The title to clean
+ * @returns The cleaned title
+ */
+export function cleanTitle(title: string): string {
+  if (!title) return title;
+  // Remove "by @username" from title if present
+  let cleaned = title.replace(/\s+by\s+@\w+/i, '');
+  // Remove trailing dashes with optional text (e.g., "-- ua", "-", " --")
+  cleaned = cleaned.replace(/\s*-+\s*[a-z]*\s*$/i, '').trim();
+  // Remove any remaining trailing dashes and spaces
+  cleaned = cleaned.replace(/\s*-\s*$/, '').trim();
+  return cleaned;
+}
+
 export function getMiniAppEmbedMetadata(
   ogImageUrl?: string,
   options?: { mode?: 'default' | 'scoreInfo' }
@@ -105,9 +121,10 @@ export async function getFarcasterDomainManifest(forBaseDirectory = false): Prom
     homeUrl,
     iconUrl,
     imageUrl,
-    buttonTitle: APP_BUTTON_TEXT ?? 'Check Neynar Score',
+    buttonTitle: APP_BUTTON_TEXT ?? 'Neynar Score',
     splashImageUrl,
     splashBackgroundColor: APP_SPLASH_BACKGROUND_COLOR,
+    canonicalDomain: 'check-neynar-score.vercel.app',
     // Additional fields used by Base App Directory
     primaryCategory: 'social',
     tags: normalizedTags,

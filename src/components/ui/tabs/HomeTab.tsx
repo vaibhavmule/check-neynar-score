@@ -8,7 +8,8 @@ import { ShareButton } from "../Share";
 import { Input } from "../input";
 import { TipButton } from "../TipButton";
 import { DailyRewardCard } from "../DailyRewardCard";
-import { DEVELOPER_FID, DEVELOPER_TIP_ADDRESS, DEVELOPER_USERNAME } from "~/lib/constants";
+import { CastList } from "../CastList";
+import { DEVELOPER_FID, DEVELOPER_TIP_ADDRESS, DEVELOPER_USERNAME, CASTS } from "~/lib/constants";
 
 type HomeTabProps = {
   fid?: number;
@@ -55,7 +56,7 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
           <div className="rounded-3xl border border-white/60 bg-white/80 p-6 shadow-glow backdrop-blur dark:border-white/10 dark:bg-gray-900/80">
             <div className="space-y-3 text-center">
               <h2 className="text-2xl font-bold leading-tight text-gray-900 dark:text-gray-50">
-                Check Your Neynar Score
+                Neynar Score
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-300">
                 View your Neynar Score - a metric ranging from 0 to 1 that evaluates the quality of user interactions on the Farcaster platform.
@@ -72,7 +73,7 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
                   isLoading={loading}
                   disabled={loading}
                 >
-                  Check Neynar Score
+                  Neynar Score
                 </Button>
               </div>
             )}
@@ -111,7 +112,7 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
                   isLoading={loading}
                   disabled={loading || !inputFid.trim()}
                 >
-                  Check Neynar Score
+                  Neynar Score
                 </Button>
               </div>
             )}
@@ -125,6 +126,21 @@ export function HomeTab({ fid, score, username, pfpUrl, loading, fetchScore, has
         {hasScore && score !== null && score !== undefined && !loading && (
           <DailyRewardCard />
         )}
+
+        {/* Cast List Section */}
+        <div className="rounded-3xl border border-white/60 bg-white/80 p-6 shadow-soft backdrop-blur dark:border-white/10 dark:bg-gray-900/80">
+          <div className="space-y-4">
+            <div className="space-y-1 text-center">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                Tips to Improve Your Score
+              </h3>
+              <p className="text-xs text-gray-600 dark:text-gray-400">
+                Learn from the community
+              </p>
+            </div>
+            <CastList casts={CASTS} />
+          </div>
+        </div>
 
         {hasScore && score !== null && score !== undefined && !loading && fid && (
           <div className="rounded-3xl border border-white/60 bg-white/80 p-5 shadow-soft backdrop-blur dark:border-white/10 dark:bg-gray-900/80">

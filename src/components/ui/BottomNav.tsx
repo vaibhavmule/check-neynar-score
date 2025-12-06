@@ -3,7 +3,7 @@
 import { useMiniApp } from "@neynar/react";
 import { sdk } from "@farcaster/miniapp-sdk";
 
-export type TabType = "tips" | "about" | "more";
+export type TabType = "score" | "improve" | "tip";
 
 interface BottomNavProps {
   activeTab: TabType;
@@ -14,7 +14,7 @@ interface BottomNavProps {
  * BottomNav component provides mobile-optimized bottom tab navigation.
  * 
  * Features:
- * - 3 tabs: Tips, About, More
+ * - 3 tabs: Score, Improve, Tip
  * - Haptic feedback on tab switch
  * - Safe area inset support
  * - Minimum 44x44px touch targets
@@ -41,9 +41,9 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
   };
 
   const tabs: { id: TabType; label: string; icon: string }[] = [
-    { id: "tips", label: "Tips", icon: "💡" },
-    { id: "about", label: "About", icon: "ℹ️" },
-    { id: "more", label: "More", icon: "⋯" },
+    { id: "score", label: "Score", icon: "📊" },
+    { id: "improve", label: "Improve", icon: "📈" },
+    { id: "tip", label: "Tip", icon: "💝" },
   ];
 
   const bottomInset = context?.client.safeAreaInsets?.bottom ?? 0;

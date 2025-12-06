@@ -2,7 +2,7 @@
 
 import { ScoreCard } from "../ScoreCard";
 
-type HomeTabProps = {
+type ScoreTabProps = {
   fid?: number;
   score?: number | null;
   username?: string;
@@ -11,7 +11,12 @@ type HomeTabProps = {
   error?: string | null;
 };
 
-export function HomeTab({ fid, score, username, pfpUrl, loading, error }: HomeTabProps) {
+/**
+ * ScoreTab component displays the Neynar Score card.
+ * 
+ * This is the main view showing the user's score in a clean, minimal card.
+ */
+export function ScoreTab({ fid, score, username, pfpUrl, loading, error }: ScoreTabProps) {
   return (
     <div className="relative flex items-start justify-center px-1 py-4">
       <div className="w-full max-w-md">

@@ -220,10 +220,6 @@ export async function GET(request: NextRequest) {
           <div tw="flex flex-col items-center justify-center">
             <h1 tw="text-7xl font-bold text-white mb-6">Neynar Score</h1>
             <p tw="text-4xl text-white opacity-90 mb-8">A metric ranging from 0 to 1 that evaluates the quality of user interactions on the Farcaster platform</p>
-            <div tw="flex items-center justify-center bg-white/20 rounded-3xl px-12 py-8 border-4 border-white/80 backdrop-blur">
-              <p tw="text-5xl font-semibold text-white">Launch the app →</p>
-            </div>
-            <p tw="text-3xl text-white opacity-80 mt-10">Powered by Neynar</p>
           </div>
         </div>
       ),

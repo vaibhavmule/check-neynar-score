@@ -1,25 +1,19 @@
 "use client";
 
 /**
- * WhatIsNeynarScoreTab component displays information about Neynar Score.
+ * ImproveTab component displays tips and information for improving Neynar Score.
  * 
- * This component provides users with context about what the Neynar User Quality Score is,
- * how it works, and how to improve it based on official Neynar documentation.
- * 
- * @example
- * ```tsx
- * <WhatIsNeynarScoreTab />
- * ```
+ * This component provides users with actionable advice on how to improve their score.
  */
-export function WhatIsNeynarScoreTab() {
+export function ImproveTab() {
   return (
     <div className="mx-6 py-4 space-y-5">
       <div className="text-center space-y-2">
         <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-500 via-primary-600 to-primary-700">
-          Get to know your Neynar score
+          Improve Your Score
         </h2>
         <p className="text-sm text-gray-600 dark:text-gray-300">
-          A quick, friendly primer on what the number means for everyday Farcaster fun.
+          Tips to boost your Neynar Score and quality on Farcaster.
         </p>
       </div>
 

@@ -5,7 +5,7 @@ import { useMiniApp } from "@neynar/react";
 import { sdk } from "@farcaster/miniapp-sdk";
 import { Header } from "~/components/ui/Header";
 import { BottomNav, type TabType } from "~/components/ui/BottomNav";
-import { HomeTab, TipsTab, MoreTab, WhatIsNeynarScoreTab } from "~/components/ui/tabs";
+import { ScoreTab, ImproveTab, TipTab } from "~/components/ui/tabs";
 import { AddAppPrompt } from "~/components/ui/AddAppPrompt";
 import { useNeynarUser } from "../hooks/useNeynarUser";
 
@@ -27,8 +27,7 @@ export interface AppProps {
  * It provides a mobile-first experience with score as default view and tabs for additional content.
  * 
  * Features:
- * - Score always visible (primary feature)
- * - Bottom tab navigation (Tips, About, More)
+ * - Bottom tab navigation (Score, Improve, Tip)
  * - Farcaster mini app integration
  * - Haptic feedback for mobile interactions
  * - Back navigation support
@@ -46,7 +45,7 @@ export default function App(
   { title: _title }: AppProps = { title: "Neynar Starter Kit" }
 ) {
   // --- State ---
-  const [activeTab, setActiveTab] = useState<TabType>("tips");
+  const [activeTab, setActiveTab] = useState<TabType>("score");
 
   // --- Hooks ---
   const {
@@ -59,6 +58,7 @@ export default function App(
     user: neynarUser,
     fetchScore,
     loading: scoreLoading,
+    error: scoreError,
   } = useNeynarUser(context || undefined);
 
   // --- Enhanced fetchScore wrapper ---
@@ -67,6 +67,16 @@ export default function App(
   }, [fetchScore]);
 
   // --- Effects ---
+  /**
+   * Auto-fetch score when SDK is loaded and user FID is available.
+   */
+  useEffect(() => {
+    if (!isSDKLoaded || !context?.user?.fid || neynarUser !== null || scoreLoading) {
+      return;
+    }
+
+    void fetchScore();
+  }, [isSDKLoaded, context?.user?.fid, neynarUser, scoreLoading, fetchScore]);
   /**
    * Signals readiness when the SDK is loaded.
    * 
@@ -201,30 +211,20 @@ export default function App(
           {/* Main content area */}
           <main className="flex-1 pb-20">
             <div className="container py-5">
-              {/* Score Section - Always Visible */}
-              <div className="mb-6">
-                <HomeTab
-                  fid={neynarUser?.fid ?? context?.user?.fid}
-                  username={neynarUser?.username ?? context?.user?.username}
-                  pfpUrl={neynarUser?.pfpUrl ?? context?.user?.pfpUrl}
-                  score={neynarUser?.score}
-                  loading={scoreLoading}
-                  fetchScore={handleFetchScore}
-                  hasScore={neynarUser !== null}
-                />
-              </div>
-
               {/* Tab Content Section */}
               <div className="min-h-[200px]">
-                {activeTab === "tips" && <TipsTab />}
-                {activeTab === "about" && <WhatIsNeynarScoreTab />}
-                {activeTab === "more" && (
-                  <MoreTab
+                {activeTab === "score" && (
+                  <ScoreTab
                     fid={neynarUser?.fid ?? context?.user?.fid}
-                    score={neynarUser?.score ?? null}
                     username={neynarUser?.username ?? context?.user?.username}
+                    pfpUrl={neynarUser?.pfpUrl ?? context?.user?.pfpUrl}
+                    score={neynarUser?.score}
+                    loading={scoreLoading}
+                    error={scoreError}
                   />
                 )}
+                {activeTab === "improve" && <ImproveTab />}
+                {activeTab === "tip" && <TipTab />}
               </div>
             </div>
           </main>

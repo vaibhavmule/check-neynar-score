@@ -4,4 +4,7 @@ export { MoreTab } from './MoreTab';
 export { ActionsTab } from './ActionsTab';
 export { ContextTab } from './ContextTab';
 export { WalletTab } from './WalletTab';
-export { WhatIsNeynarScoreTab } from './WhatIsNeynarScoreTab'; 
+export { WhatIsNeynarScoreTab } from './WhatIsNeynarScoreTab';
+export { ScoreTab } from './ScoreTab';
+export { ImproveTab } from './ImproveTab';
+export { TipTab } from './TipTab'; 

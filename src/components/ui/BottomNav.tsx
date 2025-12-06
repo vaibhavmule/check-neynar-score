@@ -1,27 +1,61 @@
 "use client";
 
+import { useCallback } from "react";
 import { useMiniApp } from "@neynar/react";
 import { sdk } from "@farcaster/miniapp-sdk";
 
-export type TabType = "score" | "improve" | "tip";
+export type TabType = "score" | "improve";
 
 interface BottomNavProps {
   activeTab: TabType;
   onTabChange: (tab: TabType) => void;
 }
 
+// Mini app token for USDC on Base (1 USDC = 1000000 with 6 decimals)
+const MINI_APP_TOKEN = "eip155:8453/erc20:0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
+const MINI_APP_AMOUNT = "1000000"; // 1 USDC (6 decimals)
+const RECIPIENT_FID = 1356870;
+
 /**
  * BottomNav component provides mobile-optimized bottom tab navigation.
  * 
  * Features:
- * - 3 tabs: Score, Improve, Tip
+ * - 2 tabs: Score, Improve
+ * - Tip button that directly triggers USDC tip action
  * - Haptic feedback on tab switch
  * - Safe area inset support
  * - Minimum 44x44px touch targets
  * - Fixed position with backdrop blur
  */
 export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
-  const { context } = useMiniApp();
+  const { context, actions, isSDKLoaded } = useMiniApp();
+
+  const handleTip = useCallback(async () => {
+    if (!actions?.sendToken || !isSDKLoaded) {
+      console.warn("sendToken action not available");
+      return;
+    }
+
+    // Trigger haptic feedback
+    try {
+      const capabilities = await sdk.getCapabilities();
+      if (capabilities.includes("haptics.selectionChanged")) {
+        await sdk.haptics.selectionChanged();
+      }
+    } catch (error) {
+      console.debug("Haptics not available:", error);
+    }
+
+    try {
+      await actions.sendToken({
+        recipientFid: RECIPIENT_FID,
+        token: MINI_APP_TOKEN,
+        amount: MINI_APP_AMOUNT,
+      });
+    } catch (error) {
+      console.error("Failed to tip:", error);
+    }
+  }, [actions, isSDKLoaded]);
 
   const handleTabClick = async (tab: TabType) => {
     if (tab === activeTab) return;
@@ -43,7 +77,6 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
   const tabs: { id: TabType; label: string; icon: string }[] = [
     { id: "score", label: "Score", icon: "📊" },
     { id: "improve", label: "Improve", icon: "📈" },
-    { id: "tip", label: "Tip", icon: "💝" },
   ];
 
   const bottomInset = context?.client.safeAreaInsets?.bottom ?? 0;

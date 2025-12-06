@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { OrangeScoreCard } from "./OrangeScoreCard";
 import { GlassScoreCard } from "./GlassScoreCard";
 
@@ -18,17 +18,11 @@ type DesignType = 'orange' | 'glass';
 const DESIGN_STORAGE_KEY = 'scoreCardDesign';
 
 export function ScoreCard({ fid, score, username, pfpUrl, loading, error }: ScoreCardProps) {
+  // Always default to orange design when visiting score tab
   const [design, setDesign] = useState<DesignType>('orange');
 
-  // Load design preference from localStorage on mount
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedDesign = localStorage.getItem(DESIGN_STORAGE_KEY) as DesignType | null;
-      if (savedDesign === 'orange' || savedDesign === 'glass') {
-        setDesign(savedDesign);
-      }
-    }
-  }, []);
+  // Note: We don't load from localStorage to always show orange by default
+  // Users can still toggle to glass, and it will be saved for their session
 
   // Toggle design and save to localStorage
   const toggleDesign = useCallback(() => {

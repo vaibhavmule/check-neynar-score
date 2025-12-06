@@ -71,7 +71,8 @@ export function MoreTab({ fid, score, username }: MoreTabProps) {
                   <ShareButton
                     buttonText="Share Score"
                     cast={{
-                      text: `My Neynar Score is ${score <= 1 ? score.toFixed(2) : Math.round(score)}. Check your score`,
+                      // Score is normalized to 0-100 from API, display as integer
+                      text: `My Neynar Score is ${Math.round(score)}. Check your score`,
                       embeds: [
                         {
                           path: `/share/${fid}`,

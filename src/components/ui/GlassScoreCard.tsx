@@ -20,7 +20,8 @@ export function GlassScoreCard({ fid, score, username, pfpUrl: _pfpUrl, loading,
   const animationRef = useRef<number | null>(null);
   const previousScoreRef = useRef<number | null>(null);
 
-  // Target score normalized to 0-100 range, then multiply by 100 for animation
+  // Glass card displays scores in 0-100 integer format
+  // API returns normalized scores in 0-100 range, use directly
   const targetScore = score !== undefined && score !== null 
     ? Math.max(0, Math.min(100, score)) 
     : null;

@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useState, useEffect, useRef } from "react";
+import { useMiniApp } from "@neynar/react";
+import { APP_URL } from "~/lib/constants";
 
 type OrangeScoreCardProps = {
   fid?: number;
@@ -13,27 +15,27 @@ type OrangeScoreCardProps = {
 };
 
 export function OrangeScoreCard({ fid, score, username, pfpUrl, loading, error, design = 'orange' }: OrangeScoreCardProps) {
+  const { actions } = useMiniApp();
   const [shareSuccess, setShareSuccess] = useState(false);
   const [animatedScore, setAnimatedScore] = useState<number | null>(null);
   const animationRef = useRef<number | null>(null);
   const previousScoreRef = useRef<number | null>(null);
 
-  // Display score in original format (0-1 range shows as decimal, 0-100 shows as integer)
-  const targetScore = score !== null && score !== undefined ? score : null;
-  const isDecimal = targetScore !== null && targetScore <= 1;
+  // Orange card displays scores in 0-1 decimal format
+  // API returns normalized scores in 0-100 range, so we divide by 100 to get 0-1 range
+  const targetScore = score !== null && score !== undefined ? score / 100 : null;
   
   const displayName = username || "User";
 
-  // Animate score from 0.01 to target score (multiply by 100 only for decimal scores)
+  // Animate score from 0.01 to target score (0-1 range)
   useEffect(() => {
     if (loading || targetScore === null) {
       setAnimatedScore(null);
       return;
     }
 
-    // For decimal scores (<= 1), multiply by 100 for animation
-    // For integer scores (> 1), animate directly
-    const animationTarget = isDecimal ? targetScore * 100 : targetScore;
+    // Animate in 0-1 range, multiply by 100 for animation precision
+    const animationTarget = targetScore * 100;
 
     // Only animate if score changed
     if (previousScoreRef.current === targetScore) {
@@ -43,7 +45,7 @@ export function OrangeScoreCard({ fid, score, username, pfpUrl, loading, error, 
 
     previousScoreRef.current = targetScore;
 
-    const startValue = isDecimal ? 0.01 * 100 : 0.01; // Start from 1 for decimals, 0.01 for integers
+    const startValue = 0.01 * 100; // Start from 1 (0.01 in decimal)
     const endValue = animationTarget;
     const duration = 1500; // 1.5 seconds
     const startTime = Date.now();
@@ -73,26 +75,39 @@ export function OrangeScoreCard({ fid, score, username, pfpUrl, loading, error, 
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [targetScore, loading, isDecimal]);
+  }, [targetScore, loading]);
 
-  // Format animated score for display (divide by 100 if it was a decimal score)
+  // Format animated score for display as decimal (0-1 range)
   const scoreDisplay = animatedScore !== null
-    ? (isDecimal ? (animatedScore / 100).toFixed(2) : Math.round(animatedScore).toString())
+    ? (animatedScore / 100).toFixed(2)
     : null;
 
   const handleShare = useCallback(async () => {
+    if (!fid) {
+      console.warn("User FID not available");
+      alert("Share functionality is not available. Please try again later.");
+      return;
+    }
+    
     try {
-      // Use target score for sharing (actual value, not animated)
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : APP_URL;
+      const shareUrl = `${baseUrl}/share/${fid}?design=${design}`;
+      // Orange card displays score in 0-1 decimal format
       const shareScoreText = targetScore !== null
-        ? (isDecimal ? targetScore.toFixed(2) : Math.round(targetScore).toString())
+        ? targetScore.toFixed(2)
         : "N/A";
-      const shareText = `Check out ${displayName}'s Neynar Score: ${shareScoreText}!`;
-      const shareUrl = fid 
-        ? `${window.location.origin}/share/${fid}?design=${design}` 
-        : `${window.location.href}${window.location.href.includes('?') ? '&' : '?'}design=${design}`;
+      const shareText = `My Neynar Score is ${shareScoreText}. Check your score`;
 
-      // Try Web Share API first (works on mobile and some desktop browsers)
-      if (navigator.share) {
+      // Try composeCast first (Farcaster mini app)
+      if (actions?.composeCast) {
+        await actions.composeCast({
+          text: shareText,
+          embeds: [shareUrl],
+        });
+        setShareSuccess(true);
+        setTimeout(() => setShareSuccess(false), 2000);
+      } else if (navigator.share) {
+        // Fallback to Web Share API
         await navigator.share({
           title: `${displayName}'s Neynar Score`,
           text: shareText,
@@ -108,16 +123,19 @@ export function OrangeScoreCard({ fid, score, username, pfpUrl, loading, error, 
         setTimeout(() => setShareSuccess(false), 2000);
       }
     } catch (error) {
-      // User cancelled share or clipboard failed
-      console.error('Share failed:', error);
+      console.error("Failed to share:", error);
+      // Don't show alert if user cancelled
+      if (error instanceof Error && error.name !== 'AbortError') {
+        alert(`Failed to share: ${error.message}`);
+      }
     }
-  }, [fid, targetScore, isDecimal, displayName, design]);
+  }, [fid, actions, targetScore, displayName, design]);
 
   return (
-    <div className="relative mx-auto w-full max-w-md">
-      <div className="card shadow-2xl overflow-hidden">
+    <div className="relative w-full max-w-md h-[80vh] max-h-[700px] flex flex-col justify-between mx-auto">
+      <div className="card shadow-2xl overflow-hidden flex flex-col h-full">
         {error ? (
-          <div className="bg-primary-50/80 p-6 text-primary-700 dark:bg-primary-900/30 dark:text-primary-200">
+          <div className="bg-primary-50/80 p-6 text-primary-700 dark:bg-primary-900/30 dark:text-primary-200 flex items-center justify-center flex-grow">
             <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
               Unable to load score
             </p>
@@ -125,7 +143,7 @@ export function OrangeScoreCard({ fid, score, username, pfpUrl, loading, error, 
         ) : (
           <>
             {/* Header with gradient background */}
-            <div className="bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 p-6 relative">
+            <div className="bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 p-6 relative flex-grow flex flex-col justify-center">
               {/* Profile Picture */}
               {pfpUrl && (
                 <div className="flex justify-center mb-4">

@@ -88,9 +88,20 @@ export async function GET(request: Request) {
           }
         }
         
+        // Normalize score to 0-100 range (percentage)
+        // Score might come as decimal (0-1) or already as percentage (0-100)
+        let normalizedScore: number | null = null;
+        if (score !== null && typeof score === 'number') {
+          // If score is <= 1, it's likely a decimal (0-1 range), convert to percentage
+          // If score is > 1, assume it's already in 0-100 range
+          normalizedScore = score <= 1 ? score * 100 : score;
+          // Clamp between 0 and 100 and round to nearest integer
+          normalizedScore = Math.max(0, Math.min(100, Math.round(normalizedScore)));
+        }
+        
         return {
           ...user,
-          score,
+          score: normalizedScore,
         };
       })
     );

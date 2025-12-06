@@ -86,8 +86,41 @@ async function getUserWithScore(fid: number) {
     if (score === null && user.experimental?.neynar_user_score !== undefined) {
       score = user.experimental.neynar_user_score;
     }
+    
+    // If still no score, fetch it via the separate API endpoint
+    if (score === null) {
+      try {
+        const response = await fetch(
+          `https://api.neynar.com/v2/farcaster/user/quality_score?fid=${user.fid}`,
+          {
+            headers: {
+              'x-api-key': apiKey,
+            },
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          // Handle different possible response structures
+          score = data.score ?? data.result?.score ?? data.result ?? null;
+        }
+      } catch (err) {
+        console.error(`Failed to fetch score for fid ${user.fid}:`, err);
+        // Leave score as null
+      }
+    }
+    
+    // Normalize score to 0-100 range (percentage)
+    // Score might come as decimal (0-1) or already as percentage (0-100)
+    let normalizedScore: number | null = null;
+    if (score !== null && typeof score === 'number') {
+      // If score is <= 1, it's likely a decimal (0-1 range), convert to percentage
+      // If score is > 1, assume it's already in 0-100 range
+      normalizedScore = score <= 1 ? score * 100 : score;
+      // Clamp between 0 and 100 and round to nearest integer
+      normalizedScore = Math.max(0, Math.min(100, Math.round(normalizedScore)));
+    }
 
-    return { ...user, score };
+    return { ...user, score: normalizedScore };
   } catch (error) {
     console.error('Failed to fetch user with score:', error);
     return null;
@@ -209,9 +242,13 @@ export async function GET(request: NextRequest) {
 
   const user = fid ? await getUserWithScore(Number(fid)) : null;
   const score = user?.score ?? null;
-  const scoreDisplay = score !== null ? score.toFixed(2) : null;
   const displayName = user?.display_name || user?.username || 'User';
   const design = searchParams.get('design') || 'orange';
+  
+  // Format score based on design: orange = 0-1 decimal, glass = 0-100 integer
+  const scoreDisplay = score !== null 
+    ? (design === 'orange' ? (score / 100).toFixed(2) : Math.round(score).toString())
+    : null;
 
   // If no user/fid provided, show a welcoming default image
   if (!user || !fid) {
@@ -290,32 +327,74 @@ export async function GET(request: NextRequest) {
   }
 
   // Orange design variant (default)
+  // Match the orange card layout: gradient header with profile pic, title, and score
   return new ImageResponse(
     (
-      <div tw="flex h-full w-full flex-col justify-center items-center relative" style={{ background: 'linear-gradient(135deg, #FF9861 0%, #FF7A3D 50%, #8A68FF 100%)' }}>
-        {user?.pfp_url && (
-          <div tw="flex w-64 h-64 rounded-full overflow-hidden mb-8 border-8 border-white/80 shadow-2xl">
-            <img src={user.pfp_url} alt="Profile" tw="w-full h-full object-cover" />
-          </div>
-        )}
-        <h1 tw="text-6xl font-bold text-white mb-4">{displayName}&apos;s Neynar Score</h1>
-        {scoreDisplay !== null ? (
-          <div tw="flex items-center justify-center mb-4">
-            <div tw="text-9xl font-bold text-white drop-shadow-lg">{scoreDisplay}</div>
-          </div>
-        ) : (
-          <div tw="flex flex-col items-center justify-center mb-4">
-            <p tw="text-5xl text-white opacity-80 mb-4">Open the app to check your Neynar Score</p>
-            <div tw="flex items-center justify-center bg-white/20 rounded-2xl px-8 py-4 border-2 border-white/80 backdrop-blur">
-              <p tw="text-4xl font-semibold text-white">Launch Mini App →</p>
+      <div tw="flex h-full w-full flex-col relative" style={{ background: 'linear-gradient(135deg, #FF9861 0%, #FF7A3D 50%, #8A68FF 100%)' }}>
+        {/* Card container matching orange card design */}
+        <div tw="flex flex-col h-full" style={{ 
+          width: '900px',
+          margin: '0 auto',
+          borderRadius: '20px',
+          overflow: 'hidden',
+          boxShadow: '0 20px 60px -20px rgba(0,0,0,0.5)',
+        }}>
+          {/* Header with gradient background */}
+          <div tw="flex flex-col justify-center items-center flex-grow" style={{ 
+            background: 'linear-gradient(to bottom right, #FF7A3D, #8A68FF)',
+            padding: '60px',
+          }}>
+            {/* Profile Picture */}
+            {user?.pfp_url && (
+              <div tw="flex mb-8" style={{ width: '128px', height: '128px' }}>
+                <div tw="flex rounded-full overflow-hidden" style={{ 
+                  width: '128px', 
+                  height: '128px',
+                  border: '4px solid white',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                }}>
+                  <img src={user.pfp_url} alt="Profile" tw="w-full h-full object-cover" />
+                </div>
+              </div>
+            )}
+
+            {/* Score Display */}
+            <div tw="flex flex-col items-center text-center">
+              <h1 tw="text-5xl font-bold text-white mb-4">
+                {displayName}&apos;s Neynar Score
+              </h1>
+              {scoreDisplay !== null ? (
+                <div tw="text-9xl font-bold text-white" style={{ lineHeight: 1 }}>
+                  {scoreDisplay}
+                </div>
+              ) : (
+                <p tw="text-3xl text-white opacity-80">No score available</p>
+              )}
             </div>
           </div>
-        )}
+
+          {/* Footer (dark section) */}
+          <div tw="flex" style={{ 
+            backgroundColor: '#1a1a1a',
+            padding: '40px 60px',
+            justifyContent: 'center',
+          }}>
+            <div tw="flex rounded-lg" style={{ 
+              background: 'linear-gradient(to right, #FF7A3D, #8A68FF)',
+              padding: '12px 48px',
+            }}>
+              <p tw="text-2xl font-semibold text-white">Share</p>
+            </div>
+          </div>
+        </div>
       </div>
     ),
     {
       width: 1200,
       height: 630,
+      ...(user?.pfp_url && {
+        images: [user.pfp_url],
+      }),
       headers: {
         'Cache-Control': 'no-store, max-age=0, must-revalidate',
         'CDN-Cache-Control': 'no-store',

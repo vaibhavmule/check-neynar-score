@@ -79,16 +79,8 @@ export function TipModal({
         onClick={onClose}
       />
 
-      {/* Snowflakes decoration */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <span className="absolute left-4 top-8 text-white/30">❄️</span>
-        <span className="absolute right-8 top-12 text-white/30">❄️</span>
-        <span className="absolute left-12 bottom-16 text-white/30">❄️</span>
-        <span className="absolute right-4 bottom-20 text-white/30">❄️</span>
-      </div>
-
       {/* Modal */}
-      <div className="relative w-full max-w-md rounded-3xl border border-white/60 bg-white/95 p-6 shadow-2xl backdrop-blur dark:border-white/10 dark:bg-gray-900/95">
+      <div className="relative w-full max-w-md rounded-3xl border border-white/60 bg-white/95 p-6 shadow-2xl backdrop-blur dark:border-white/10 dark:bg-gray-900/95 z-10">
         {/* Close button */}
         <button
           onClick={onClose}
@@ -110,7 +102,7 @@ export function TipModal({
 
           {/* Description */}
           <p className="text-center text-sm text-gray-600 dark:text-gray-400">
-            Help keep Secret Santa Chain running! Your support helps pay for servers, development, and spreading holiday cheer. 🎄
+            Help keep Neynar Score running! Your support helps pay for servers, development, and improving the app.
           </p>
 
           {/* Predefined amounts */}
@@ -174,20 +166,16 @@ export function TipModal({
           </div>
 
           {/* Send button */}
-          <div className="relative">
-            <span className="absolute left-2 top-1/2 -translate-y-1/2 text-white/80">❄️</span>
-            <span className="absolute right-2 top-1/2 -translate-y-1/2 text-white/80">❄️</span>
-            <TipUsdc
-              recipientFid={recipientFid}
-              username={username}
-              recipientAddress={recipientAddress}
-              amount={finalAmount}
-              variant="primary"
-              size="lg"
-              className="w-full"
-              onSuccess={onClose}
-            />
-          </div>
+          <TipUsdc
+            recipientFid={recipientFid}
+            username={username}
+            recipientAddress={recipientAddress}
+            amount={finalAmount}
+            variant="primary"
+            size="lg"
+            className="w-full"
+            onSuccess={onClose}
+          />
 
           {/* Disclaimer */}
           <p className="text-center text-xs text-gray-500 dark:text-gray-400">

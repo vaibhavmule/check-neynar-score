@@ -119,6 +119,18 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
             </button>
           );
         })}
+        <button
+          onClick={handleTip}
+          className="relative flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-1 rounded-xl px-4 py-2 transition-all text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400"
+          aria-label="Tip"
+        >
+          <span className="text-xl" aria-hidden="true">
+            💝
+          </span>
+          <span className="text-xs font-medium opacity-70">
+            Tip
+          </span>
+        </button>
       </div>
     </nav>
   );

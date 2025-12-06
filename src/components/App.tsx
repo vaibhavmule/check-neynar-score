@@ -5,7 +5,7 @@ import { useMiniApp } from "@neynar/react";
 import { sdk } from "@farcaster/miniapp-sdk";
 import { Header } from "~/components/ui/Header";
 import { BottomNav, type TabType } from "~/components/ui/BottomNav";
-import { ScoreTab, ImproveTab, TipTab } from "~/components/ui/tabs";
+import { ScoreTab, ImproveTab } from "~/components/ui/tabs";
 import { AddAppPrompt } from "~/components/ui/AddAppPrompt";
 import { useNeynarUser } from "../hooks/useNeynarUser";
 
@@ -27,7 +27,7 @@ export interface AppProps {
  * It provides a mobile-first experience with score as default view and tabs for additional content.
  * 
  * Features:
- * - Bottom tab navigation (Score, Improve, Tip)
+ * - Bottom tab navigation (Score, Improve) with Tip button
  * - Farcaster mini app integration
  * - Haptic feedback for mobile interactions
  * - Back navigation support
@@ -224,7 +224,6 @@ export default function App(
                   />
                 )}
                 {activeTab === "improve" && <ImproveTab />}
-                {activeTab === "tip" && <TipTab />}
               </div>
             </div>
           </main>

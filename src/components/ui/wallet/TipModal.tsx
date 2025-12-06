@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { TipUsdc } from "./TipUsdc";
 
@@ -55,9 +56,13 @@ export function TipModal({
     setUseCustomAmount(true);
   }, []);
 
-  // Close on escape key
+  // Close on escape key and prevent body scroll when modal is open
   useEffect(() => {
     if (!isOpen) return;
+    
+    // Prevent body scroll when modal is open
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    document.body.style.overflow = "hidden";
     
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -66,13 +71,15 @@ export function TipModal({
     };
 
     window.addEventListener("keydown", handleEscape);
-    return () => window.removeEventListener("keydown", handleEscape);
+    return () => {
+      window.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = originalStyle;
+    };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+  // Portal the modal to document.body to avoid z-index and overflow issues
+  const modalContent = isOpen ? (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -184,6 +191,13 @@ export function TipModal({
         </div>
       </div>
     </div>
-  );
+  ) : null;
+
+  // Use portal to render modal at document.body level
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  return createPortal(modalContent, document.body);
 }
 

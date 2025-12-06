@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useMiniApp } from "@neynar/react";
 import { sdk } from "@farcaster/miniapp-sdk";
-import { Header } from "~/components/ui/Header";
 import { BottomNav, type TabType } from "~/components/ui/BottomNav";
 import { ScoreTab, ImproveTab } from "~/components/ui/tabs";
 import { AddAppPrompt } from "~/components/ui/AddAppPrompt";
@@ -205,9 +204,6 @@ export default function App(
         </div>
 
         <div className="relative flex min-h-screen flex-col">
-          {/* Header should be full width */}
-          <Header neynarUser={neynarUser} />
-
           {/* Main content area */}
           <main className="flex-1 pb-20">
             <div className="container py-5">

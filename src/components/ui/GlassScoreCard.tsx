@@ -147,7 +147,7 @@ export function GlassScoreCard({ fid, score, username, pfpUrl, loading, error, d
 
   return (
     <div 
-      className="relative w-full max-w-[380px] h-[80vh] max-h-[700px] flex flex-col justify-between mx-auto"
+      className="relative w-full max-w-md h-[80vh] max-h-[700px] flex flex-col justify-between mx-auto"
       style={{
         background: 'rgba(255, 255, 255, 0.02)',
         backdropFilter: 'blur(20px)',

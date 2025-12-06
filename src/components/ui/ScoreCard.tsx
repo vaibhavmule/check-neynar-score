@@ -107,7 +107,7 @@ export function ScoreCard({ fid, score, username, pfpUrl, loading, error }: Scor
             {/* Username and Neynar Score text - Centered */}
             <div className="text-center mb-2">
               <p className="text-white text-sm mb-1">
-                {displayName}'s
+                {displayName}&apos;s
               </p>
               <h1 className="text-xl font-bold text-white">
                 Neynar Score

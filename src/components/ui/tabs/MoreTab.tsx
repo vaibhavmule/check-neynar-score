@@ -5,7 +5,7 @@ import { useMiniApp } from "@neynar/react";
 import { sdk } from "@farcaster/miniapp-sdk";
 import { ShareButton } from "../Share";
 import { Button } from "../Button";
-import { TipUsdc } from "../wallet/TipUsdc";
+import { TipButtonWithModal } from "../wallet/TipButtonWithModal";
 import { DEVELOPER_FID, DEVELOPER_TIP_ADDRESS, DEVELOPER_USERNAME, APP_URL } from "~/lib/constants";
 
 type MoreTabProps = {
@@ -114,13 +114,14 @@ export function MoreTab({ fid, score, username }: MoreTabProps) {
               >
                 Follow @{DEVELOPER_USERNAME}
               </Button>
-              <TipUsdc
+              <TipButtonWithModal
                 recipientFid={DEVELOPER_FID}
                 username={DEVELOPER_USERNAME}
                 recipientAddress={DEVELOPER_TIP_ADDRESS}
                 variant="secondary"
                 size="md"
                 className="w-full"
+                buttonText="Tip Developer"
               />
             </div>
           </div>

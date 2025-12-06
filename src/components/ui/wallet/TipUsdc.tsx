@@ -19,15 +19,16 @@ const DEFAULT_TIP_RECIPIENT_ADDRESS = "0xFFe16898FC0af80ee9BCF29D2B54a0F20F9498a
 
 // Mini app token for USDC on Base (1 USDC = 1000000 with 6 decimals)
 const MINI_APP_TOKEN = "eip155:8453/erc20:0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
-const MINI_APP_AMOUNT = "1000000"; // 1 USDC (6 decimals)
 
 type TipUsdcProps = {
   recipientFid?: number;
   username?: string;
   recipientAddress?: `0x${string}`;
+  amount?: number; // Amount in USDC (defaults to 1)
   className?: string;
   variant?: "primary" | "secondary" | "outline";
   size?: "sm" | "md" | "lg";
+  onSuccess?: () => void; // Callback when tip is successful
 };
 
 type TipStatus = "idle" | "pending" | "success" | "error";
@@ -60,9 +61,9 @@ const ERC20_TRANSFER_ABI = [
 ] as const;
 
 /**
- * TipUsdc component handles sending 1 USDC tip transactions.
+ * TipUsdc component handles sending USDC tip transactions.
  * 
- * This component provides a simple interface for users to send 1 USDC
+ * This component provides a simple interface for users to send USDC
  * to a recipient by FID, username, or wallet address. It uses the native
  * mini app SDK tipping flow when FID is provided, or falls back to direct
  * ERC20 transfer when only an address is provided.
@@ -71,24 +72,26 @@ const ERC20_TRANSFER_ABI = [
  * - Native mini app tipping via SDK when FID is provided
  * - Direct ERC20 transfer when address is provided
  * - Chain-specific USDC contract addresses
- * - 1 USDC amount (6 decimals for USDC)
+ * - Configurable USDC amount (6 decimals for USDC)
  * - Transaction status tracking
  * - Error handling and display
  * - Transaction hash display
  * 
  * @example
  * ```tsx
- * <TipUsdc recipientFid={1356870} />
- * <TipUsdc recipientAddress="0x..." />
+ * <TipUsdc recipientFid={1356870} amount={5} />
+ * <TipUsdc recipientAddress="0x..." amount={10} />
  * ```
  */
 export function TipUsdc({
   recipientFid,
   username: _username,
   recipientAddress,
+  amount = 1, // Default to 1 USDC
   className,
   variant,
   size,
+  onSuccess,
 }: TipUsdcProps = {}) {
   // --- Hooks ---
   const { actions, isSDKLoaded } = useMiniApp();
@@ -112,6 +115,12 @@ export function TipUsdc({
   // Determine which tipping method to use
   const resolvedRecipientAddress = recipientAddress || DEFAULT_TIP_RECIPIENT_ADDRESS;
   const usingEvmTip = Boolean(resolvedRecipientAddress && !recipientFid);
+
+  // Calculate amount in USDC (6 decimals)
+  const amountInWei = useMemo(() => {
+    // USDC has 6 decimals, so multiply by 1,000,000
+    return Math.floor(amount * 1_000_000).toString();
+  }, [amount]);
 
   // Reset transient states when recipient changes
   useEffect(() => {
@@ -166,11 +175,12 @@ export function TipUsdc({
         const result = await actions.sendToken({
           recipientFid,
           token: MINI_APP_TOKEN,
-          amount: MINI_APP_AMOUNT,
+          amount: amountInWei,
         });
         
         if (result.success) {
           setStatus("success");
+          onSuccess?.();
           setTimeout(() => {
             setStatus("idle");
           }, 2500);
@@ -201,14 +211,14 @@ export function TipUsdc({
     setErrorMessage(null);
 
     try {
-      // 1 USDC = 1 * 10^6 (USDC has 6 decimals)
-      const amount = parseUnits("1", 6);
+      // Convert amount to wei (USDC has 6 decimals)
+      const amountInWei = parseUnits(amount.toString(), 6);
 
       // Encode the transfer function call
       const data = encodeFunctionData({
         abi: ERC20_TRANSFER_ABI,
         functionName: "transfer",
-        args: [resolvedRecipientAddress, amount],
+        args: [resolvedRecipientAddress, amountInWei],
       });
 
       sendTransaction(
@@ -219,6 +229,7 @@ export function TipUsdc({
         {
           onSuccess: () => {
             setStatus("success");
+            onSuccess?.();
             setTimeout(() => {
               setStatus("idle");
             }, 2500);
@@ -242,6 +253,9 @@ export function TipUsdc({
     sendTransaction,
     usdcAddress,
     usingEvmTip,
+    amountInWei,
+    amount,
+    onSuccess,
   ]);
 
   // --- Render Logic ---
@@ -262,7 +276,7 @@ export function TipUsdc({
       : "Opening tip flow..."
     : isSuccess
       ? "Tip sent!"
-      : "Tip";
+      : `Send ${amount} USDC ❤️`;
 
   const resolvedVariant = variant ?? (isSuccess ? "primary" : "primary");
   const resolvedSize = size ?? "lg";

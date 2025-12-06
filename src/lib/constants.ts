@@ -9,6 +9,8 @@ import { type AccountAssociation } from '@farcaster/miniapp-core/src/manifest';
  *
  * NOTE: This file is automatically updated by the init script.
  * Manual changes may be overwritten during project initialization.
+ *
+ * Merged features: Includes cast list functionality from improve-neynar-score app.
  */
 
 // --- App Configuration ---

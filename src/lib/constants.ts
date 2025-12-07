@@ -294,9 +294,8 @@ export const DAILY_CLAIM_ABI = [
 /**
  * Daily reward contract address on Celo.
  * Users can claim CELO tokens once per day from this contract.
- * TODO: Update with actual Celo reward contract address
  */
-export const CELO_REWARD_CONTRACT_ADDRESS: `0x${string}` = '0x0000000000000000000000000000000000000000';
+export const CELO_REWARD_CONTRACT_ADDRESS: `0x${string}` = '0xCCf2cE5a423958d107F32c9e30767b00B6791d99';
 
 /**
  * CELO token contract address on Celo (native token, use zero address for native).

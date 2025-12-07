@@ -5,11 +5,7 @@ import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { Button } from "./Button";
 import { useCeloReward } from "~/hooks/useCeloReward";
-import { useAccount, useSwitchChain } from "wagmi";
-import { CELO_CHAIN_ID } from "~/lib/constants";
-import { getItem, setItem } from "~/lib/localStorage";
-
-const CELO_REWARD_MODAL_DISMISSED_KEY = "celo_reward_modal_dismissed";
+import { useAccount } from "wagmi";
 
 /**
  * CeloRewardModal component displays a popup for claiming daily Celo rewards.
@@ -19,8 +15,7 @@ const CELO_REWARD_MODAL_DISMISSED_KEY = "celo_reward_modal_dismissed";
  */
 export function CeloRewardModal() {
   const [isOpen, setIsOpen] = useState(false);
-  const { isConnected, chainId } = useAccount();
-  const { switchChain } = useSwitchChain();
+  const { isConnected } = useAccount();
   const {
     claim,
     isPending,
@@ -30,17 +25,6 @@ export function CeloRewardModal() {
     rewardAmountDisplay,
     timeUntilNextClaim,
   } = useCeloReward();
-
-  const [needsChainSwitch, setNeedsChainSwitch] = useState(false);
-
-  // Check if user needs to switch to Celo
-  useEffect(() => {
-    if (isConnected && chainId && chainId !== CELO_CHAIN_ID) {
-      setNeedsChainSwitch(true);
-    } else {
-      setNeedsChainSwitch(false);
-    }
-  }, [isConnected, chainId]);
 
   // Show modal when component mounts (every time app opens)
   useEffect(() => {
@@ -56,17 +40,11 @@ export function CeloRewardModal() {
     // Note: Modal will show again on next app open
   }, []);
 
-  const handleClaim = async () => {
+  const handleClaim = () => {
     if (!isConnected) {
       // This will trigger wallet connection
       return;
     }
-    
-    if (needsChainSwitch) {
-      await switchChain({ chainId: CELO_CHAIN_ID });
-      return;
-    }
-    
     claim();
   };
 
@@ -83,9 +61,6 @@ export function CeloRewardModal() {
   const getButtonText = () => {
     if (!isConnected) {
       return "Connect Wallet";
-    }
-    if (needsChainSwitch) {
-      return "Switch to Celo";
     }
     if (isPending) {
       return "Claiming...";

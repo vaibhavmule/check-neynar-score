@@ -245,7 +245,7 @@ export function CeloRewardModal() {
               ⏰ Available for a limited time only
             </p>
             {timeUntilNextClaim && (
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-red-600 dark:text-red-400 font-medium">
                 Next claim available in {timeUntilNextClaim.hours}h {timeUntilNextClaim.minutes}m
               </p>
             )}

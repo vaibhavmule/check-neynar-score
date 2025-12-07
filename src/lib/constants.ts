@@ -238,22 +238,6 @@ export const SIGNED_KEY_REQUEST_TYPE = [
 
 // --- Daily Reward Contract Configuration ---
 /**
- * Daily reward contract address on Arbitrum.
- * Users can claim 0.025 ARB tokens once per day from this contract.
- */
-export const REWARD_CONTRACT_ADDRESS: `0x${string}` = '0xE4895Ee66a1C1A890Abb158CDfC66925f92eE2A5';
-
-/**
- * ARB token contract address on Arbitrum.
- */
-export const ARB_TOKEN_ADDRESS: `0x${string}` = '0x912CE59144191C1204E64559FE8253a0e49E6548';
-
-/**
- * Arbitrum chain ID.
- */
-export const ARBITRUM_CHAIN_ID = 42161;
-
-/**
  * DailyClaim contract ABI.
  * Minimal ABI containing only the functions needed for frontend interaction.
  */

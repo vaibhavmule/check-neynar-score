@@ -164,7 +164,6 @@ async function checkRequiredEnvVars(): Promise<void> {
           choices: [
             { name: 'Ethereum Mainnet (eip155:1)', value: 'eip155:1' },
             { name: 'Polygon (eip155:137)', value: 'eip155:137' },
-            { name: 'Arbitrum One (eip155:42161)', value: 'eip155:42161' },
             { name: 'Optimism (eip155:10)', value: 'eip155:10' },
             { name: 'Base (eip155:8453)', value: 'eip155:8453' },
             { name: 'Solana (solana:mainnet)', value: 'solana:mainnet' },

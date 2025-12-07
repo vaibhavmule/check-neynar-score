@@ -1,5 +1,5 @@
 import { createConfig, http, WagmiProvider } from "wagmi";
-import { arbitrum, base, degen, mainnet, optimism, unichain, celo } from "wagmi/chains";
+import { base, degen, mainnet, optimism, unichain, celo } from "wagmi/chains";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { farcasterFrame } from "@farcaster/miniapp-wagmi-connector";
 import { coinbaseWallet, metaMask } from 'wagmi/connectors';
@@ -42,9 +42,8 @@ function useCoinbaseWalletAutoConnect() {
 }
 
 export const config = createConfig({
-  chains: [arbitrum, base, optimism, mainnet, degen, unichain, celo],
+  chains: [base, optimism, mainnet, degen, unichain, celo],
   transports: {
-    [arbitrum.id]: http(),
     [base.id]: http(),
     [optimism.id]: http(),
     [mainnet.id]: http(),

@@ -5,7 +5,8 @@ import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { Button } from "./Button";
 import { useCeloReward } from "~/hooks/useCeloReward";
-import { useAccount } from "wagmi";
+import { useAccount, useSwitchChain } from "wagmi";
+import { CELO_CHAIN_ID } from "~/lib/constants";
 
 /**
  * CeloRewardModal component displays a popup for claiming daily Celo rewards.
@@ -15,7 +16,8 @@ import { useAccount } from "wagmi";
  */
 export function CeloRewardModal() {
   const [isOpen, setIsOpen] = useState(false);
-  const { isConnected } = useAccount();
+  const { isConnected, chainId } = useAccount();
+  const { switchChain } = useSwitchChain();
   const {
     claim,
     isPending,
@@ -40,11 +42,29 @@ export function CeloRewardModal() {
     // Note: Modal will show again on next app open
   }, []);
 
-  const handleClaim = () => {
+  const handleClaim = async () => {
     if (!isConnected) {
       // This will trigger wallet connection
       return;
     }
+    
+    // Check if user is on the correct chain (Celo)
+    if (chainId !== CELO_CHAIN_ID) {
+      // Automatically switch to Celo chain
+      try {
+        await switchChain({ chainId: CELO_CHAIN_ID });
+        // Wait a moment for chain switch to complete, then claim
+        setTimeout(() => {
+          claim();
+        }, 1000);
+      } catch (switchError) {
+        console.error("Failed to switch chain:", switchError);
+        // If switch fails, still try to claim (wallet might handle it)
+      }
+      return;
+    }
+    
+    // User is on correct chain, claim directly
     claim();
   };
 

@@ -13,8 +13,8 @@ interface BottomNavProps {
 }
 
 // Mini app token for USDC on Base (1 USDC = 1000000 with 6 decimals)
-const MINI_APP_TOKEN = "eip155:8453/erc20:0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
-const MINI_APP_AMOUNT = "1000000"; // 1 USDC (6 decimals)
+const _MINI_APP_TOKEN = "eip155:8453/erc20:0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
+const _MINI_APP_AMOUNT = "1000000"; // 1 USDC (6 decimals)
 const RECIPIENT_FID = 1356870;
 
 /**

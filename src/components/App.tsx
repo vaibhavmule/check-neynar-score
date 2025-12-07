@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useMiniApp } from "@neynar/react";
 import { sdk } from "@farcaster/miniapp-sdk";
 import { BottomNav, type TabType } from "~/components/ui/BottomNav";
@@ -164,7 +164,7 @@ export default function App(
       cancelled = true;
       clearTimeout(timeout);
     };
-  }, [isSDKLoaded, neynarUser?.score, scoreLoading]);
+  }, [isSDKLoaded, neynarUser, scoreLoading]);
 
   // --- Early Returns ---
   if (!isSDKLoaded) {

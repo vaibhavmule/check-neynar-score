@@ -92,7 +92,7 @@ export function RestructuringNoticeModal() {
               This app is available for a <strong className="text-primary-600 dark:text-primary-400">limited time</strong> before we restructure it.
             </p>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              We're working on improvements and will be back with a better experience soon!
+              We&apos;re working on improvements and will be back with a better experience soon!
             </p>
           </div>
 

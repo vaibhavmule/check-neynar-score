@@ -42,26 +42,18 @@ export function CeloRewardModal() {
     }
   }, [isConnected, chainId]);
 
-  // Check if modal has been dismissed today
+  // Show modal when component mounts (every time app opens)
   useEffect(() => {
-    const dismissed = getItem<string>(CELO_REWARD_MODAL_DISMISSED_KEY);
-    const today = new Date().toDateString();
-    
-    // Show modal if not dismissed today
-    if (dismissed !== today) {
-      // Small delay to ensure smooth rendering
-      const timer = setTimeout(() => {
-        setIsOpen(true);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
+    // Small delay to ensure smooth rendering
+    const timer = setTimeout(() => {
+      setIsOpen(true);
+    }, 1500);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleClose = useCallback(() => {
     setIsOpen(false);
-    // Remember that user dismissed the modal today
-    const today = new Date().toDateString();
-    setItem(CELO_REWARD_MODAL_DISMISSED_KEY, today);
+    // Note: Modal will show again on next app open
   }, []);
 
   const handleClaim = async () => {

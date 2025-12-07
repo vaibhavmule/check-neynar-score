@@ -92,7 +92,10 @@ export function CeloRewardModal() {
   };
 
   const isButtonDisabled = () => {
-    return isPending;
+    // Disable if pending, or if user can't claim yet (countdown active)
+    if (isPending) return true;
+    if (isConnected && !canClaim) return true;
+    return false;
   };
 
   // Close on escape key and prevent body scroll when modal is open

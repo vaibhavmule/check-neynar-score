@@ -64,46 +64,48 @@ export function CeloRewardModal() {
     setItem(CELO_REWARD_MODAL_DISMISSED_KEY, today);
   }, []);
 
-  const handleClaim = () => {
-    if (needsChainSwitch) {
-      switchChain({ chainId: CELO_CHAIN_ID });
+  const handleClaim = async () => {
+    if (!isConnected) {
+      // This will trigger wallet connection
       return;
     }
+    
+    if (needsChainSwitch) {
+      await switchChain({ chainId: CELO_CHAIN_ID });
+      return;
+    }
+    
     claim();
-    // Close modal after successful claim
+  };
+
+  // Close modal after successful claim
+  useEffect(() => {
     if (isSuccess) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         handleClose();
       }, 2000);
+      return () => clearTimeout(timer);
     }
-  };
+  }, [isSuccess, handleClose]);
 
   const getButtonText = () => {
     if (!isConnected) {
-      return "Connect Wallet to Claim CELO";
+      return "Connect Wallet";
     }
     if (needsChainSwitch) {
       return "Switch to Celo";
     }
     if (isPending) {
-      return "Claiming CELO...";
+      return "Claiming...";
     }
     if (isSuccess) {
-      return "CELO Claimed! ✓";
+      return "Claimed! ✓";
     }
-    if (!canClaim && timeUntilNextClaim) {
-      const { hours, minutes } = timeUntilNextClaim;
-      return `Claim CELO (${hours}h ${minutes}m)`;
-    }
-    return `Claim ${rewardAmountDisplay || 'CELO'}`;
+    return "Claim";
   };
 
   const isButtonDisabled = () => {
-    if (!isConnected) return false; // Allow connecting
-    if (needsChainSwitch) return false; // Allow switching
-    if (isPending) return true;
-    if (!canClaim && !needsChainSwitch) return true;
-    return false;
+    return isPending;
   };
 
   // Close on escape key and prevent body scroll when modal is open
@@ -153,14 +155,14 @@ export function CeloRewardModal() {
           <div className="text-center space-y-2">
             <div className="text-4xl mb-2">🎁</div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Daily Reward
+              Reward
             </h2>
           </div>
 
           {/* Message */}
           <div className="space-y-3 text-center">
             <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-              Claim your daily <strong className="text-primary-600 dark:text-primary-400">CELO</strong> reward!
+              Claim your <strong className="text-primary-600 dark:text-primary-400">CELO</strong> reward!
             </p>
             {rewardAmountDisplay && (
               <p className="text-lg font-semibold text-primary-600 dark:text-primary-400">

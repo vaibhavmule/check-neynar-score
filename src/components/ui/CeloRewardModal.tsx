@@ -23,8 +23,6 @@ export function CeloRewardModal() {
     isPending,
     isSuccess,
     error,
-    canClaim,
-    rewardAmountDisplay,
     timeUntilNextClaim,
   } = useCeloReward();
 
@@ -92,10 +90,8 @@ export function CeloRewardModal() {
   };
 
   const isButtonDisabled = () => {
-    // Disable if pending, or if user can't claim yet (countdown active)
-    if (isPending) return true;
-    if (isConnected && !canClaim) return true;
-    return false;
+    // Only disable if transaction is pending
+    return isPending;
   };
 
   // Close on escape key and prevent body scroll when modal is open

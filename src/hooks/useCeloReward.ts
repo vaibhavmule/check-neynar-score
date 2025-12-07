@@ -65,7 +65,13 @@ export function useCeloReward() {
 
   // Calculate time until next claim
   const timeUntilNextClaim = useMemo(() => {
-    if (!currentTimestamp || !lastClaimTime || canClaim) {
+    // Need timestamp and lastClaimTime to calculate
+    if (!currentTimestamp || lastClaimTime === undefined || lastClaimTime === null) {
+      return null;
+    }
+
+    // If user can claim, no countdown needed
+    if (canClaim) {
       return null;
     }
 

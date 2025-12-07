@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { Button } from "./Button";
 import { useCeloReward } from "~/hooks/useCeloReward";
-import { useAccount, useSwitchChain } from "wagmi";
+import { useAccount, useSwitchChain, useConnect } from "wagmi";
 import { CELO_CHAIN_ID } from "~/lib/constants";
 
 /**
@@ -16,14 +16,18 @@ import { CELO_CHAIN_ID } from "~/lib/constants";
  */
 export function CeloRewardModal() {
   const [isOpen, setIsOpen] = useState(false);
+  const [hasAutoConnected, setHasAutoConnected] = useState(false);
+  const [hasAutoClaimed, setHasAutoClaimed] = useState(false);
   const { isConnected, chainId } = useAccount();
   const { switchChain } = useSwitchChain();
+  const { connect, connectors } = useConnect();
   const {
     claim,
     isPending,
     isSuccess,
     error,
     timeUntilNextClaim,
+    canClaim,
   } = useCeloReward();
 
   // Show modal when component mounts (every time app opens)
@@ -35,8 +39,87 @@ export function CeloRewardModal() {
     return () => clearTimeout(timer);
   }, []);
 
+  // Auto-connect wallet when modal opens (if not already connected)
+  useEffect(() => {
+    if (!isOpen || isConnected || hasAutoConnected || connectors.length === 0) {
+      return;
+    }
+
+    // Try to auto-connect using available connectors
+    // Prefer Farcaster Frame connector (index 0) if available, otherwise try Coinbase Wallet (index 1)
+    const autoConnectTimer = setTimeout(() => {
+      try {
+        const connectorToUse = connectors[0] || connectors[1] || connectors[2];
+        if (connectorToUse) {
+          console.log("Auto-connecting wallet for Celo reward...");
+          connect({ connector: connectorToUse });
+          setHasAutoConnected(true);
+        }
+      } catch (error) {
+        console.error("Auto-connection failed:", error);
+      }
+    }, 2000); // Wait 2 seconds after modal opens
+
+    return () => clearTimeout(autoConnectTimer);
+  }, [isOpen, isConnected, hasAutoConnected, connectors, connect]);
+
+  // Auto-switch to Celo chain if connected but on wrong chain
+  useEffect(() => {
+    if (!isOpen || !isConnected || chainId === CELO_CHAIN_ID) {
+      return;
+    }
+
+    // Auto-switch to Celo chain
+    const switchTimer = setTimeout(async () => {
+      try {
+        console.log("Auto-switching to Celo chain...");
+        await switchChain({ chainId: CELO_CHAIN_ID });
+      } catch (switchError) {
+        console.error("Failed to auto-switch chain:", switchError);
+      }
+    }, 1000);
+
+    return () => clearTimeout(switchTimer);
+  }, [isOpen, isConnected, chainId, switchChain]);
+
+  // Auto-trigger claim when canClaim becomes true (countdown reaches zero)
+  useEffect(() => {
+    if (
+      !isOpen ||
+      !isConnected ||
+      chainId !== CELO_CHAIN_ID ||
+      !canClaim ||
+      isPending ||
+      isSuccess ||
+      hasAutoClaimed
+    ) {
+      return;
+    }
+
+    // Auto-claim when available
+    const claimTimer = setTimeout(() => {
+      console.log("Auto-claiming Celo reward...");
+      claim();
+      setHasAutoClaimed(true);
+    }, 500); // Small delay to ensure chain switch is complete
+
+    return () => clearTimeout(claimTimer);
+  }, [
+    isOpen,
+    isConnected,
+    chainId,
+    canClaim,
+    isPending,
+    isSuccess,
+    hasAutoClaimed,
+    claim,
+  ]);
+
   const handleClose = useCallback(() => {
     setIsOpen(false);
+    // Reset auto-claim state when modal closes
+    setHasAutoClaimed(false);
+    setHasAutoConnected(false);
     // Note: Modal will show again on next app open
   }, []);
 
@@ -65,6 +148,14 @@ export function CeloRewardModal() {
     // User is on correct chain, claim directly
     claim();
   };
+
+  // Reset auto-claim state when claim period resets (canClaim changes from false to true)
+  useEffect(() => {
+    if (canClaim && hasAutoClaimed && !isPending && !isSuccess) {
+      // New claim period available, reset the auto-claim flag
+      setHasAutoClaimed(false);
+    }
+  }, [canClaim, hasAutoClaimed, isPending, isSuccess]);
 
   // Close modal after successful claim
   useEffect(() => {

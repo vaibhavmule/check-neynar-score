@@ -7,6 +7,8 @@ import { Button } from '../Button';
 import { SignIn } from '../wallet/SignIn';
 import { type Haptics } from '@farcaster/miniapp-sdk';
 import { APP_URL } from '~/lib/constants';
+import { ArbitrumRewardButton } from '../ArbitrumRewardButton';
+import { CeloRewardButton } from '../CeloRewardButton';
 
 /**
  * ActionsTab component handles mini app actions like sharing, notifications, and haptic feedback.
@@ -137,6 +139,29 @@ export function ActionsTab() {
 
       {/* Authentication */}
       <SignIn />
+
+      {/* Daily Rewards Section */}
+      <div className="space-y-4">
+        <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+            Daily Rewards
+          </h3>
+          <div className="space-y-3">
+            <div>
+              <label className="text-xs text-gray-500 dark:text-gray-400 mb-1 block">
+                Arbitrum (ARB)
+              </label>
+              <ArbitrumRewardButton />
+            </div>
+            <div>
+              <label className="text-xs text-gray-500 dark:text-gray-400 mb-1 block">
+                Celo (CELO)
+              </label>
+              <CeloRewardButton />
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Mini app actions */}
       <Button

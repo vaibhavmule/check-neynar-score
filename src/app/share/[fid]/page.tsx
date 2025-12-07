@@ -21,7 +21,22 @@ export async function generateMetadata({
 
   return {
     title: `${APP_NAME} - Share`,
+    description: APP_DESCRIPTION,
     openGraph: {
+      title: APP_NAME,
+      description: APP_DESCRIPTION,
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: 'Neynar Score',
+        },
+      ],
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
       title: APP_NAME,
       description: APP_DESCRIPTION,
       images: [imageUrl],

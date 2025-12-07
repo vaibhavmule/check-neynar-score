@@ -89,12 +89,16 @@ export function GlassScoreCard({ fid, score, username, pfpUrl: _pfpUrl, loading,
     try {
       const baseUrl = typeof window !== 'undefined' ? window.location.origin : APP_URL;
       const shareUrl = `${baseUrl}/share/${fid}?design=${design}`;
+      // Explicitly include the OpenGraph image URL to ensure Farcaster picks it up
+      const ogImageUrl = `${baseUrl}/api/opengraph-image?fid=${fid}&design=${design}`;
       const shareText = score !== undefined && score !== null
         ? `My Neynar Score is ${Math.round(score)}. Check your score`
         : 'Check your Neynar Score';
 
       // Try composeCast first (Farcaster mini app)
       if (actions?.composeCast) {
+        // Pass the share URL - Farcaster will fetch OpenGraph metadata which includes the image
+        // The OpenGraph image should be automatically picked up from the share page metadata
         await actions.composeCast({
           text: shareText,
           embeds: [shareUrl],

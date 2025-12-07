@@ -131,11 +131,6 @@ export function CeloRewardModal() {
             <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
               Claim your <strong className="text-primary-600 dark:text-primary-400">CELO</strong> reward!
             </p>
-            {rewardAmountDisplay && (
-              <p className="text-lg font-semibold text-primary-600 dark:text-primary-400">
-                {rewardAmountDisplay} CELO
-              </p>
-            )}
             <p className="text-sm text-amber-600 dark:text-amber-400 font-medium">
               ⏰ Available for a limited time only
             </p>

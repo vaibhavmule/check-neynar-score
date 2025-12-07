@@ -6,6 +6,7 @@ import { sdk } from "@farcaster/miniapp-sdk";
 import { BottomNav, type TabType } from "~/components/ui/BottomNav";
 import { ScoreTab, ImproveTab } from "~/components/ui/tabs";
 import { AddAppPrompt } from "~/components/ui/AddAppPrompt";
+import { RestructuringNoticeModal } from "~/components/ui/RestructuringNoticeModal";
 import { useNeynarUser } from "../hooks/useNeynarUser";
 
 export interface AppProps {
@@ -180,6 +181,9 @@ export default function App(
   // --- Render ---
   return (
     <>
+      {/* Restructuring notice popup - shows on first visit */}
+      <RestructuringNoticeModal />
+
       {/* Auto-trigger "Add to App" 1 second after score is checked */}
       <AddAppPrompt hasScore={neynarUser !== null} delay={1000} />
 

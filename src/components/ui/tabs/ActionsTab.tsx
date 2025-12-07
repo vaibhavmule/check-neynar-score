@@ -7,7 +7,6 @@ import { Button } from '../Button';
 import { SignIn } from '../wallet/SignIn';
 import { type Haptics } from '@farcaster/miniapp-sdk';
 import { APP_URL } from '~/lib/constants';
-import { ArbitrumRewardButton } from '../ArbitrumRewardButton';
 import { CeloRewardButton } from '../CeloRewardButton';
 
 /**
@@ -146,19 +145,11 @@ export function ActionsTab() {
           <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
             Daily Rewards
           </h3>
-          <div className="space-y-3">
-            <div>
-              <label className="text-xs text-gray-500 dark:text-gray-400 mb-1 block">
-                Arbitrum (ARB)
-              </label>
-              <ArbitrumRewardButton />
-            </div>
-            <div>
-              <label className="text-xs text-gray-500 dark:text-gray-400 mb-1 block">
-                Celo (CELO)
-              </label>
-              <CeloRewardButton />
-            </div>
+          <div>
+            <label className="text-xs text-gray-500 dark:text-gray-400 mb-1 block">
+              Celo (CELO)
+            </label>
+            <CeloRewardButton />
           </div>
         </div>
       </div>

@@ -65,7 +65,7 @@ export function RewardsTab() {
       const { hours, minutes } = timeUntilNextClaim;
       return `Next claim in ${hours}h ${minutes}m`;
     }
-    return `Claim ${dailyAmountDisplay ?? BASE_DEGEN_DAILY_CLAIM_TOKEN_SYMBOL}`;
+    return "Claim";
   };
 
   const isButtonDisabled = () => {
@@ -102,16 +102,6 @@ export function RewardsTab() {
                 <span className="font-semibold">
                   {contractBalanceDisplay
                     ? `${contractBalanceDisplay} ${BASE_DEGEN_DAILY_CLAIM_TOKEN_SYMBOL}`
-                    : "Loading..."}
-                </span>
-              </div>
-              <div className="mt-2 flex items-center justify-between">
-                <span className="text-xs text-gray-600 dark:text-gray-400">
-                  Daily claim
-                </span>
-                <span className="text-xs font-medium text-gray-800 dark:text-gray-100">
-                  {dailyAmountDisplay
-                    ? `${dailyAmountDisplay} ${BASE_DEGEN_DAILY_CLAIM_TOKEN_SYMBOL}`
                     : "Loading..."}
                 </span>
               </div>

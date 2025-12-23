@@ -55,6 +55,21 @@ export function useDailyClaimReward() {
     },
   });
 
+  // Read eligibility directly from contract (handles first-time users correctly)
+  const { data: isEligible, refetch: refetchIsEligible } = useReadContract({
+    address: BASE_DEGEN_DAILY_CLAIM_CONTRACT_ADDRESS,
+    abi: DAILY_CLAIM_ABI,
+    functionName: 'isEligibleForClaim',
+    args: address ? [address] : undefined,
+    chainId: BASE_DEGEN_DAILY_CLAIM_CHAIN_ID,
+    query: {
+      enabled:
+        isConnected &&
+        !!address &&
+        chainId === BASE_DEGEN_DAILY_CLAIM_CHAIN_ID,
+    },
+  });
+
   // Read daily claim amount
   const { data: dailyClaimAmount } = useReadContract({
     address: BASE_DEGEN_DAILY_CLAIM_CONTRACT_ADDRESS,
@@ -78,36 +93,33 @@ export function useDailyClaimReward() {
       },
     });
 
-  // Derived: can the user claim now?
+  // Use contract's isEligibleForClaim result (handles first-time users where lastClaimTime = 0)
   const canClaim = useMemo(() => {
     if (
       !isConnected ||
       !address ||
-      !currentTimestamp ||
-      !lastClaimTime ||
       chainId !== BASE_DEGEN_DAILY_CLAIM_CHAIN_ID
     ) {
       return false;
     }
-
-    const oneDayInSeconds = BigInt(86400);
-    const nextClaimTime = lastClaimTime + oneDayInSeconds;
-    return currentTimestamp >= nextClaimTime;
-  }, [
-    isConnected,
-    address,
-    currentTimestamp,
-    lastClaimTime,
-    chainId,
-  ]);
+    // Contract returns true for first-time users (lastClaimTime = 0)
+    return isEligible === true;
+  }, [isConnected, address, chainId, isEligible]);
 
   // Derived: time until the next claim window
   const timeUntilNextClaim = useMemo(() => {
+    // If eligible, no countdown needed
+    if (canClaim) {
+      return null;
+    }
+
+    // Need timestamp and lastClaimTime to calculate
     if (!currentTimestamp || lastClaimTime === undefined || lastClaimTime === null) {
       return null;
     }
 
-    if (canClaim) {
+    // For first-time users (lastClaimTime = 0), they're eligible, so no countdown
+    if (lastClaimTime === 0n) {
       return null;
     }
 
@@ -158,6 +170,7 @@ export function useDailyClaimReward() {
           // Refresh timings and balances shortly after a successful tx
           setTimeout(() => {
             refetchLastClaimTime();
+            refetchIsEligible();
             refetchContractBalance();
           }, 2000);
         },

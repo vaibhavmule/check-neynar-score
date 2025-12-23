@@ -69,10 +69,14 @@ export function RewardsTab() {
   };
 
   const isButtonDisabled = () => {
+    // Allow connecting wallet
     if (!isConnected) return false;
+    // Allow switching chain (only disable if switching is in progress)
     if (!isOnCorrectChain) return isSwitchingChain;
+    // Disable while transaction is pending
     if (isPending) return true;
-    if (!canClaim) return true;
+    // Disable if not eligible (but allow if we don't know yet - let contract handle it)
+    if (isConnected && isOnCorrectChain && canClaim === false) return true;
     return false;
   };
 

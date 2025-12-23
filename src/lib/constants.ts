@@ -58,7 +58,7 @@ export const APP_URL: string = getAppUrl();
  * The name of the mini app as displayed to users.
  * Used in titles, headers, and app store listings.
  */
-export const APP_NAME: string = 'Neynar Score';
+export const APP_NAME: string = 'Check Neynar Score';
 
 /**
  * A brief description of the mini app's functionality.

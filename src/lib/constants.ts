@@ -264,6 +264,14 @@ export const DAILY_CLAIM_ABI = [
     type: "function",
   },
   {
+    // Legacy Celo contract uses a different name for the same value
+    inputs: [],
+    name: "dailyAmount",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "getContractBalance",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],

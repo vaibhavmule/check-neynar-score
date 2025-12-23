@@ -33,3 +33,6 @@ export function ScoreTab({ fid, score, username, pfpUrl, loading, error }: Score
   );
 }
 
+
+
+

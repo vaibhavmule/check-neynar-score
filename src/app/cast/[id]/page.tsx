@@ -67,3 +67,6 @@ export default async function CastDetailPage({
   return <CastPageClient castConfig={castConfig} castId={id} />;
 }
 
+
+
+

@@ -8,3 +8,4 @@ export { WhatIsNeynarScoreTab } from './WhatIsNeynarScoreTab';
 export { ScoreTab } from './ScoreTab';
 export { ImproveTab } from './ImproveTab';
 export { TipTab } from './TipTab'; 
+export { RewardsTab } from './RewardsTab';

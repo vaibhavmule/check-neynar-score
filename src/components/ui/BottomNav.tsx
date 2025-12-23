@@ -5,7 +5,7 @@ import { useMiniApp } from "@neynar/react";
 import { sdk } from "@farcaster/miniapp-sdk";
 import { TipModal } from "./wallet/TipModal";
 
-export type TabType = "score" | "improve";
+export type TabType = "score" | "improve" | "rewards";
 
 interface BottomNavProps {
   activeTab: TabType;
@@ -66,6 +66,7 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
 
   const tabs: { id: TabType; label: string; icon: string }[] = [
     { id: "score", label: "Score", icon: "📊" },
+    { id: "rewards", label: "Rewards", icon: "🎁" },
     { id: "improve", label: "Improve", icon: "📈" },
   ];
 

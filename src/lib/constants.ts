@@ -238,39 +238,44 @@ export const SIGNED_KEY_REQUEST_TYPE = [
 
 // --- Daily Reward Contract Configuration ---
 /**
- * DailyClaim contract ABI.
+ * Shared DailyClaim-style contract ABI.
  * Minimal ABI containing only the functions needed for frontend interaction.
  */
 export const DAILY_CLAIM_ABI = [
   {
     inputs: [],
-    name: 'claim',
+    name: "claim",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
-    inputs: [{ internalType: 'address', name: '', type: 'address' }],
-    name: 'lastClaimTime',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function',
+    inputs: [{ internalType: "address", name: "", type: "address" }],
+    name: "lastClaimTime",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
   },
   {
     inputs: [],
-    name: 'dailyAmount',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function',
+    name: "dailyClaimAmount",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
   },
   {
-    anonymous: false,
-    inputs: [
-      { indexed: false, internalType: 'address', name: 'user', type: 'address' },
-      { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' },
-    ],
-    name: 'Claimed',
-    type: 'event',
+    inputs: [],
+    name: "getContractBalance",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "_user", type: "address" }],
+    name: "isEligibleForClaim",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
   },
 ] as const;
 
@@ -279,14 +284,34 @@ export const DAILY_CLAIM_ABI = [
  * Daily reward contract address on Celo.
  * Users can claim CELO tokens once per day from this contract.
  */
-export const CELO_REWARD_CONTRACT_ADDRESS: `0x${string}` = '0xCCf2cE5a423958d107F32c9e30767b00B6791d99';
+export const CELO_REWARD_CONTRACT_ADDRESS: `0x${string}` =
+  "0xCCf2cE5a423958d107F32c9e30767b00B6791d99";
 
 /**
  * CELO token contract address on Celo (native token, use zero address for native).
  */
-export const CELO_TOKEN_ADDRESS: `0x${string}` = '0x0000000000000000000000000000000000000000';
+export const CELO_TOKEN_ADDRESS: `0x${string}` =
+  "0x0000000000000000000000000000000000000000";
 
 /**
  * Celo chain ID.
  */
 export const CELO_CHAIN_ID = 42220;
+
+// --- Base / Degen Rewards (DailyClaim) Configuration ---
+/**
+ * DailyClaim contract on Base for Degen rewards.
+ * Users can claim DEGEN tokens once per day from this contract.
+ */
+export const BASE_DEGEN_DAILY_CLAIM_CONTRACT_ADDRESS: `0x${string}` =
+  "0x7DD548f786C49F96255D4883504b247c04e2f5E4";
+
+/**
+ * Base mainnet chain ID (EIP-155).
+ */
+export const BASE_DEGEN_DAILY_CLAIM_CHAIN_ID = 8453;
+
+/**
+ * Symbol for the reward token distributed by the Base DailyClaim contract.
+ */
+export const BASE_DEGEN_DAILY_CLAIM_TOKEN_SYMBOL = "DEGEN";

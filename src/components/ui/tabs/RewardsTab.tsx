@@ -97,12 +97,17 @@ export function RewardsTab() {
             </div>
 
             <div className="rounded-2xl bg-gray-50/90 p-4 text-sm text-gray-800 dark:bg-gray-900/80 dark:text-gray-100 border border-gray-200/70 dark:border-gray-700">
-              <div className="flex items-center justify-between">
-                <span className="font-medium">Contract balance</span>
-                <span className="font-semibold">
+              <div className="flex flex-col items-center text-center space-y-2">
+                <span className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                  Degen Reward Pool
+                </span>
+                <div className="text-3xl font-extrabold">
                   {contractBalanceDisplay
                     ? `${contractBalanceDisplay} ${BASE_DEGEN_DAILY_CLAIM_TOKEN_SYMBOL}`
                     : "Loading..."}
+                </div>
+                <span className="text-[11px] text-gray-600 dark:text-gray-400">
+                  Total DEGEN available to claim
                 </span>
               </div>
             </div>

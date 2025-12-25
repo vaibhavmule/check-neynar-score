@@ -1,6 +1,7 @@
 "use client";
 
 import { useAccount, useConnect, useSwitchChain } from "wagmi";
+import { useMiniApp } from "@neynar/react";
 import { Button } from "../Button";
 import {
   BASE_DEGEN_DAILY_CLAIM_CHAIN_ID,
@@ -17,6 +18,7 @@ export function RewardsTab() {
   const { address, isConnected, chainId } = useAccount();
   const { connect, connectors } = useConnect();
   const { switchChain, isPending: isSwitchingChain } = useSwitchChain();
+  const { actions } = useMiniApp();
 
   const {
     contractBalance,
@@ -139,6 +141,18 @@ export function RewardsTab() {
               className="w-full"
             >
               {getButtonText()}
+            </Button>
+
+            <Button
+              onClick={() => {
+                if (actions?.openUrl) {
+                  actions.openUrl('https://farcaster.xyz/miniapps/N5W6uG9qsKai/jesse-counter');
+                }
+              }}
+              className="w-full"
+              variant="secondary"
+            >
+              Claim $jesse
             </Button>
 
             <div className="text-center text-xs text-gray-500 dark:text-gray-400">

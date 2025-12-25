@@ -149,10 +149,17 @@ export function RewardsTab() {
                   actions.openUrl('https://farcaster.xyz/miniapps/N5W6uG9qsKai/jesse-counter');
                 }
               }}
-              className="w-full"
-              variant="secondary"
+              className="w-full bg-orange-500 hover:bg-orange-600 text-white border-0 focus:ring-orange-400 dark:bg-orange-600 dark:hover:bg-orange-700"
+              variant="primary"
             >
-              Claim $jesse
+              <div className="flex items-center justify-center gap-2">
+                <img 
+                  src="https://pbs.twimg.com/profile_images/1879556312822120448/QngrqCSC_400x400.jpg" 
+                  alt="Jesse" 
+                  className="w-5 h-5 rounded-full"
+                />
+                <span>Claim $jesse</span>
+              </div>
             </Button>
 
             <div className="text-center text-xs text-gray-500 dark:text-gray-400">

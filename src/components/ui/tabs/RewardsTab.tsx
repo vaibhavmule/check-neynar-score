@@ -146,7 +146,7 @@ export function RewardsTab() {
             <Button
               onClick={() => {
                 if (actions?.openUrl) {
-                  actions.openUrl('https://jesse-counter.vercel.app/');
+                  actions.openUrl('https://farcaster.xyz/miniapps/N5W6uG9qsKai/jesse-counter');
                 }
               }}
               className="w-full bg-orange-500 hover:bg-orange-600 text-white border-0 focus:ring-orange-400 dark:bg-orange-600 dark:hover:bg-orange-700"

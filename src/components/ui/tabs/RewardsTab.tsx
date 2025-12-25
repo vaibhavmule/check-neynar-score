@@ -19,8 +19,8 @@ export function RewardsTab() {
   const { switchChain, isPending: isSwitchingChain } = useSwitchChain();
 
   const {
+    contractBalance,
     contractBalanceDisplay,
-    dailyAmountDisplay,
     canClaim,
     timeUntilNextClaim,
     claim,
@@ -28,6 +28,9 @@ export function RewardsTab() {
     isSuccess,
     error,
   } = useDailyClaimReward();
+
+  // Check if reward pool is empty (check raw bigint value, not formatted string)
+  const isPoolEmpty = contractBalance !== undefined && contractBalance !== null && contractBalance === 0n;
 
   const isOnCorrectChain = chainId === BASE_DEGEN_DAILY_CLAIM_CHAIN_ID;
 
@@ -49,6 +52,9 @@ export function RewardsTab() {
   };
 
   const getButtonText = () => {
+    if (isPoolEmpty) {
+      return "Reward Pool Empty";
+    }
     if (!isConnected) {
       return "Connect Wallet to Claim";
     }
@@ -69,6 +75,8 @@ export function RewardsTab() {
   };
 
   const isButtonDisabled = () => {
+    // Always disable if pool is empty
+    if (isPoolEmpty) return true;
     // Allow connecting wallet
     if (!isConnected) return false;
     // Allow switching chain (only disable if switching is in progress)
@@ -111,6 +119,12 @@ export function RewardsTab() {
                 </span>
               </div>
             </div>
+
+            {isPoolEmpty && (
+              <div className="rounded-lg bg-amber-50 p-3 text-sm text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 text-center">
+                ⚠️ Reward pool is empty
+              </div>
+            )}
 
             {error && (
               <div className="rounded-lg bg-red-50 p-2 text-xs text-red-600 dark:bg-red-900/20 dark:text-red-400">

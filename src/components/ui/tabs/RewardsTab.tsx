@@ -153,12 +153,13 @@ export function RewardsTab() {
               variant="primary"
             >
               <div className="flex items-center justify-center gap-2">
+                <span>Claim</span>
                 <img 
                   src="https://pbs.twimg.com/profile_images/1879556312822120448/QngrqCSC_400x400.jpg" 
                   alt="Jesse" 
                   className="w-5 h-5 rounded-full"
                 />
-                <span>Claim $jesse</span>
+                <span>$jesse</span>
               </div>
             </Button>
 

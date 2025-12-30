@@ -168,6 +168,17 @@ export const USE_WALLET: boolean = false;
 export const ANALYTICS_ENABLED: boolean = true;
 
 /**
+ * Flag to enable/disable maintenance mode.
+ *
+ * When true, a maintenance banner is displayed and API calls may return
+ * maintenance messages. Set via NEXT_PUBLIC_MAINTENANCE_MODE environment variable.
+ * Useful when services are temporarily unavailable (e.g., API key recovery).
+ */
+export const MAINTENANCE_MODE: boolean = 
+  process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true' || 
+  process.env.NEXT_PUBLIC_MAINTENANCE_MODE === '1';
+
+/**
  * Required chains for the mini app.
  *
  * Contains an array of CAIP-2 identifiers for blockchains that the mini app requires.

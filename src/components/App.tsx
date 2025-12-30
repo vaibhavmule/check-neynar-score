@@ -6,7 +6,9 @@ import { sdk } from "@farcaster/miniapp-sdk";
 import { BottomNav, type TabType } from "~/components/ui/BottomNav";
 import { ScoreTab, ImproveTab } from "~/components/ui/tabs";
 import { AddAppPrompt } from "~/components/ui/AddAppPrompt";
+import { MaintenanceBanner } from "~/components/ui/MaintenanceBanner";
 import { useNeynarUser } from "../hooks/useNeynarUser";
+import { MAINTENANCE_MODE } from "~/lib/constants";
 
 export interface AppProps {
   title?: string;
@@ -192,6 +194,9 @@ export default function App(
           paddingRight: context?.client.safeAreaInsets?.right ?? 0,
         }}
       >
+        {/* Maintenance Banner */}
+        {MAINTENANCE_MODE && <MaintenanceBanner />}
+
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute -top-32 -right-16 h-64 w-64 rounded-full bg-primary-200/50 blur-3xl" />
           <div className="absolute -bottom-24 -left-10 h-72 w-72 rounded-full bg-accent-200/40 blur-3xl" />

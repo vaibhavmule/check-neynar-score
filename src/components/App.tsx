@@ -6,7 +6,7 @@ import { sdk } from "@farcaster/miniapp-sdk";
 import { BottomNav, type TabType } from "~/components/ui/BottomNav";
 import { ScoreTab, ImproveTab } from "~/components/ui/tabs";
 import { AddAppPrompt } from "~/components/ui/AddAppPrompt";
-import { MaintenanceBanner } from "~/components/ui/MaintenanceBanner";
+import { MaintenanceModal } from "~/components/ui/MaintenanceBanner";
 import { useNeynarUser } from "../hooks/useNeynarUser";
 import { MAINTENANCE_MODE } from "~/lib/constants";
 
@@ -182,8 +182,11 @@ export default function App(
   // --- Render ---
   return (
     <>
+      {/* Maintenance Modal - blocks all app usage */}
+      <MaintenanceModal />
+
       {/* Auto-trigger "Add to App" 1 second after score is checked */}
-      <AddAppPrompt hasScore={neynarUser !== null} delay={1000} />
+      {!MAINTENANCE_MODE && <AddAppPrompt hasScore={neynarUser !== null} delay={1000} />}
 
       <div
         className="relative min-h-screen bg-gradient-to-br from-secondary via-white to-primary-50 dark:from-gray-950 dark:via-gray-950 dark:to-gray-900"
@@ -194,16 +197,13 @@ export default function App(
           paddingRight: context?.client.safeAreaInsets?.right ?? 0,
         }}
       >
-        {/* Maintenance Banner */}
-        {MAINTENANCE_MODE && <MaintenanceBanner />}
-
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute -top-32 -right-16 h-64 w-64 rounded-full bg-primary-200/50 blur-3xl" />
           <div className="absolute -bottom-24 -left-10 h-72 w-72 rounded-full bg-accent-200/40 blur-3xl" />
           <div className="absolute top-1/3 left-1/2 h-80 w-80 -translate-x-1/2 rounded-full bg-primary-100/30 blur-[120px]" />
         </div>
 
-        <div className="relative flex min-h-screen flex-col">
+        <div className={`relative flex min-h-screen flex-col ${MAINTENANCE_MODE ? 'pointer-events-none opacity-50' : ''}`}>
           {/* Main content area */}
           <main className="flex-1 pb-20">
             <div className="container py-5">

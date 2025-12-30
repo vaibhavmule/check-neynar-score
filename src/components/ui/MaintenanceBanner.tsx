@@ -30,8 +30,8 @@ export function MaintenanceBanner() {
                   <span className="font-bold">Maintenance Mode</span>
                 </p>
                 <p className="mt-1 text-sm text-amber-800">
-                  We're currently performing maintenance on our Neynar integration. 
-                  Some features may be temporarily unavailable. We'll be back soon!
+                  We&apos;re currently performing maintenance on our Neynar integration. 
+                  Some features may be temporarily unavailable. We&apos;ll be back soon!
                 </p>
               </div>
             </div>

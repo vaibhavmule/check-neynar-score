@@ -143,7 +143,8 @@ export function RewardsTab() {
               {getButtonText()}
             </Button>
 
-            <Button
+            {/* Jesse button hidden */}
+            {/* <Button
               onClick={() => {
                 if (actions?.openUrl) {
                   actions.openUrl('https://farcaster.xyz/miniapps/N5W6uG9qsKai/jesse-counter');
@@ -161,7 +162,7 @@ export function RewardsTab() {
                 />
                 <span>$jesse</span>
               </div>
-            </Button>
+            </Button> */}
 
             <div className="text-center text-xs text-gray-500 dark:text-gray-400">
               <a

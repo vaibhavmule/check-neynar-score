@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useMiniApp } from "@neynar/react";
 import { sdk } from "@farcaster/miniapp-sdk";
 import { BottomNav, type TabType } from "~/components/ui/BottomNav";
-import { ScoreTab, ImproveTab } from "~/components/ui/tabs";
+import { ScoreTab, ImproveTab, RewardsTab } from "~/components/ui/tabs";
 import { AddAppPrompt } from "~/components/ui/AddAppPrompt";
 import { useNeynarUser } from "../hooks/useNeynarUser";
 
@@ -214,6 +214,7 @@ export default function App(
                     error={scoreError}
                   />
                 )}
+                {activeTab === "rewards" && <RewardsTab />}
                 {activeTab === "improve" && <ImproveTab />}
               </div>
             </div>

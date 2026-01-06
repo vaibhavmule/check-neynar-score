@@ -66,6 +66,7 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
 
   const tabs: { id: TabType; label: string; icon: string }[] = [
     { id: "score", label: "Score", icon: "📊" },
+    { id: "rewards", label: "Rewards", icon: "🎁" },
     { id: "improve", label: "Improve", icon: "📈" },
   ];
 

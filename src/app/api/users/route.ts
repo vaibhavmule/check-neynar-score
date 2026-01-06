@@ -2,21 +2,6 @@ import { NeynarAPIClient, Configuration } from '@neynar/nodejs-sdk';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
-  // Check for maintenance mode
-  const maintenanceMode = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true' || 
-                          process.env.NEXT_PUBLIC_MAINTENANCE_MODE === '1';
-  
-  if (maintenanceMode) {
-    return NextResponse.json(
-      { 
-        error: 'Service temporarily unavailable',
-        message: 'We are currently performing maintenance on our Neynar integration. Please check back soon!',
-        maintenance: true
-      },
-      { status: 503 }
-    );
-  }
-
   const apiKey = process.env.NEYNAR_API_KEY;
   const { searchParams } = new URL(request.url);
   const fids = searchParams.get('fids');

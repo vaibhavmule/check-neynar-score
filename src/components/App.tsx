@@ -6,9 +6,7 @@ import { sdk } from "@farcaster/miniapp-sdk";
 import { BottomNav, type TabType } from "~/components/ui/BottomNav";
 import { ScoreTab, ImproveTab } from "~/components/ui/tabs";
 import { AddAppPrompt } from "~/components/ui/AddAppPrompt";
-import { MaintenanceModal } from "~/components/ui/MaintenanceBanner";
 import { useNeynarUser } from "../hooks/useNeynarUser";
-import { MAINTENANCE_MODE } from "~/lib/constants";
 
 export interface AppProps {
   title?: string;
@@ -182,11 +180,8 @@ export default function App(
   // --- Render ---
   return (
     <>
-      {/* Maintenance Modal - blocks all app usage */}
-      <MaintenanceModal />
-
       {/* Auto-trigger "Add to App" 1 second after score is checked */}
-      {!MAINTENANCE_MODE && <AddAppPrompt hasScore={neynarUser !== null} delay={1000} />}
+      <AddAppPrompt hasScore={neynarUser !== null} delay={1000} />
 
       <div
         className="relative min-h-screen bg-gradient-to-br from-secondary via-white to-primary-50 dark:from-gray-950 dark:via-gray-950 dark:to-gray-900"
@@ -203,7 +198,7 @@ export default function App(
           <div className="absolute top-1/3 left-1/2 h-80 w-80 -translate-x-1/2 rounded-full bg-primary-100/30 blur-[120px]" />
         </div>
 
-        <div className={`relative flex min-h-screen flex-col ${MAINTENANCE_MODE ? 'pointer-events-none opacity-50' : ''}`}>
+        <div className="relative flex min-h-screen flex-col">
           {/* Main content area */}
           <main className="flex-1 pb-20">
             <div className="container py-5">

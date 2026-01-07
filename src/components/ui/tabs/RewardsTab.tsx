@@ -1,42 +1,58 @@
 "use client";
 
 import { useAccount, useConnect, useSwitchChain } from "wagmi";
-import { useMiniApp } from "@neynar/react";
 import { Button } from "../Button";
 import {
   BASE_DEGEN_DAILY_CLAIM_CHAIN_ID,
   BASE_DEGEN_DAILY_CLAIM_CONTRACT_ADDRESS,
   BASE_DEGEN_DAILY_CLAIM_TOKEN_SYMBOL,
+  CELO_REWARD_CONTRACT_ADDRESS,
+  CELO_CHAIN_ID,
 } from "~/lib/constants";
 import { useDailyClaimReward } from "~/hooks/useDailyClaimReward";
+import { useCeloReward } from "~/hooks/useCeloReward";
 
 /**
- * RewardsTab shows the Base DailyClaim contract balance and lets
- * eligible users claim their daily DEGEN reward.
+ * RewardsTab shows both Base DailyClaim (DEGEN) and Celo reward contract balances
+ * and lets eligible users claim their daily rewards.
  */
 export function RewardsTab() {
   const { address, isConnected, chainId } = useAccount();
   const { connect, connectors } = useConnect();
   const { switchChain, isPending: isSwitchingChain } = useSwitchChain();
-  const { actions } = useMiniApp();
 
+  // Degen reward hook
   const {
-    contractBalance,
-    contractBalanceDisplay,
-    canClaim,
-    timeUntilNextClaim,
-    claim,
-    isPending,
-    isSuccess,
-    error,
+    contractBalance: degenContractBalance,
+    contractBalanceDisplay: degenContractBalanceDisplay,
+    canClaim: canClaimDegen,
+    timeUntilNextClaim: degenTimeUntilNextClaim,
+    claim: claimDegen,
+    isPending: isDegenPending,
+    isSuccess: isDegenSuccess,
+    error: degenError,
   } = useDailyClaimReward();
 
-  // Check if reward pool is empty (check raw bigint value, not formatted string)
-  const isPoolEmpty = contractBalance !== undefined && contractBalance !== null && contractBalance === 0n;
+  // Celo reward hook
+  const {
+    contractBalance: celoContractBalance,
+    contractBalanceDisplay: celoContractBalanceDisplay,
+    canClaim: canClaimCelo,
+    timeUntilNextClaim: celoTimeUntilNextClaim,
+    claim: claimCelo,
+    isPending: isCeloPending,
+    isSuccess: isCeloSuccess,
+    error: celoError,
+  } = useCeloReward();
 
-  const isOnCorrectChain = chainId === BASE_DEGEN_DAILY_CLAIM_CHAIN_ID;
+  // Check if reward pools are empty
+  const isDegenPoolEmpty = degenContractBalance !== undefined && degenContractBalance !== null && degenContractBalance === 0n;
+  const isCeloPoolEmpty = celoContractBalance !== undefined && celoContractBalance !== null && celoContractBalance === 0n;
 
-  const handlePrimaryAction = () => {
+  const isOnDegenChain = chainId === BASE_DEGEN_DAILY_CLAIM_CHAIN_ID;
+  const isOnCeloChain = chainId === CELO_CHAIN_ID;
+
+  const handleDegenAction = () => {
     if (!isConnected) {
       const connectorToUse = connectors[0] || connectors[1] || connectors[2];
       if (connectorToUse) {
@@ -45,65 +61,117 @@ export function RewardsTab() {
       return;
     }
 
-    if (!isOnCorrectChain) {
+    if (!isOnDegenChain) {
       switchChain({ chainId: BASE_DEGEN_DAILY_CLAIM_CHAIN_ID });
       return;
     }
 
-    claim();
+    claimDegen();
   };
 
-  const getButtonText = () => {
-    if (isPoolEmpty) {
+  const handleCeloAction = () => {
+    if (!isConnected) {
+      const connectorToUse = connectors[0] || connectors[1] || connectors[2];
+      if (connectorToUse) {
+        connect({ connector: connectorToUse });
+      }
+      return;
+    }
+
+    if (!isOnCeloChain) {
+      switchChain({ chainId: CELO_CHAIN_ID });
+      return;
+    }
+
+    claimCelo();
+  };
+
+  const getDegenButtonText = () => {
+    if (isDegenPoolEmpty) {
       return "Reward Pool Empty";
     }
     if (!isConnected) {
       return "Connect Wallet to Claim";
     }
-    if (!isOnCorrectChain) {
+    if (!isOnDegenChain) {
       return "Switch to Base";
     }
-    if (isPending) {
+    if (isDegenPending) {
       return "Claiming DEGEN...";
     }
-    if (isSuccess) {
+    if (isDegenSuccess) {
       return "Claimed! ✓";
     }
-    if (!canClaim && timeUntilNextClaim) {
-      const { hours, minutes } = timeUntilNextClaim;
+    if (!canClaimDegen && degenTimeUntilNextClaim) {
+      const { hours, minutes } = degenTimeUntilNextClaim;
       return `Next claim in ${hours}h ${minutes}m`;
     }
-    return "Claim";
+    return "Claim DEGEN";
   };
 
-  const isButtonDisabled = () => {
-    // Always disable if pool is empty
-    if (isPoolEmpty) return true;
-    // Allow connecting wallet
+  const getCeloButtonText = () => {
+    if (isCeloPoolEmpty) {
+      return "Reward Pool Empty";
+    }
+    if (!isConnected) {
+      return "Connect Wallet to Claim";
+    }
+    if (!isOnCeloChain) {
+      return "Switch to Celo";
+    }
+    if (isCeloPending) {
+      return "Claiming CELO...";
+    }
+    if (isCeloSuccess) {
+      return "Claimed! ✓";
+    }
+    if (!canClaimCelo && celoTimeUntilNextClaim) {
+      const { hours, minutes } = celoTimeUntilNextClaim;
+      return `Next claim in ${hours}h ${minutes}m`;
+    }
+    return "Claim CELO";
+  };
+
+  const isDegenButtonDisabled = () => {
+    if (isDegenPoolEmpty) return true;
     if (!isConnected) return false;
-    // Allow switching chain (only disable if switching is in progress)
-    if (!isOnCorrectChain) return isSwitchingChain;
-    // Disable while transaction is pending
-    if (isPending) return true;
-    // Disable if not eligible (but allow if we don't know yet - let contract handle it)
-    if (isConnected && isOnCorrectChain && canClaim === false) return true;
+    if (!isOnDegenChain) return isSwitchingChain;
+    if (isDegenPending) return true;
+    if (isConnected && isOnDegenChain && canClaimDegen === false) return true;
     return false;
   };
 
-  const explorerUrl = `https://basescan.org/address/${BASE_DEGEN_DAILY_CLAIM_CONTRACT_ADDRESS}`;
+  const isCeloButtonDisabled = () => {
+    if (isCeloPoolEmpty) return true;
+    if (!isConnected) return false;
+    if (!isOnCeloChain) return isSwitchingChain;
+    if (isCeloPending) return true;
+    if (isConnected && isOnCeloChain && canClaimCelo === false) return true;
+    return false;
+  };
+
+  const degenExplorerUrl = `https://basescan.org/address/${BASE_DEGEN_DAILY_CLAIM_CONTRACT_ADDRESS}`;
+  const celoExplorerUrl = `https://celoscan.io/address/${CELO_REWARD_CONTRACT_ADDRESS}`;
 
   return (
     <div className="relative flex items-start justify-center px-1 py-4">
       <div className="w-full max-w-md space-y-4">
+        <div className="space-y-1 text-center mb-4">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+            Daily Rewards
+          </h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Claim your daily rewards on Base and Celo.
+          </p>
+        </div>
+
+        {/* Degen Reward Section */}
         <div className="rounded-3xl border border-white/60 bg-white/80 p-6 shadow-soft backdrop-blur dark:border-white/10 dark:bg-gray-900/80">
           <div className="space-y-4">
             <div className="space-y-1 text-center">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                Rewards
-              </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Claim your daily {BASE_DEGEN_DAILY_CLAIM_TOKEN_SYMBOL} reward on Base.
-              </p>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                {BASE_DEGEN_DAILY_CLAIM_TOKEN_SYMBOL} on Base
+              </h3>
             </div>
 
             <div className="rounded-2xl bg-gray-50/90 p-4 text-sm text-gray-800 dark:bg-gray-900/80 dark:text-gray-100 border border-gray-200/70 dark:border-gray-700">
@@ -112,8 +180,8 @@ export function RewardsTab() {
                   Degen Reward Pool
                 </span>
                 <div className="text-3xl font-extrabold">
-                  {contractBalanceDisplay
-                    ? `${contractBalanceDisplay} ${BASE_DEGEN_DAILY_CLAIM_TOKEN_SYMBOL}`
+                  {degenContractBalanceDisplay
+                    ? `${degenContractBalanceDisplay} ${BASE_DEGEN_DAILY_CLAIM_TOKEN_SYMBOL}`
                     : "Loading..."}
                 </div>
                 <span className="text-[11px] text-gray-600 dark:text-gray-400">
@@ -122,68 +190,107 @@ export function RewardsTab() {
               </div>
             </div>
 
-            {isPoolEmpty && (
+            {isDegenPoolEmpty && (
               <div className="rounded-lg bg-amber-50 p-3 text-sm text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 text-center">
                 ⚠️ Reward pool is empty
               </div>
             )}
 
-            {error && (
+            {degenError && (
               <div className="rounded-lg bg-red-50 p-2 text-xs text-red-600 dark:bg-red-900/20 dark:text-red-400">
-                {error instanceof Error ? error.message : "Transaction failed"}
+                {degenError instanceof Error ? degenError.message : "Transaction failed"}
               </div>
             )}
 
             <Button
-              onClick={handlePrimaryAction}
-              disabled={isButtonDisabled()}
-              isLoading={isPending || isSwitchingChain}
+              onClick={handleDegenAction}
+              disabled={isDegenButtonDisabled()}
+              isLoading={isDegenPending || (isSwitchingChain && !isOnDegenChain)}
               className="w-full"
             >
-              {getButtonText()}
+              {getDegenButtonText()}
             </Button>
-
-            {/* Jesse button hidden */}
-            {/* <Button
-              onClick={() => {
-                if (actions?.openUrl) {
-                  actions.openUrl('https://farcaster.xyz/miniapps/N5W6uG9qsKai/jesse-counter');
-                }
-              }}
-              className="w-full bg-orange-500 hover:bg-orange-600 text-white border-0 focus:ring-orange-400 dark:bg-orange-600 dark:hover:bg-orange-700"
-              variant="primary"
-            >
-              <div className="flex items-center justify-center gap-2">
-                <span>Claim</span>
-                <img 
-                  src="https://pbs.twimg.com/profile_images/1879556312822120448/QngrqCSC_400x400.jpg" 
-                  alt="Jesse" 
-                  className="w-5 h-5 rounded-full"
-                />
-                <span>$jesse</span>
-              </div>
-            </Button> */}
 
             <div className="text-center text-xs text-gray-500 dark:text-gray-400">
               <a
-                href={explorerUrl}
+                href={degenExplorerUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="underline underline-offset-2 hover:text-primary-600 dark:hover:text-primary-400"
               >
                 View contract on BaseScan
               </a>
-              {address && (
-                <div className="mt-1">
-                  Connected wallet:{" "}
-                  <span className="font-mono text-[11px] opacity-80">
-                    {address}
-                  </span>
-                </div>
-              )}
             </div>
           </div>
         </div>
+
+        {/* Celo Reward Section */}
+        <div className="rounded-3xl border border-white/60 bg-white/80 p-6 shadow-soft backdrop-blur dark:border-white/10 dark:bg-gray-900/80">
+          <div className="space-y-4">
+            <div className="space-y-1 text-center">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                CELO on Celo
+              </h3>
+            </div>
+
+            <div className="rounded-2xl bg-gray-50/90 p-4 text-sm text-gray-800 dark:bg-gray-900/80 dark:text-gray-100 border border-gray-200/70 dark:border-gray-700">
+              <div className="flex flex-col items-center text-center space-y-2">
+                <span className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                  Celo Reward Pool
+                </span>
+                <div className="text-3xl font-extrabold">
+                  {celoContractBalanceDisplay
+                    ? `${celoContractBalanceDisplay} CELO`
+                    : "Loading..."}
+                </div>
+                <span className="text-[11px] text-gray-600 dark:text-gray-400">
+                  Total CELO available to claim
+                </span>
+              </div>
+            </div>
+
+            {isCeloPoolEmpty && (
+              <div className="rounded-lg bg-amber-50 p-3 text-sm text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 text-center">
+                ⚠️ Reward pool is empty
+              </div>
+            )}
+
+            {celoError && (
+              <div className="rounded-lg bg-red-50 p-2 text-xs text-red-600 dark:bg-red-900/20 dark:text-red-400">
+                {celoError instanceof Error ? celoError.message : "Transaction failed"}
+              </div>
+            )}
+
+            <Button
+              onClick={handleCeloAction}
+              disabled={isCeloButtonDisabled()}
+              isLoading={isCeloPending || (isSwitchingChain && !isOnCeloChain)}
+              className="w-full"
+            >
+              {getCeloButtonText()}
+            </Button>
+
+            <div className="text-center text-xs text-gray-500 dark:text-gray-400">
+              <a
+                href={celoExplorerUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="underline underline-offset-2 hover:text-primary-600 dark:hover:text-primary-400"
+              >
+                View contract on CeloScan
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {address && (
+          <div className="text-center text-xs text-gray-500 dark:text-gray-400">
+            Connected wallet:{" "}
+            <span className="font-mono text-[11px] opacity-80">
+              {address}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );

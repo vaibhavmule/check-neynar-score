@@ -51,6 +51,17 @@ export function useCeloReward() {
     },
   });
 
+  // Read contract CELO balance
+  const { data: contractBalance, refetch: refetchContractBalance } = useReadContract({
+    address: CELO_REWARD_CONTRACT_ADDRESS,
+    abi: DAILY_CLAIM_ABI,
+    functionName: "getContractBalance",
+    chainId: CELO_CHAIN_ID,
+    query: {
+      enabled: true,
+    },
+  });
+
   // Calculate if user can claim
   const canClaim = useMemo(() => {
     if (!isConnected || !address || !currentTimestamp || !lastClaimTime || chainId !== CELO_CHAIN_ID) {
@@ -123,22 +134,32 @@ export function useCeloReward() {
       },
       {
         onSuccess: () => {
-          // Refetch last claim time after successful transaction
+          // Refetch last claim time and contract balance after successful transaction
           setTimeout(() => {
             refetchLastClaimTime();
+            refetchContractBalance();
           }, 2000);
         },
       }
     );
   };
 
-  // Format CELO amount for display
-  const rewardAmountDisplay = useMemo(() => {
-    if (!dailyAmount) return null;
-    // CELO has 18 decimals
-    const amount = Number(dailyAmount) / 1e18;
+  // Formatting helpers (CELO has 18 decimals)
+  const formatAmount = (value?: bigint | null) => {
+    if (!value) return null;
+    const amount = Number(value) / 1e18;
     return amount.toFixed(4);
-  }, [dailyAmount]);
+  };
+
+  const rewardAmountDisplay = useMemo(
+    () => (dailyAmount ? formatAmount(dailyAmount as bigint) : null),
+    [dailyAmount]
+  );
+
+  const contractBalanceDisplay = useMemo(
+    () => (contractBalance ? formatAmount(contractBalance as bigint) : null),
+    [contractBalance]
+  );
 
   return {
     // Status
@@ -150,10 +171,13 @@ export function useCeloReward() {
     timeUntilNextClaim,
     rewardAmount: dailyAmount,
     rewardAmountDisplay,
+    contractBalance,
+    contractBalanceDisplay,
 
     // Actions
     claim,
     refetchLastClaimTime,
+    refetchContractBalance,
 
     // Transaction status
     hash,

@@ -88,48 +88,48 @@ export function RewardsTab() {
 
   const getDegenButtonText = () => {
     if (isDegenPoolEmpty) {
-      return "Reward Pool Empty";
+      return "Pool Empty";
     }
     if (!isConnected) {
-      return "Connect Wallet to Claim";
+      return "Connect Wallet";
     }
     if (!isOnDegenChain) {
       return "Switch to Base";
     }
     if (isDegenPending) {
-      return "Claiming DEGEN...";
+      return "Claiming...";
     }
     if (isDegenSuccess) {
-      return "Claimed! ✓";
+      return "Claimed ✓";
     }
     if (!canClaimDegen && degenTimeUntilNextClaim) {
       const { hours, minutes } = degenTimeUntilNextClaim;
-      return `Next claim in ${hours}h ${minutes}m`;
+      return `${hours}h ${minutes}m`;
     }
-    return "Claim DEGEN";
+    return "Claim $DEGEN";
   };
 
   const getCeloButtonText = () => {
     if (isCeloPoolEmpty) {
-      return "Reward Pool Empty";
+      return "Pool Empty";
     }
     if (!isConnected) {
-      return "Connect Wallet to Claim";
+      return "Connect Wallet";
     }
     if (!isOnCeloChain) {
       return "Switch to Celo";
     }
     if (isCeloPending) {
-      return "Claiming CELO...";
+      return "Claiming...";
     }
     if (isCeloSuccess) {
-      return "Claimed! ✓";
+      return "Claimed ✓";
     }
     if (!canClaimCelo && celoTimeUntilNextClaim) {
       const { hours, minutes } = celoTimeUntilNextClaim;
-      return `Next claim in ${hours}h ${minutes}m`;
+      return `${hours}h ${minutes}m`;
     }
-    return "Claim CELO";
+    return "Claim $CELO";
   };
 
   const isDegenButtonDisabled = () => {
@@ -155,103 +155,30 @@ export function RewardsTab() {
 
   return (
     <div className="relative flex items-start justify-center px-1 py-4">
-      <div className="w-full max-w-md space-y-4">
-        <div className="space-y-1 text-center mb-4">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-            Daily Rewards
-          </h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Claim your daily rewards on Base and Celo.
-          </p>
-        </div>
-
-        {/* Degen Reward Section */}
-        <div className="rounded-3xl border border-white/60 bg-white/80 p-6 shadow-soft backdrop-blur dark:border-white/10 dark:bg-gray-900/80">
-          <div className="space-y-4">
-            <div className="space-y-1 text-center">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                {BASE_DEGEN_DAILY_CLAIM_TOKEN_SYMBOL} on Base
-              </h3>
-            </div>
-
-            <div className="rounded-2xl bg-gray-50/90 p-4 text-sm text-gray-800 dark:bg-gray-900/80 dark:text-gray-100 border border-gray-200/70 dark:border-gray-700">
-              <div className="flex flex-col items-center text-center space-y-2">
-                <span className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                  Degen Reward Pool
-                </span>
-                <div className="text-3xl font-extrabold">
-                  {degenContractBalanceDisplay
-                    ? `${degenContractBalanceDisplay} ${BASE_DEGEN_DAILY_CLAIM_TOKEN_SYMBOL}`
-                    : "Loading..."}
-                </div>
-                <span className="text-[11px] text-gray-600 dark:text-gray-400">
-                  Total DEGEN available to claim
-                </span>
-              </div>
-            </div>
-
-            {isDegenPoolEmpty && (
-              <div className="rounded-lg bg-amber-50 p-3 text-sm text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 text-center">
-                ⚠️ Reward pool is empty
-              </div>
-            )}
-
-            {degenError && (
-              <div className="rounded-lg bg-red-50 p-2 text-xs text-red-600 dark:bg-red-900/20 dark:text-red-400">
-                {degenError instanceof Error ? degenError.message : "Transaction failed"}
-              </div>
-            )}
-
-            <Button
-              onClick={handleDegenAction}
-              disabled={isDegenButtonDisabled()}
-              isLoading={isDegenPending || (isSwitchingChain && !isOnDegenChain)}
-              className="w-full"
-            >
-              {getDegenButtonText()}
-            </Button>
-
-            <div className="text-center text-xs text-gray-500 dark:text-gray-400">
-              <a
-                href={degenExplorerUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="underline underline-offset-2 hover:text-primary-600 dark:hover:text-primary-400"
-              >
-                View contract on BaseScan
-              </a>
-            </div>
-          </div>
-        </div>
-
+      <div className="w-full max-w-md space-y-3">
         {/* Celo Reward Section */}
-        <div className="rounded-3xl border border-white/60 bg-white/80 p-6 shadow-soft backdrop-blur dark:border-white/10 dark:bg-gray-900/80">
-          <div className="space-y-4">
-            <div className="space-y-1 text-center">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                CELO on Celo
+        <div className="rounded-2xl border border-white/60 bg-white/80 p-4 shadow-soft backdrop-blur dark:border-white/10 dark:bg-gray-900/80">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                $CELO
               </h3>
+              <span className="text-xs text-gray-500 dark:text-gray-400">Celo</span>
             </div>
 
-            <div className="rounded-2xl bg-gray-50/90 p-4 text-sm text-gray-800 dark:bg-gray-900/80 dark:text-gray-100 border border-gray-200/70 dark:border-gray-700">
-              <div className="flex flex-col items-center text-center space-y-2">
-                <span className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                  Celo Reward Pool
-                </span>
-                <div className="text-3xl font-extrabold">
+            <div className="rounded-xl bg-gray-50/90 p-3 text-sm text-gray-800 dark:bg-gray-900/80 dark:text-gray-100 border border-gray-200/70 dark:border-gray-700">
+              <div className="flex flex-col items-center text-center space-y-1">
+                <div className="text-2xl font-extrabold">
                   {celoContractBalanceDisplay
-                    ? `${celoContractBalanceDisplay} CELO`
+                    ? `${celoContractBalanceDisplay}`
                     : "Loading..."}
                 </div>
-                <span className="text-[11px] text-gray-600 dark:text-gray-400">
-                  Total CELO available to claim
-                </span>
               </div>
             </div>
 
             {isCeloPoolEmpty && (
-              <div className="rounded-lg bg-amber-50 p-3 text-sm text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 text-center">
-                ⚠️ Reward pool is empty
+              <div className="rounded-lg bg-amber-50 p-2 text-xs text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 text-center">
+                ⚠️ Pool empty
               </div>
             )}
 
@@ -269,28 +196,51 @@ export function RewardsTab() {
             >
               {getCeloButtonText()}
             </Button>
-
-            <div className="text-center text-xs text-gray-500 dark:text-gray-400">
-              <a
-                href={celoExplorerUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="underline underline-offset-2 hover:text-primary-600 dark:hover:text-primary-400"
-              >
-                View contract on CeloScan
-              </a>
-            </div>
           </div>
         </div>
 
-        {address && (
-          <div className="text-center text-xs text-gray-500 dark:text-gray-400">
-            Connected wallet:{" "}
-            <span className="font-mono text-[11px] opacity-80">
-              {address}
-            </span>
+        {/* Degen Reward Section */}
+        <div className="rounded-2xl border border-white/60 bg-white/80 p-4 shadow-soft backdrop-blur dark:border-white/10 dark:bg-gray-900/80">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                $DEGEN
+              </h3>
+              <span className="text-xs text-gray-500 dark:text-gray-400">Base</span>
+            </div>
+
+            <div className="rounded-xl bg-gray-50/90 p-3 text-sm text-gray-800 dark:bg-gray-900/80 dark:text-gray-100 border border-gray-200/70 dark:border-gray-700">
+              <div className="flex flex-col items-center text-center space-y-1">
+                <div className="text-2xl font-extrabold">
+                  {degenContractBalanceDisplay
+                    ? `${degenContractBalanceDisplay}`
+                    : "Loading..."}
+                </div>
+              </div>
+            </div>
+
+            {isDegenPoolEmpty && (
+              <div className="rounded-lg bg-amber-50 p-2 text-xs text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 text-center">
+                ⚠️ Pool empty
+              </div>
+            )}
+
+            {degenError && (
+              <div className="rounded-lg bg-red-50 p-2 text-xs text-red-600 dark:bg-red-900/20 dark:text-red-400">
+                {degenError instanceof Error ? degenError.message : "Transaction failed"}
+              </div>
+            )}
+
+            <Button
+              onClick={handleDegenAction}
+              disabled={isDegenButtonDisabled()}
+              isLoading={isDegenPending || (isSwitchingChain && !isOnDegenChain)}
+              className="w-full"
+            >
+              {getDegenButtonText()}
+            </Button>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

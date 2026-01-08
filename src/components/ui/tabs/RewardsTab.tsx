@@ -47,7 +47,8 @@ export function RewardsTab() {
 
   // Check if reward pools are empty
   const isDegenPoolEmpty = degenContractBalance !== undefined && degenContractBalance !== null && degenContractBalance === 0n;
-  const isCeloPoolEmpty = celoContractBalance !== undefined && celoContractBalance !== null && celoContractBalance === 0n;
+  // Celo balance may not be available - always treat as unknown
+  const isCeloPoolEmpty = false; // Don't check Celo pool balance as it may not be available
 
   const isOnDegenChain = chainId === BASE_DEGEN_DAILY_CLAIM_CHAIN_ID;
   const isOnCeloChain = chainId === CELO_CHAIN_ID;
@@ -110,9 +111,7 @@ export function RewardsTab() {
   };
 
   const getCeloButtonText = () => {
-    if (isCeloPoolEmpty) {
-      return "Pool Empty";
-    }
+    // Don't check pool empty for Celo as balance may not be available
     if (!isConnected) {
       return "Connect Wallet";
     }
@@ -142,7 +141,7 @@ export function RewardsTab() {
   };
 
   const isCeloButtonDisabled = () => {
-    if (isCeloPoolEmpty) return true;
+    // Don't check pool empty for Celo as balance may not be available
     if (!isConnected) return false;
     if (!isOnCeloChain) return isSwitchingChain;
     if (isCeloPending) return true;
@@ -156,6 +155,16 @@ export function RewardsTab() {
   return (
     <div className="relative flex items-start justify-center px-1 py-4">
       <div className="w-full max-w-md space-y-3">
+        {/* Title */}
+        <div className="text-center mb-2">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+            Rewards Pool
+          </h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+            Claim your daily rewards on Base and Celo
+          </p>
+        </div>
+
         {/* Celo Reward Section */}
         <div className="rounded-2xl border border-white/60 bg-white/80 p-4 shadow-soft backdrop-blur dark:border-white/10 dark:bg-gray-900/80">
           <div className="space-y-3">
@@ -169,18 +178,13 @@ export function RewardsTab() {
             <div className="rounded-xl bg-gray-50/90 p-3 text-sm text-gray-800 dark:bg-gray-900/80 dark:text-gray-100 border border-gray-200/70 dark:border-gray-700">
               <div className="flex flex-col items-center text-center space-y-1">
                 <div className="text-2xl font-extrabold">
-                  {celoContractBalanceDisplay
-                    ? `${celoContractBalanceDisplay}`
-                    : "Loading..."}
+                  N/A
                 </div>
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  Balance unavailable
+                </span>
               </div>
             </div>
-
-            {isCeloPoolEmpty && (
-              <div className="rounded-lg bg-amber-50 p-2 text-xs text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 text-center">
-                ⚠️ Pool empty
-              </div>
-            )}
 
             {celoError && (
               <div className="rounded-lg bg-red-50 p-2 text-xs text-red-600 dark:bg-red-900/20 dark:text-red-400">
@@ -192,7 +196,7 @@ export function RewardsTab() {
               onClick={handleCeloAction}
               disabled={isCeloButtonDisabled()}
               isLoading={isCeloPending || (isSwitchingChain && !isOnCeloChain)}
-              className="w-full"
+              className="!bg-yellow-500 hover:!bg-yellow-600 !text-white !border-0 focus:!ring-yellow-400 dark:!bg-yellow-600 dark:hover:!bg-yellow-700"
             >
               {getCeloButtonText()}
             </Button>
@@ -235,7 +239,7 @@ export function RewardsTab() {
               onClick={handleDegenAction}
               disabled={isDegenButtonDisabled()}
               isLoading={isDegenPending || (isSwitchingChain && !isOnDegenChain)}
-              className="w-full"
+              className="!bg-purple-500 hover:!bg-purple-600 !text-white !border-0 focus:!ring-purple-400 dark:!bg-purple-600 dark:hover:!bg-purple-700"
             >
               {getDegenButtonText()}
             </Button>
@@ -245,5 +249,6 @@ export function RewardsTab() {
     </div>
   );
 }
+
 
 

@@ -52,13 +52,14 @@ export function useCeloReward() {
   });
 
   // Read contract CELO balance
+  // Note: Celo contract may not support getContractBalance, so this may always fail
   const { data: contractBalance, refetch: refetchContractBalance } = useReadContract({
     address: CELO_REWARD_CONTRACT_ADDRESS,
     abi: DAILY_CLAIM_ABI,
     functionName: "getContractBalance",
     chainId: CELO_CHAIN_ID,
     query: {
-      enabled: true,
+      enabled: false, // Disabled - Celo contract may not support balance checking
     },
   });
 

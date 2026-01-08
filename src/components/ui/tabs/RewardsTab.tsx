@@ -196,7 +196,7 @@ export function RewardsTab() {
               onClick={handleCeloAction}
               disabled={isCeloButtonDisabled()}
               isLoading={isCeloPending || (isSwitchingChain && !isOnCeloChain)}
-              className="!bg-yellow-500 hover:!bg-yellow-600 !text-white !border-0 focus:!ring-yellow-400 dark:!bg-yellow-600 dark:hover:!bg-yellow-700"
+              className="!from-yellow-500 !to-yellow-500 hover:!from-yellow-600 hover:!to-yellow-600 !text-white !border-0 focus:!ring-yellow-400 dark:!from-yellow-600 dark:!to-yellow-600 dark:hover:!from-yellow-700 dark:hover:!to-yellow-700"
             >
               {getCeloButtonText()}
             </Button>
@@ -239,7 +239,7 @@ export function RewardsTab() {
               onClick={handleDegenAction}
               disabled={isDegenButtonDisabled()}
               isLoading={isDegenPending || (isSwitchingChain && !isOnDegenChain)}
-              className="!bg-purple-500 hover:!bg-purple-600 !text-white !border-0 focus:!ring-purple-400 dark:!bg-purple-600 dark:hover:!bg-purple-700"
+              className="!from-purple-500 !to-purple-500 hover:!from-purple-600 hover:!to-purple-600 !text-white !border-0 focus:!ring-purple-400 dark:!from-purple-600 dark:!to-purple-600 dark:hover:!from-purple-700 dark:hover:!to-purple-700"
             >
               {getDegenButtonText()}
             </Button>
